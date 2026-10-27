@@ -1,0 +1,70 @@
+{
+  "name": "effect-kit-package-name-workspace",
+  "private": true,
+  "description": "A starter for publishable Effect packages.",
+  "homepage": "https://github.com/effect-kit/template#readme",
+  "bugs": {
+    "url": "https://github.com/effect-kit/template/issues"
+  },
+  "license": "Apache-2.0",
+  "author": {
+    "name": "Effect Kit Contributors",
+    "url": "https://github.com/effect-kit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/effect-kit/template.git"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "clean": "turbo run clean",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
+    "lint": "oxlint --deny-warnings .",
+    "lint:fix": "oxlint --fix .",
+    "typecheck": "tsc --noEmit -p tsconfig.json && turbo run typecheck typecheck:test",
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "ci:check": "pnpm check",
+    "check:package": "turbo run check:package",
+    "test:artifacts": "echo \"Not implemented: add package-specific artifact checks\"",
+    "test:extended": "pnpm test:artifacts",
+    "verify": "pnpm check && pnpm test:extended",
+    "changeset": "changeset",
+    "release:version": "changeset version && pnpm install --lockfile-only --ignore-scripts && pnpm format",
+    "release:prepare": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm build",
+    "release:pack": "changeset pack --out-dir .artifacts/release",
+    "release:check": "echo \"Not implemented: verify the supplied release archives\"",
+    "release:smoke": "echo \"Not implemented: verify the published release\"",
+    "prepare": "lefthook install"
+  },
+  "dependencies": {
+    "effect": "catalog:"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "catalog:",
+    "@changesets/cli": "catalog:",
+    "@commitlint/cli": "catalog:",
+    "@commitlint/config-conventional": "catalog:",
+    "@effect/vitest": "catalog:",
+    "@types/node": "catalog:",
+    "klarity": "catalog:",
+    "lefthook": "catalog:",
+    "oxfmt": "catalog:",
+    "oxlint": "catalog:",
+    "publint": "catalog:",
+    "tsdown": "catalog:",
+    "turbo": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  },
+  "engines": {
+    "node": ">=24.22.0",
+    "pnpm": ">=12.14.0 <13"
+  },
+  "packageManager": "pnpm@12.14.0"
+}

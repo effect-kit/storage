@@ -1,0 +1,37 @@
+name: Extended tests
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: extended-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    name: Extended (${{ matrix.node || 'pinned Node' }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        # An empty override reads .node-version, so the pinned version has one owner.
+        node: ["", "24.x"]
+    steps:
+      - name: Check out the selected commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Install the workspace
+        uses: effect-kit/.github/actions/setup@v1
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
+      - name: Run fast checks
+        run: pnpm ci:check
+      - name: Run package-specific extended checks
+        run: pnpm test:extended

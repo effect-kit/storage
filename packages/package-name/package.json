@@ -1,0 +1,74 @@
+{
+  "name": "@effect-kit/package-name",
+  "version": "0.0.0",
+  "description": "Replace this with a short description of your Effect package.",
+  "homepage": "https://github.com/effect-kit/template#readme",
+  "bugs": {
+    "url": "https://github.com/effect-kit/template/issues"
+  },
+  "license": "Apache-2.0",
+  "author": {
+    "name": "Effect Kit Contributors",
+    "url": "https://github.com/effect-kit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/effect-kit/template.git",
+    "directory": "packages/package-name"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "workspace-source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      },
+      "./package.json": "./package.json"
+    },
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "clean": "node --input-type=module -e \"import { rmSync } from 'node:fs'; for (const directory of ['dist', 'coverage']) rmSync(directory, { recursive: true, force: true })\"",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "typecheck:test": "tsc --noEmit -p test/tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check:package": "publint --strict && attw --pack --profile esm-only",
+    "lint": "oxlint --deny-warnings src test *.config.ts"
+  },
+  "devDependencies": {
+    "@effect/vitest": "catalog:",
+    "effect": "catalog:",
+    "klarity": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "effect": "^4.0.6"
+  },
+  "engines": {
+    "node": ">=24.22.0"
+  }
+}

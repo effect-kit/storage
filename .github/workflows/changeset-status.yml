@@ -1,0 +1,12 @@
+name: Changeset status
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+jobs:
+  status:
+    uses: effect-kit/.github/.github/workflows/changeset-status.yml@v1

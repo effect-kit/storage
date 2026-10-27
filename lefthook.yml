@@ -1,0 +1,7 @@
+extends:
+  - node_modules/klarity/src/lefthook/monorepo.yml
+
+pre-push:
+  jobs:
+    - name: check
+      run: pnpm ci:check

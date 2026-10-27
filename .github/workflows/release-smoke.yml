@@ -1,0 +1,26 @@
+name: Release smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      release-run-id:
+        description: Successful Release run ID
+        type: number
+        required: true
+      pack-artifact-id:
+        description: Packed artifact ID from that release job summary
+        type: number
+        required: true
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  smoke:
+    uses: effect-kit/.github/.github/workflows/release-smoke.yml@v1
+    with:
+      # Manual dispatch supplies IDs as strings; the reusable workflow expects numbers.
+      release-run-id: ${{ fromJSON(inputs.release-run-id) }}
+      pack-artifact-id: ${{ fromJSON(inputs.pack-artifact-id) }}
+      timeout-minutes: 15

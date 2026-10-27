@@ -1,0 +1,46 @@
+# Working in this repository
+
+This is a pnpm/Turborepo workspace for Effect libraries. Read the root and owning
+package README before changing code. The root is private; libraries live in `packages/*`.
+Read `.github/README.md` when changing workflows or implementing release checks.
+
+## Implementation
+
+- Inspect the working tree and relevant code before editing. Preserve unrelated work.
+- Make focused changes and use Conventional Commits. Commit each coherent change unless
+  the user asks you not to commit. Never push or publish without authorization.
+- Prefer simple functions and focused modules. Extract shared code when it has real reuse
+  or makes the behavior easier to understand. Avoid unrelated refactors and dependencies.
+- Read the installed `node_modules/effect/AGENTS.md` before writing Effect code. Use the
+  installed Effect 4 source and documentation to confirm APIs.
+- Keep Effect execution at runtime boundaries. Model expected failures explicitly and
+  validate untrusted inputs. Preserve public behavior unless the task changes it.
+- Keep source, tests, package exports, and consumer-facing documentation synchronized.
+- Keep local investigations in `/research/`. It is ignored; never force-add it.
+
+## Tooling
+
+- Use the Node version in `.node-version` and pnpm from the root `packageManager`.
+- Manage aligned versions in `pnpm-workspace.yaml`; commit lockfile changes.
+- Reuse Klarity presets instead of adding another formatter, linter, or test framework.
+- Build libraries with tsdown. Publish ESM and declarations from `dist`; keep development
+  source conditions out of published exports. Keep `files` narrow and include `LICENSE`.
+- Check source and test types. Add meaningful tests for behavior changes and regressions.
+  Use `@effect/vitest` for Effect programs and ordinary tests for tooling and pure code.
+
+## Checks and releases
+
+- Run `pnpm format` and `pnpm ci:check` after meaningful changes. Run
+  `pnpm test:extended` when changing packaging, exports, declarations, or release tooling.
+- Keep PR checks fast and deterministic. Long suites, live services, fuzzing, and provider
+  matrices belong in manually dispatched workflows. Add those commands only when needed.
+- `test:artifacts`, `release:check`, and `release:smoke` are echo placeholders. Implement
+  package-specific checks before using release workflows. `release:prepare` owns release
+  source checks and builds; `release:check` must verify exact archives and write
+  `verification.json` without changing plans or tarballs.
+- Release tooling must handle all publishable packages in the plan. Registry smoke checks
+  compare downloaded bytes and provenance; they must never publish or rebuild a release.
+- Add changesets for user-visible package changes. Do not add release notes for tooling
+  changes alone. Keep shared workflow callers on `effect-kit/.github@v1` unless a deliberate
+  migration requires another version.
+- Report what changed, checks run, skipped checks and reasons, and any remaining limitations.

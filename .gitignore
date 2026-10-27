@@ -1,0 +1,67 @@
+# Dependencies and package manager state
+node_modules/
+.pnpm-store/
+.pnp.*
+
+# Build output, task caches, and test evidence
+dist/
+build/
+out/
+.turbo/
+.cache/
+.artifacts/
+coverage/
+.vitest/
+.nyc_output/
+test-results/
+playwright-report/
+*.tsbuildinfo
+*.tgz
+
+# Local research is intentionally untracked
+/research/
+
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+*.p12
+*.pfx
+.npmrc.local
+
+# Platform and deployment tooling
+.vercel/
+.netlify/
+.wrangler/
+.serverless/
+.aws-sam/
+.terraform/
+
+# Editors and operating systems
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.swp
+*.swo
+*~
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Logs, runtime state, and temporary files
+*.log
+*.pid
+*.pid.lock
+*.seed
+tmp/
+temp/
+*.tmp
+*.bak
