@@ -1,10 +1,10 @@
 {
-  "name": "@effect-kit/package-name",
+  "name": "@effect-kit/storage",
   "version": "0.0.0",
-  "description": "Replace this with a short description of your Effect package.",
-  "homepage": "https://github.com/effect-kit/template#readme",
+  "description": "Object storage services and workflows for Effect.",
+  "homepage": "https://github.com/effect-kit/storage#readme",
   "bugs": {
-    "url": "https://github.com/effect-kit/template/issues"
+    "url": "https://github.com/effect-kit/storage/issues"
   },
   "license": "Apache-2.0",
   "author": {
@@ -13,8 +13,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/effect-kit/template.git",
-    "directory": "packages/package-name"
+    "url": "git+https://github.com/effect-kit/storage.git",
+    "directory": "packages/storage"
   },
   "files": [
     "dist",

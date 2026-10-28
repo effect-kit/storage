@@ -1,10 +1,10 @@
 {
-  "name": "effect-kit-package-name-workspace",
+  "name": "effect-kit-storage-workspace",
   "private": true,
-  "description": "A starter for publishable Effect packages.",
-  "homepage": "https://github.com/effect-kit/template#readme",
+  "description": "Effect Kit Storage workspace.",
+  "homepage": "https://github.com/effect-kit/storage#readme",
   "bugs": {
-    "url": "https://github.com/effect-kit/template/issues"
+    "url": "https://github.com/effect-kit/storage/issues"
   },
   "license": "Apache-2.0",
   "author": {
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/effect-kit/template.git"
+    "url": "git+https://github.com/effect-kit/storage.git"
   },
   "type": "module",
   "scripts": {
@@ -25,12 +25,12 @@
     "lint": "oxlint --deny-warnings .",
     "lint:fix": "oxlint --fix .",
     "typecheck": "tsc --noEmit -p tsconfig.json && turbo run typecheck typecheck:test",
-    "test": "turbo run test",
+    "test": "pnpm test:tooling && turbo run test",
     "test:watch": "turbo run test:watch",
-    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "check": "pnpm format:check && pnpm catalog:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "ci:check": "pnpm check",
     "check:package": "turbo run check:package",
-    "test:artifacts": "echo \"Not implemented: add package-specific artifact checks\"",
+    "test:artifacts": "pnpm build && pnpm check:package && node scripts/artifacts/check.ts",
     "test:extended": "pnpm test:artifacts",
     "verify": "pnpm check && pnpm test:extended",
     "changeset": "changeset",
@@ -39,7 +39,9 @@
     "release:pack": "changeset pack --out-dir .artifacts/release",
     "release:check": "echo \"Not implemented: verify the supplied release archives\"",
     "release:smoke": "echo \"Not implemented: verify the published release\"",
-    "prepare": "lefthook install"
+    "prepare": "lefthook install",
+    "test:tooling": "node --test scripts/catalog/catalog.test.ts scripts/artifacts/archive-policy.test.ts",
+    "catalog:check": "node scripts/catalog/check.ts"
   },
   "dependencies": {
     "effect": "catalog:"

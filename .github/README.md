@@ -1,8 +1,7 @@
-# Workflows for a new package
+# Workflows for Effect Storage
 
-This template stays local. Copy its `.github/` directory into each new package repository
-along with the workspace files. The new repository runs these workflows after you push it;
-the template itself does not need a GitHub repository.
+This repository calls the shared Effect Kit workflows. Package scripts own checks and
+artifact behavior; workflow YAML selects when and where those commands run.
 
 Most files call reusable workflows from `effect-kit/.github@v1`. This keeps setup and
 release behavior consistent with Redis and emails. Each package owns its root scripts
@@ -10,21 +9,21 @@ and the tests those scripts run.
 
 ## What each file does
 
-| File                             | When it runs                                         | What it does                                                    | Customize                                             |
-| -------------------------------- | ---------------------------------------------------- | --------------------------------------------------------------- | ----------------------------------------------------- |
-| `workflows/ci.yml`               | PRs, pushes to `main`, merge queues, manual dispatch | Runs `pnpm ci:check` through shared CI                          | Branch, timeout, optional Bun and reports             |
-| `workflows/pr-title.yml`         | PR opened, edited, updated, reopened, or ready       | Checks Conventional Commit PR titles                            | Usually keep as supplied                              |
-| `workflows/changeset-status.yml` | The same PR activity                                 | Shows release impact in the job summary                         | Usually keep as supplied                              |
-| `workflows/release.yml`          | Manual dispatch from the default branch              | Versions or publishes packages; defaults to a dry run           | Implement release checks, then configure npm          |
-| `workflows/release-smoke.yml`    | Manual dispatch                                      | Verifies an already published release using its saved archive   | Implement `release:smoke`                             |
-| `workflows/extended.yml`         | Manual dispatch                                      | Runs fast and extended checks on pinned Node and latest Node 24 | Implement extended tests; adjust the matrix as needed |
-| `dependabot.yml`                 | Weekly                                               | Groups GitHub Actions dependency update PRs                     | Update cadence if needed                              |
-| `pull_request_template.md`       | When writing a PR                                    | Prompts for the change and verification                         | Add package-specific reviewer context                 |
+| File                             | When it runs                                         | What it does                                                    | Customize                                               |
+| -------------------------------- | ---------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------- |
+| `workflows/ci.yml`               | PRs, pushes to `main`, merge queues, manual dispatch | Runs `pnpm ci:check` through shared CI                          | Branch, timeout, optional Bun and reports               |
+| `workflows/pr-title.yml`         | PR opened, edited, updated, reopened, or ready       | Checks Conventional Commit PR titles                            | Usually keep as supplied                                |
+| `workflows/changeset-status.yml` | The same PR activity                                 | Shows release impact in the job summary                         | Usually keep as supplied                                |
+| `workflows/release.yml`          | Manual dispatch from the default branch              | Versions or publishes packages; defaults to a dry run           | Implement release checks, then configure npm            |
+| `workflows/release-smoke.yml`    | Manual dispatch                                      | Verifies an already published release using its saved archive   | Implement `release:smoke`                               |
+| `workflows/extended.yml`         | Manual dispatch                                      | Runs fast and extended checks on pinned Node and latest Node 24 | Extend real artifact tests; adjust the matrix as needed |
+| `dependabot.yml`                 | Weekly                                               | Groups GitHub Actions dependency update PRs                     | Update cadence if needed                                |
+| `pull_request_template.md`       | When writing a PR                                    | Prompts for the change and verification                         | Add package-specific reviewer context                   |
 
-CI, PR metadata checks, and package builds are wired up. `test:artifacts`, `release:check`,
-and `release:smoke` currently print **Not implemented**. Extended tests therefore run
-the fast gate plus a placeholder until you add real suites. A green placeholder is not
-evidence that packaging or published packages have been verified.
+CI, PR metadata checks, and package builds are wired up. `test:artifacts` builds,
+packs and checks isolated production consumers. `release:check` and `release:smoke`
+remain unimplemented placeholders; artifact tests do not verify exact release
+plans, publishing permission or registry provenance.
 
 ## CI: keep the automatic checks fast
 
@@ -141,8 +140,8 @@ the shared workflow retains them for thirty days.
 `ci:check`, then runs `test:extended`. The empty Node override reads `.node-version`;
 the other job uses `24.x`. This avoids repeating the pinned patch version in YAML.
 
-Replace the `test:artifacts` echo with real archive and consumer tests. Then extend
-`test:extended` with applicable suites, for example:
+`test:artifacts` now performs real archive and consumer checks. Extend
+`test:extended` with applicable suites as they are implemented, for example:
 
 ```json
 {
