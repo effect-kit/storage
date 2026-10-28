@@ -552,76 +552,186 @@
       "name": "Memory/testing",
       "transport": "Effect state and streams",
       "implementationPhase": 2,
-      "implementation": "planned",
-      "runtimes": ["node"],
-      "sources": ["https://effect.website/docs/v4/"],
+      "implementation": "implemented",
+      "runtimes": ["node-24.22.0"],
+      "sources": ["https://effect.website/docs/v4/", "docs/testing.md", "docs/evidence/phase-2.md"],
       "notes": [
-        "Reference semantics, bounded storage and deterministic faults; no durability claim."
+        "Process-local reference storage with configurable object, total, pending and read byte quotas.",
+        "Atomic conditional publication; copied input buffers and metadata; scoped single-use downloads.",
+        "Current pinned references only; no retained history, native signer, checksums or durability.",
+        "Process-local instance/query-bound cursors; listing is not a snapshot.",
+        "Only the listed Node runtime was executed; other runtimes remain unqualified."
       ],
       "operations": [
         {
           "featureId": "OBJ-01",
           "operation": "put",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "default-memory",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "verified",
+          "constraints": [
+            "Memory reference semantics; default quotas documented in docs/testing.md.",
+            "No history, content digests, cross-process state or durability."
+          ],
+          "implementations": [
+            "packages/storage/src/testing/memory.ts",
+            "packages/storage/src/testing/memory-upload.ts"
+          ],
+          "tests": [
+            "packages/storage/test/conformance.test.ts",
+            "packages/storage/test/memory.test.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "runtime",
+              "date": "2026-10-28",
+              "source": "docs/evidence/phase-2.md",
+              "sdkVersion": "effect@4.0.6",
+              "apiVersion": null,
+              "runtime": "node-24.22.0",
+              "configuration": "default-memory",
+              "testId": "packages/storage/test/conformance.test.ts",
+              "limitations": [
+                "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
+              ]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-02",
           "operation": "get",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "default-memory",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "verified",
+          "constraints": [
+            "Memory reference semantics; default quotas documented in docs/testing.md.",
+            "No history, content digests, cross-process state or durability."
+          ],
+          "implementations": ["packages/storage/src/testing/memory.ts"],
+          "tests": [
+            "packages/storage/test/conformance.test.ts",
+            "packages/storage/test/memory.test.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "runtime",
+              "date": "2026-10-28",
+              "source": "docs/evidence/phase-2.md",
+              "sdkVersion": "effect@4.0.6",
+              "apiVersion": null,
+              "runtime": "node-24.22.0",
+              "configuration": "default-memory",
+              "testId": "packages/storage/test/conformance.test.ts",
+              "limitations": [
+                "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
+              ]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-03",
           "operation": "head",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "default-memory",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "verified",
+          "constraints": [
+            "Memory reference semantics; default quotas documented in docs/testing.md.",
+            "No history, content digests, cross-process state or durability."
+          ],
+          "implementations": ["packages/storage/src/testing/memory.ts"],
+          "tests": [
+            "packages/storage/test/conformance.test.ts",
+            "packages/storage/test/memory.test.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "runtime",
+              "date": "2026-10-28",
+              "source": "docs/evidence/phase-2.md",
+              "sdkVersion": "effect@4.0.6",
+              "apiVersion": null,
+              "runtime": "node-24.22.0",
+              "configuration": "default-memory",
+              "testId": "packages/storage/test/conformance.test.ts",
+              "limitations": [
+                "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
+              ]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-04",
           "operation": "delete",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "default-memory",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "verified",
+          "constraints": [
+            "Memory reference semantics; default quotas documented in docs/testing.md.",
+            "No history, content digests, cross-process state or durability."
+          ],
+          "implementations": ["packages/storage/src/testing/memory.ts"],
+          "tests": [
+            "packages/storage/test/conformance.test.ts",
+            "packages/storage/test/memory.test.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "runtime",
+              "date": "2026-10-28",
+              "source": "docs/evidence/phase-2.md",
+              "sdkVersion": "effect@4.0.6",
+              "apiVersion": null,
+              "runtime": "node-24.22.0",
+              "configuration": "default-memory",
+              "testId": "packages/storage/test/conformance.test.ts",
+              "limitations": [
+                "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
+              ]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-05",
           "operation": "listPage",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "default-memory",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "verified",
+          "constraints": [
+            "Memory reference semantics; default quotas documented in docs/testing.md.",
+            "No history, content digests, cross-process state or durability."
+          ],
+          "implementations": [
+            "packages/storage/src/testing/memory.ts",
+            "packages/storage/src/testing/memory-list.ts"
+          ],
+          "tests": [
+            "packages/storage/test/conformance.test.ts",
+            "packages/storage/test/memory.test.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "runtime",
+              "date": "2026-10-28",
+              "source": "docs/evidence/phase-2.md",
+              "sdkVersion": "effect@4.0.6",
+              "apiVersion": null,
+              "runtime": "node-24.22.0",
+              "configuration": "default-memory",
+              "testId": "packages/storage/test/conformance.test.ts",
+              "limitations": [
+                "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
+              ]
+            }
+          ],
           "deferral": null
         }
       ]

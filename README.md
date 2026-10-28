@@ -2,9 +2,10 @@
 
 Effect-native object storage for applications, workers and upload backends.
 
-The package is under development. The current foundation exports schemas for opaque
-object keys and JSON-safe byte counts. Provider adapters, object operations and
-transfer workflows are planned; no provider is advertised as qualified yet.
+The package is under development. The portable Storage service provides uploads,
+scoped downloads, metadata, deletion and pagination. The `/testing` entry point
+provides memory storage, fault scripts and a public adapter conformance suite.
+Hosted adapters and managed transfers follow in later phases.
 
 ## Package
 
@@ -53,7 +54,8 @@ Local investigations stay in ignored `research/` and are never required by CI.
 - [Feature catalog](docs/features.json): 47 stable feature IDs and delivery ownership.
 - [Provider catalog](docs/providers.json): 16 distinct targets, configuration-specific operations and evidence.
 - [Catalog conventions](docs/catalogs.md)
-- [Phase 1 evidence](docs/evidence/phase-1.md)
+- [Portable API](docs/core.md) and [memory/testing tools](docs/testing.md)
+- [Phase 1 evidence](docs/evidence/phase-1.md) and [phase 2 evidence](docs/evidence/phase-2.md)
 
 A documented native capability, local fixture result and real-provider acceptance are
 different evidence. Unknown support is never treated as a pass.

@@ -12,6 +12,10 @@ const Manifest = Schema.Struct({
       types: Schema.Literal("./dist/index.d.ts"),
       import: Schema.Literal("./dist/index.js"),
     }),
+    "./testing": Schema.Struct({
+      types: Schema.Literal("./dist/testing.d.ts"),
+      import: Schema.Literal("./dist/testing.js"),
+    }),
     "./package.json": Schema.Literal("./package.json"),
   }),
 });
@@ -38,6 +42,8 @@ export function checkArchive(manifestInput: unknown, entries: readonly string[])
     "LICENSE",
     "dist/index.js",
     "dist/index.d.ts",
+    "dist/testing.js",
+    "dist/testing.d.ts",
   ]) {
     if (!entries.includes(`package/${required}`))
       throw new Error(`Missing packed file: ${required}`);

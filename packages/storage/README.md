@@ -2,50 +2,60 @@
 
 Object storage services and workflows for Effect.
 
-Development status: foundation only. This package currently exports `ObjectKey` and
-`ObjectSize` schemas. The portable Storage service, providers, transfers and upload
-sessions are planned and are not available yet.
+Development status: the portable API and memory reference are implemented. Hosted
+adapters, managed transfers and durable upload sessions follow in later phases.
+Published-package installation instructions will accompany the first release.
 
-## Use the foundation
+## Use storage
 
-Requires the workspace's Node 24.22+ baseline and Effect 4. Published-package
-installation instructions will be finalized with the first release.
+Requires the workspace's Node 24.22+ baseline and Effect 4.
 
 ```ts
-import { Effect, Schema } from "effect";
+import { Effect } from "effect";
 
-import { ObjectKey, ObjectSize } from "@effect-kit/storage";
+import { Storage } from "@effect-kit/storage";
+import { MemoryStorage } from "@effect-kit/storage/testing";
 
-const decodeMetadata = Schema.decodeUnknownEffect(
-  Schema.Struct({ key: ObjectKey, size: ObjectSize }),
-);
+const program = Effect.gen(function* () {
+  const storage = yield* Storage;
+  yield* storage.put({
+    key: "notes/example.txt",
+    body: new TextEncoder().encode("hello"),
+    contentType: "text/plain",
+    condition: { _tag: "CreateOnly" },
+  });
 
-const program = decodeMetadata({
-  key: "invoices/example.pdf",
-  size: 42,
-});
+  return yield* Storage.getText({ key: "notes/example.txt", maxBytes: 1024 });
+}).pipe(Effect.provide(MemoryStorage.layer()));
 
 // Run at your application's runtime boundary.
 await Effect.runPromise(program);
 ```
 
-Keys are nonempty opaque strings. The schema preserves slashes, percent sequences
-and Unicode without normalization. It does not establish filesystem confinement,
-authorization or provider-specific key/header limits.
+Storage supplies put, scoped get, head, delete and listPage. Helpers add exists,
+explicitly bounded byte/text collection, lazy listing and ordered per-key delete
+results. Upload streams preserve caller error/environment types. Read bodies are
+single-use and tied to their acquisition scope. Signing, public URLs and native
+copy use separate capability services.
 
-Sizes are nonnegative safe integer byte counts, including zero. Fractions, infinity,
-negative values and unsafe integers fail decoding. Native versions/generations will
-remain opaque strings; a byte count is never a native version identifier.
+Keys preserve slashes, percent sequences and Unicode normalization; empty keys,
+NUL and malformed Unicode fail decoding. Sizes are nonnegative safe integers;
+native versions/generations remain opaque strings. Keys establish neither
+filesystem confinement nor authorization.
 
-## Package boundaries
+## Package boundaries and evidence
 
-Core imports depend only on Effect. Optional provider SDKs, database integrations,
-HTTP helpers and browser clients will be added under separate entry points alongside
-their implementations and tests. The root export does not load provider clients.
+Core and `/testing` depend only on Effect. Provider SDKs, database integrations,
+HTTP helpers and browser clients will use separate entry points alongside their
+implementations and tests. Core does not load provider clients.
 
-See the repository [architecture decisions](../../architecture/README.md),
-[feature catalog](../../docs/features.json) and [support evidence](../../docs/evidence/phase-1.md).
-No hosted provider support is currently qualified.
+See the [portable API](../../docs/core.md), [testing tools](../../docs/testing.md),
+[architecture decisions](../../architecture/README.md),
+[feature catalog](../../docs/features.json) and [phase 2 evidence](../../docs/evidence/phase-2.md).
+Memory is process-local, with configurable quotas and current references rather
+than retained history. It cannot qualify cloud races, checksums, durability or
+native cancellation. Its five primitives have Node 24.22.0 runtime evidence;
+no hosted provider support is currently qualified.
 
 ## License
 

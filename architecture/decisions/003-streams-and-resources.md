@@ -9,7 +9,9 @@ source error E and required environment R in their result types; adapters must
 not erase them while converting to Node/Web streams.
 
 Get acquires a scoped response containing metadata and a body from the same
-request. Consumers read inside that scope. Scope finalization disposes partially
+request. Consumers read inside that scope. Storage.make also rejects a second
+materialization and reading after the original scope closes. Adapters remain
+responsible for native resource finalizers. Scope finalization disposes partially
 consumed/unread bodies and aborts outstanding native work where supported.
 Do not obtain metadata with a racing head request.
 
@@ -41,3 +43,7 @@ Native SDK streams require resource bridges at adapter boundaries.
 This establishes the ownership contract, not production memory bounds or every
 SDK's cancellation semantics. Measure buffers/handles and test native source
 failure/cleanup in the implementing phase before advertising those guarantees.
+
+[Phase 2 evidence](../../docs/evidence/phase-2.md) covers source E/R, scoped and
+single-use bodies, partial reads, memory reservations and bounded collection.
+The memory limits describe logical retained bytes, not process RSS.

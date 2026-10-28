@@ -12,6 +12,7 @@ const manifest = {
   peerDependencies: { effect: "^4.0.6" },
   exports: {
     ".": { types: "./dist/index.d.ts", import: "./dist/index.js" },
+    "./testing": { types: "./dist/testing.d.ts", import: "./dist/testing.js" },
     "./package.json": "./package.json",
   },
 };
@@ -21,6 +22,8 @@ const entries = [
   "package/LICENSE",
   "package/dist/index.js",
   "package/dist/index.d.ts",
+  "package/dist/testing.js",
+  "package/dist/testing.d.ts",
 ];
 
 test("research, source files, secrets and traversal cannot enter the archive", () => {
@@ -37,7 +40,13 @@ test("research, source files, secrets and traversal cannot enter the archive", (
 });
 
 test("missing runtime/declarations/license and development exports fail", () => {
-  for (const required of ["LICENSE", "dist/index.js", "dist/index.d.ts"]) {
+  for (const required of [
+    "LICENSE",
+    "dist/index.js",
+    "dist/index.d.ts",
+    "dist/testing.js",
+    "dist/testing.d.ts",
+  ]) {
     assert.throws(() =>
       checkArchive(
         manifest,

@@ -1,6 +1,6 @@
 # 002 — Portable objects, identity, capabilities and cursors
 
-Date: 2026-10-28. Decision: accepted; service implementation belongs to phase 2.
+Date: 2026-10-28. Decision: accepted; portable service implemented in phase 2.
 
 ## Decision
 
@@ -10,7 +10,7 @@ listing and per-object bulk outcomes. Separate services provide signing, native
 copy, multipart, resumable protocols, versions/governance and administration.
 Applications declare the capabilities they need through ordinary Effect services.
 
-ObjectKey is a nonempty opaque string. Core never collapses slashes, changes
+ObjectKey is a nonempty, well-formed Unicode string without NUL. Core never collapses slashes, changes
 Unicode normalization, decodes percent sequences or applies OS path resolution.
 Adapters validate their accepted key/metadata/header domains; an opaque key is
 neither authorization nor a safe filesystem path.
@@ -48,3 +48,7 @@ Capabilities describe operations, native constraints, configuration and runtime.
 GCS offsets, Azure blocks, S3 parts and tus offsets remain distinct low-level
 protocols with shared higher-level workflows. TypeScript interfaces alone do not
 complete a feature; dynamic selection needs a typed unsupported outcome.
+
+The [portable API](../../docs/core.md) specifies implemented conditions, reference
+variants, codecs and helpers. Advanced protocol/lifecycle interfaces establish
+boundaries; they do not imply implemented native capabilities.

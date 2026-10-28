@@ -3,7 +3,8 @@
   "compilerOptions": {
     "customConditions": ["workspace-source"],
     "rootDir": "src",
-    "types": []
+    "types": [],
+    "lib": ["ES2024", "DOM", "DOM.Iterable"]
   },
   "include": ["src/**/*.ts"]
 }

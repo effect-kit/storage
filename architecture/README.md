@@ -1,7 +1,7 @@
 # Storage architecture
 
-Status: phase 1 foundation. Only ObjectKey/ObjectSize schemas are implemented.
-These decisions guide the portable service and adapters in subsequent phases.
+Status: phase 2 portable API, memory reference and public conformance implemented.
+These decisions guide native adapters and transfer workflows in subsequent phases.
 
 | Decision                                                                        | Responsibility                                              |
 | ------------------------------------------------------------------------------- | ----------------------------------------------------------- |
@@ -15,7 +15,8 @@ These decisions guide the portable service and adapters in subsequent phases.
 Use the [catalogs](../docs/catalogs.md) to track delivery. Each feature has a target
 and implementation phase; planned contracts and documented vendor support are not
 completed implementations. [Phase 1 evidence](../docs/evidence/phase-1.md) records
-what the local probes actually establish.
+what the local probes actually establish. [Phase 2 evidence](../docs/evidence/phase-2.md)
+records core/memory behavior, types and packed custom-adapter checks.
 
 Create modules/exports when their behavior exists. No production code, CI check or
 required documentation input may depend on ignored research.

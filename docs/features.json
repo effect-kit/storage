@@ -7,12 +7,32 @@
       "title": "Upload",
       "target": "Bytes, byte streams, known/unknown lengths, empty objects, metadata, overwrite behavior",
       "completionPhase": 4,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "in-progress",
+      "specifications": ["docs/core.md", "docs/testing.md"],
+      "implementations": [
+        "packages/storage/src/requests.ts",
+        "packages/storage/src/testing/memory-upload.ts"
+      ],
+      "tests": [
+        "packages/storage/test/memory.test.ts",
+        "packages/storage/test/conformance.test.ts"
+      ],
+      "examples": ["packages/storage/README.md"],
+      "evidence": [
+        {
+          "kind": "runtime",
+          "date": "2026-10-28",
+          "source": "docs/evidence/phase-2.md",
+          "sdkVersion": "effect@4.0.6",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "portable-memory",
+          "testId": "packages/storage/test/conformance.test.ts",
+          "limitations": [
+            "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
+          ]
+        }
+      ],
       "deferral": null
     },
     {
@@ -20,12 +40,29 @@
       "title": "Download",
       "target": "Scoped byte streams, bounded collection helpers, metadata, cancellation, response disposal",
       "completionPhase": 4,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "in-progress",
+      "specifications": ["docs/core.md", "docs/testing.md"],
+      "implementations": [
+        "packages/storage/src/storage.ts",
+        "packages/storage/src/testing/memory.ts"
+      ],
+      "tests": ["packages/storage/test/storage.test.ts", "packages/storage/test/memory.test.ts"],
+      "examples": ["packages/storage/README.md"],
+      "evidence": [
+        {
+          "kind": "runtime",
+          "date": "2026-10-28",
+          "source": "docs/evidence/phase-2.md",
+          "sdkVersion": "effect@4.0.6",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "portable-memory",
+          "testId": "packages/storage/test/memory.test.ts",
+          "limitations": [
+            "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
+          ]
+        }
+      ],
       "deferral": null
     },
     {
@@ -33,12 +70,33 @@
       "title": "Metadata",
       "target": "Head, existence helper, MIME/cache/disposition fields, custom metadata, explicit update semantics",
       "completionPhase": 10,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "in-progress",
+      "specifications": ["docs/core.md", "docs/testing.md"],
+      "implementations": [
+        "packages/storage/src/object.ts",
+        "packages/storage/src/storage.ts",
+        "packages/storage/src/testing/memory.ts"
+      ],
+      "tests": [
+        "packages/storage/test/models.test.ts",
+        "packages/storage/test/conformance.test.ts"
+      ],
+      "examples": ["packages/storage/README.md"],
+      "evidence": [
+        {
+          "kind": "runtime",
+          "date": "2026-10-28",
+          "source": "docs/evidence/phase-2.md",
+          "sdkVersion": "effect@4.0.6",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "portable-memory",
+          "testId": "packages/storage/test/conformance.test.ts",
+          "limitations": [
+            "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
+          ]
+        }
+      ],
       "deferral": null
     },
     {
@@ -46,12 +104,32 @@
       "title": "Delete",
       "target": "Idempotent missing-delete contract, conditional/version-specific deletion, per-key bulk results",
       "completionPhase": 4,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "in-progress",
+      "specifications": ["docs/core.md", "docs/testing.md"],
+      "implementations": [
+        "packages/storage/src/storage.ts",
+        "packages/storage/src/testing/memory.ts"
+      ],
+      "tests": [
+        "packages/storage/test/faults.test.ts",
+        "packages/storage/test/conformance.test.ts"
+      ],
+      "examples": ["packages/storage/README.md"],
+      "evidence": [
+        {
+          "kind": "runtime",
+          "date": "2026-10-28",
+          "source": "docs/evidence/phase-2.md",
+          "sdkVersion": "effect@4.0.6",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "portable-memory",
+          "testId": "packages/storage/test/conformance.test.ts",
+          "limitations": [
+            "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
+          ]
+        }
+      ],
       "deferral": null
     },
     {
@@ -59,12 +137,32 @@
       "title": "List",
       "target": "Prefix, delimiter/common prefixes, pages and lazy streams, limits, opaque cursors, cancellation",
       "completionPhase": 2,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "implemented",
+      "specifications": ["docs/core.md", "docs/testing.md"],
+      "implementations": [
+        "packages/storage/src/storage.ts",
+        "packages/storage/src/testing/memory-list.ts"
+      ],
+      "tests": [
+        "packages/storage/test/storage.test.ts",
+        "packages/storage/test/conformance.test.ts"
+      ],
+      "examples": ["packages/storage/README.md"],
+      "evidence": [
+        {
+          "kind": "runtime",
+          "date": "2026-10-28",
+          "source": "docs/evidence/phase-2.md",
+          "sdkVersion": "effect@4.0.6",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "portable-memory",
+          "testId": "packages/storage/test/conformance.test.ts",
+          "limitations": [
+            "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
+          ]
+        }
+      ],
       "deferral": null
     },
     {
@@ -85,12 +183,30 @@
       "title": "Conditions",
       "target": "Create-only, match-current, not-modified reads, source/destination conditions where supported",
       "completionPhase": 3,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "in-progress",
+      "specifications": ["docs/core.md", "docs/testing.md"],
+      "implementations": [
+        "packages/storage/src/requests.ts",
+        "packages/storage/src/testing/memory-upload.ts",
+        "packages/storage/src/testing/memory.ts"
+      ],
+      "tests": ["packages/storage/test/memory.test.ts", "packages/storage/test/models.test.ts"],
+      "examples": ["packages/storage/README.md"],
+      "evidence": [
+        {
+          "kind": "runtime",
+          "date": "2026-10-28",
+          "source": "docs/evidence/phase-2.md",
+          "sdkVersion": "effect@4.0.6",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "portable-memory",
+          "testId": "packages/storage/test/models.test.ts",
+          "limitations": [
+            "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
+          ]
+        }
+      ],
       "deferral": null
     },
     {
@@ -98,12 +214,32 @@
       "title": "Ranges",
       "target": "Single/suffix/open-ended byte ranges, response bounds, unsatisfiable ranges, safe resume",
       "completionPhase": 4,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "in-progress",
+      "specifications": ["docs/core.md", "docs/testing.md"],
+      "implementations": [
+        "packages/storage/src/ranges.ts",
+        "packages/storage/src/testing/memory.ts"
+      ],
+      "tests": [
+        "packages/storage/test/models.test.ts",
+        "packages/storage/test/conformance.test.ts"
+      ],
+      "examples": ["packages/storage/README.md"],
+      "evidence": [
+        {
+          "kind": "runtime",
+          "date": "2026-10-28",
+          "source": "docs/evidence/phase-2.md",
+          "sdkVersion": "effect@4.0.6",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "portable-memory",
+          "testId": "packages/storage/test/conformance.test.ts",
+          "limitations": [
+            "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
+          ]
+        }
+      ],
       "deferral": null
     },
     {
@@ -111,12 +247,33 @@
       "title": "Identity",
       "target": "Opaque ETags, native version IDs/generations, object references, canonical key handling",
       "completionPhase": 2,
-      "status": "in-progress",
-      "specifications": ["architecture/decisions/002-object-contracts.md"],
-      "implementations": ["packages/storage/src/object.ts"],
-      "tests": ["packages/storage/test/object.test.ts"],
+      "status": "implemented",
+      "specifications": ["docs/core.md", "docs/testing.md"],
+      "implementations": [
+        "packages/storage/src/object.ts",
+        "packages/storage/src/testing/memory-state.ts"
+      ],
+      "tests": [
+        "packages/storage/test/object.test.ts",
+        "packages/storage/test/models.test.ts",
+        "packages/storage/test/memory.test.ts"
+      ],
       "examples": ["packages/storage/README.md"],
-      "evidence": [],
+      "evidence": [
+        {
+          "kind": "runtime",
+          "date": "2026-10-28",
+          "source": "docs/evidence/phase-2.md",
+          "sdkVersion": "effect@4.0.6",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "portable-memory",
+          "testId": "packages/storage/test/memory.test.ts",
+          "limitations": [
+            "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
+          ]
+        }
+      ],
       "deferral": null
     },
     {
@@ -254,12 +411,30 @@
       "title": "Validation",
       "target": "Byte limits, metadata rules, declared/sniffed MIME distinction, source length verification",
       "completionPhase": 4,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "in-progress",
+      "specifications": ["docs/core.md", "docs/testing.md"],
+      "implementations": [
+        "packages/storage/src/object.ts",
+        "packages/storage/src/requests.ts",
+        "packages/storage/src/testing/memory-upload.ts"
+      ],
+      "tests": ["packages/storage/test/models.test.ts", "packages/storage/test/memory.test.ts"],
+      "examples": ["packages/storage/README.md"],
+      "evidence": [
+        {
+          "kind": "runtime",
+          "date": "2026-10-28",
+          "source": "docs/evidence/phase-2.md",
+          "sdkVersion": "effect@4.0.6",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "portable-memory",
+          "testId": "packages/storage/test/memory.test.ts",
+          "limitations": [
+            "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
+          ]
+        }
+      ],
       "deferral": null
     },
     {
@@ -566,12 +741,50 @@
       "title": "Custom adapters",
       "target": "Public service constructors, capability contracts, provider helpers, conformance suite",
       "completionPhase": 2,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "implemented",
+      "specifications": ["docs/core.md", "docs/testing.md"],
+      "implementations": [
+        "packages/storage/src/storage.ts",
+        "packages/storage/src/capabilities.ts",
+        "packages/storage/src/testing/conformance.ts"
+      ],
+      "tests": [
+        "packages/storage/test/public-types.ts",
+        "packages/storage/test/conformance.test.ts",
+        "packages/storage/test/consumers/custom-adapter.ts"
+      ],
+      "examples": [
+        "packages/storage/README.md",
+        "packages/storage/test/consumers/custom-adapter.ts"
+      ],
+      "evidence": [
+        {
+          "kind": "runtime",
+          "date": "2026-10-28",
+          "source": "docs/evidence/phase-2.md",
+          "sdkVersion": "effect@4.0.6",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "portable-memory",
+          "testId": "packages/storage/test/consumers/custom-adapter.ts",
+          "limitations": [
+            "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
+          ]
+        },
+        {
+          "kind": "artifact",
+          "date": "2026-10-28",
+          "source": "docs/evidence/phase-2.md",
+          "sdkVersion": "effect@4.0.6",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "isolated-packed-consumer",
+          "testId": "scripts/artifacts/check.ts",
+          "limitations": [
+            "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
+          ]
+        }
+      ],
       "deferral": null
     },
     {
@@ -579,12 +792,34 @@
       "title": "Testing",
       "target": "In-memory Layer, fault injection, deterministic clock, fixture ownership, runtime/provider suites",
       "completionPhase": 2,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "implemented",
+      "specifications": ["docs/core.md", "docs/testing.md"],
+      "implementations": [
+        "packages/storage/src/testing/memory.ts",
+        "packages/storage/src/testing/faults.ts",
+        "packages/storage/src/testing/conformance.ts"
+      ],
+      "tests": [
+        "packages/storage/test/memory.test.ts",
+        "packages/storage/test/faults.test.ts",
+        "packages/storage/test/conformance.test.ts"
+      ],
+      "examples": ["packages/storage/README.md"],
+      "evidence": [
+        {
+          "kind": "runtime",
+          "date": "2026-10-28",
+          "source": "docs/evidence/phase-2.md",
+          "sdkVersion": "effect@4.0.6",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "portable-memory",
+          "testId": "packages/storage/test/conformance.test.ts",
+          "limitations": [
+            "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
+          ]
+        }
+      ],
       "deferral": null
     },
     {

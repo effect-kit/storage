@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { mkdtemp, readFile, rm, writeFile, mkdir, readdir } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile, mkdir, readdir, copyFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
@@ -77,36 +77,12 @@ try {
     ],
     temporary,
   );
-  await writeFile(
-    join(temporary, "consumer.mjs"),
-    [
-      'import assert from "node:assert/strict";',
-      'import { createRequire } from "node:module";',
-      'import { Schema } from "effect";',
-      'import { ObjectKey, ObjectSize } from "@effect-kit/storage";',
-      'assert.equal(Schema.decodeUnknownSync(ObjectKey)("a//b"), "a//b");',
-      "assert.equal(Schema.decodeUnknownSync(ObjectSize)(0), 0);",
-      "assert.throws(() => Schema.decodeUnknownSync(ObjectSize)(Number.MAX_SAFE_INTEGER + 1));",
-      "const require = createRequire(import.meta.url);",
-      'for (const peer of ["@aws-sdk/client-s3", "@google-cloud/storage", "@azure/storage-blob", "@effect/sql-pg", "@vercel/blob"]) {',
-      "  assert.throws(() => require.resolve(peer));",
-      "}",
-    ].join("\n"),
-  );
-  run(process.execPath, ["consumer.mjs"], temporary);
-
-  await writeFile(
-    join(temporary, "consumer.ts"),
-    [
-      'import { Schema } from "effect";',
-      'import { ObjectKey, ObjectSize } from "@effect-kit/storage";',
-      'const key: ObjectKey = Schema.decodeUnknownSync(ObjectKey)("a//b");',
-      "const size: ObjectSize = Schema.decodeUnknownSync(ObjectSize)(42);",
-      "// @ts-expect-error byte counts are numbers, not strings",
-      'const invalid: ObjectSize = "42";',
-      "void [key, size, invalid];",
-    ].join("\n"),
-  );
+  const fixtures = resolve("packages/storage/test/consumers");
+  await Promise.all([
+    copyFile(join(fixtures, "runtime.mjs"), join(temporary, "consumer.mjs")),
+    copyFile(join(fixtures, "types.ts"), join(temporary, "consumer.ts")),
+    copyFile(join(fixtures, "custom-adapter.ts"), join(temporary, "custom-adapter.ts")),
+  ]);
   await Promise.all(
     ["NodeNext", "Bundler"].map(async (module) => {
       await writeFile(
@@ -121,7 +97,7 @@ try {
             types: [],
             lib: ["ES2024", "DOM", "DOM.Iterable"],
           },
-          include: ["consumer.ts"],
+          include: ["consumer.ts", "custom-adapter.ts"],
         }),
       );
       run(
@@ -131,6 +107,20 @@ try {
       );
     }),
   );
+  run(
+    process.execPath,
+    [
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "tsconfig.NodeNext.json",
+      "--noEmit",
+      "false",
+      "--outDir",
+      "build",
+    ],
+    temporary,
+  );
+  run(process.execPath, ["consumer.mjs"], temporary);
   await writeFile(
     resolve(".artifacts/artifact-check.json"),
     `${JSON.stringify(
@@ -144,6 +134,8 @@ try {
           "SDK-free isolated runtime",
           "NodeNext declarations",
           "Bundler/browser declarations",
+          "memory/fault/conformance imports",
+          "public custom adapter and optional capability",
         ],
       },
       null,
