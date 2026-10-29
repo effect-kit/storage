@@ -262,3 +262,18 @@ This workflow has not been dispatched as part of local development. Local Darwin
 runtime results do not establish its Ubuntu/remote success. Chromium installation
 and alternate engines stay outside automatic PR CI. See [runtime commands and
 limits](../docs/runtimes.md); real provider acceptance remains in its own lanes.
+
+## Phase 6 local provider acceptance
+
+`workflows/phase-6-local.yml` manually runs Node/Bun filesystem acceptance on macOS
+and Ubuntu and an isolated native R2 Worker on Ubuntu. It retains only the selected
+safe JSON reports for fourteen days. The local filesystem suite uses real temporary
+roots, independent writers and killed subprocesses. The Worker suite uses pinned
+Miniflare/workerd, an owned disposable bucket and disabled outbound network; no
+Cloudflare credentials or remote binding are supplied. Workerd's verified binary
+installer is explicitly allowed in pnpm's build policy for this development tool.
+
+Local Darwin results do not certify those remote Ubuntu runners. This workflow was
+linted locally but not dispatched. Windows, hosted R2 and physical power-cut tests
+remain separate qualification work. The local R2 reset fixture must never be deployed
+against application data; the application example is a separate read-only Worker.
