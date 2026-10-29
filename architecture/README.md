@@ -1,6 +1,6 @@
 # Storage architecture
 
-Status: portable API, memory/conformance and phase 3 S3 implementation delivered;
+Status: portable API, memory/conformance S3 and in-process managed transfers delivered;
 hosted AWS acceptance remains pending.
 These decisions guide native adapters and transfer workflows in subsequent phases.
 
@@ -24,3 +24,6 @@ required documentation input may depend on ignored research.
 
 [Phase 3 evidence](../docs/evidence/phase-3.md) separates the implemented S3 adapter,
 controlled HTTP results, owned RustFS acceptance and the open AWS hosted gate.
+
+[007 — Managed transfer ownership](decisions/007-managed-transfers.md) records shared
+admission, protocol attempts, verified copy/move, uncertainty and observer boundaries.

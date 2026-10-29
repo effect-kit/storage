@@ -26,6 +26,9 @@ const manifest = {
     "./package.json": "./package.json",
     "./s3": { types: "./dist/s3.d.ts", import: "./dist/s3.js" },
     "./s3/signing": { types: "./dist/s3/signing.d.ts", import: "./dist/s3/signing.js" },
+    "./transfers": { types: "./dist/transfers.d.ts", import: "./dist/transfers.js" },
+    "./transfers/node": { types: "./dist/transfers/node.d.ts", import: "./dist/transfers/node.js" },
+    "./s3/transfers": { types: "./dist/s3/transfers.d.ts", import: "./dist/s3/transfers.js" },
     "./s3/post": { types: "./dist/s3/post.d.ts", import: "./dist/s3/post.js" },
   },
 };
@@ -43,6 +46,12 @@ const entries = [
   "package/dist/s3/signing.d.ts",
   "package/dist/s3/post.js",
   "package/dist/s3/post.d.ts",
+  "package/dist/transfers.js",
+  "package/dist/transfers.d.ts",
+  "package/dist/transfers/node.js",
+  "package/dist/transfers/node.d.ts",
+  "package/dist/s3/transfers.js",
+  "package/dist/s3/transfers.d.ts",
 ];
 
 test("research, source files, secrets and traversal cannot enter the archive", () => {
@@ -71,6 +80,12 @@ test("missing runtime/declarations/license and development exports fail", () => 
     "dist/s3/signing.d.ts",
     "dist/s3/post.js",
     "dist/s3/post.d.ts",
+    "dist/transfers.js",
+    "dist/transfers.d.ts",
+    "dist/transfers/node.js",
+    "dist/transfers/node.d.ts",
+    "dist/s3/transfers.js",
+    "dist/s3/transfers.d.ts",
   ]) {
     assert.throws(() =>
       checkArchive(

@@ -1,4 +1,4 @@
-import { Effect, Predicate } from "effect";
+import { Clock, Effect, Predicate } from "effect";
 
 import { StorageError, storageError } from "../errors.js";
 import type { StorageReason } from "../errors.js";
@@ -23,7 +23,12 @@ const knownReasons: Readonly<Record<string, StorageReason>> = {
   NoSuchUpload: { _tag: "InvalidSession" },
 };
 
-export function mapS3Error(cause: unknown, operation: string, mutation: boolean): StorageError {
+export function mapS3Error(
+  cause: unknown,
+  operation: string,
+  mutation: boolean,
+  nowMillis?: number,
+): StorageError {
   if (cause instanceof StorageError) return cause;
   const failure = Predicate.isObject(cause) ? cause : {};
   const name = typeof failure.name === "string" ? failure.name : "";
@@ -67,6 +72,21 @@ export function mapS3Error(cause: unknown, operation: string, mutation: boolean)
     }
   }
 
+  if (reason._tag === "Throttled") {
+    const response = Predicate.isObject(failure.$response) ? failure.$response : {};
+    const headers = Predicate.isObject(response.headers) ? response.headers : {};
+    const retryAfter = headers["retry-after"];
+    if (typeof retryAfter === "string") {
+      const millis = /^\d+(?:\.\d+)?$/u.test(retryAfter)
+        ? Number(retryAfter) * 1000
+        : nowMillis === undefined
+          ? Number.NaN
+          : Date.parse(retryAfter) - nowMillis;
+      if (Number.isFinite(millis) && millis <= Number.MAX_SAFE_INTEGER)
+        reason = { _tag: "Throttled", retryAfterMillis: Math.max(0, Math.ceil(millis)) };
+    }
+  }
+
   // Generic 404s can mean a missing bucket or hidden authority; only named object errors prove absence.
   return new StorageError({
     operation,
@@ -74,7 +94,8 @@ export function mapS3Error(cause: unknown, operation: string, mutation: boolean)
     reason,
     requestId,
     mutationOutcome: mutation
-      ? status !== undefined && status >= 400 && status < 500 && status !== 408
+      ? (reason._tag === "Throttled" && status === 503) ||
+        (status !== undefined && status >= 400 && status < 500 && status !== 408)
         ? "rejected"
         : "unknown"
       : "not-applicable",
@@ -89,8 +110,13 @@ export function request<A>(
 ) {
   return Effect.tryPromise({
     try: execute,
-    catch: (cause) => mapS3Error(cause, operation, mutation),
+    catch: (cause) => cause,
   }).pipe(
+    Effect.catch((cause) =>
+      Effect.flatMap(Clock.currentTimeMillis, (now) =>
+        Effect.fail(mapS3Error(cause, operation, mutation, now)),
+      ),
+    ),
     Effect.timeoutOrElse({
       duration: connection.config.requestTimeoutMillis,
       orElse: () =>

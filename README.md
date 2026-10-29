@@ -6,8 +6,8 @@ The package is under development. The portable Storage service provides uploads,
 scoped downloads, metadata, deletion and pagination. The `/testing` entry point
 provides memory storage, fault scripts and a public adapter conformance suite.
 The official-SDK S3 adapter adds native copy, multipart and signing. It has local
-protocol evidence; hosted AWS acceptance is pending. Managed transfers follow in
-later phases.
+protocol evidence; hosted AWS acceptance is pending. Managed transfers add bounded
+uploads, pinned downloads, verified copy/move and lazy batches. Durable sessions follow.
 
 ## Package
 
@@ -57,7 +57,8 @@ Local investigations stay in ignored `research/` and are never required by CI.
 - [Feature catalog](docs/features.json): 47 stable feature IDs and delivery ownership.
 - [Provider catalog](docs/providers.json): 16 distinct targets, configuration-specific operations and evidence.
 - [Catalog conventions](docs/catalogs.md)
-- [Portable API](docs/core.md), [memory/testing tools](docs/testing.md), and [S3 adapter](docs/s3.md)
+- [Portable API](docs/core.md), [memory/testing tools](docs/testing.md), [S3 adapter](docs/s3.md), and [managed transfers](docs/transfers.md)
+- [Phase 4 transfer/resource evidence](docs/evidence/phase-4.md)
 - [Phase 1 evidence](docs/evidence/phase-1.md), [phase 2 evidence](docs/evidence/phase-2.md), and [phase 3 evidence](docs/evidence/phase-3.md)
 
 A documented native capability, local fixture result and real-provider acceptance are

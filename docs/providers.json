@@ -12,14 +12,17 @@
       "sources": [
         "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html",
         "docs/s3.md",
-        "docs/evidence/phase-3.md"
+        "docs/evidence/phase-3.md",
+        "docs/transfers.md",
+        "docs/evidence/phase-4.md"
       ],
       "notes": [
         "Official AWS SDK 3.1159.0; general-purpose bucket adapter and isolated signing/POST peers.",
         "Controlled HTTP and versioned RustFS fixture executed; hosted AWS acceptance remains pending by owner request.",
         "Known-length streaming; unknown-length sources stage within a configurable per-operation byte limit.",
         "One SDK attempt; separate capability services and explicit owned/borrowed clients.",
-        "Named compatible providers, special bucket types and non-Node runtimes remain unqualified."
+        "Named compatible providers, special bucket types and non-Node runtimes remain unqualified.",
+        "Managed transfer hooks supply multipart/native-copy/reconciliation to the Effect-only engine. Local 320 MiB resource and verified copy/move evidence is separate from hosted AWS acceptance."
       ],
       "operations": [
         {
@@ -79,10 +82,14 @@
             "General-purpose bucket scope; hosted AWS acceptance pending.",
             "Stream, authority, checksum and configuration limits documented in docs/s3.md."
           ],
-          "implementations": ["packages/storage/src/s3/primitives.ts"],
+          "implementations": [
+            "packages/storage/src/s3/primitives.ts",
+            "packages/storage/src/s3/transfers.ts"
+          ],
           "tests": [
             "packages/storage/test/s3/primitives.test.ts",
-            "packages/storage/test/provider/s3.acceptance.ts"
+            "packages/storage/test/provider/s3.acceptance.ts",
+            "packages/storage/test/provider/transfers.acceptance.ts"
           ],
           "evidence": [
             {
@@ -109,6 +116,19 @@
               "testId": "packages/storage/test/provider/s3.acceptance.ts",
               "limitations": [
                 "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+              ]
+            },
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-29",
+              "source": "docs/evidence/phase-4.md",
+              "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+              "apiVersion": "2006-03-01",
+              "runtime": "node-24.22.0",
+              "configuration": "local-rustfs-versioned",
+              "testId": "packages/storage/test/provider/transfers.acceptance.ts",
+              "limitations": [
+                "Local managed transfer/native-copy/resource evidence only. Hosted AWS remains pending; no cloud throughput, billing or service guarantee is established."
               ]
             }
           ],
@@ -293,8 +313,14 @@
             "Source/destination conditions; explicit source namespace; no cross-endpoint native copy.",
             "Hosted AWS qualification pending."
           ],
-          "implementations": ["packages/storage/src/s3/copy.ts"],
-          "tests": ["packages/storage/test/s3/native.test.ts"],
+          "implementations": [
+            "packages/storage/src/s3/copy.ts",
+            "packages/storage/src/s3/transfers.ts"
+          ],
+          "tests": [
+            "packages/storage/test/s3/native.test.ts",
+            "packages/storage/test/provider/transfers.acceptance.ts"
+          ],
           "evidence": [
             {
               "kind": "local-protocol",
@@ -307,6 +333,19 @@
               "testId": "packages/storage/test/s3/native.test.ts",
               "limitations": [
                 "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+              ]
+            },
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-29",
+              "source": "docs/evidence/phase-4.md",
+              "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+              "apiVersion": "2006-03-01",
+              "runtime": "node-24.22.0",
+              "configuration": "local-rustfs-versioned",
+              "testId": "packages/storage/test/provider/transfers.acceptance.ts",
+              "limitations": [
+                "Local managed transfer/native-copy/resource evidence only. Hosted AWS remains pending; no cloud throughput, billing or service guarantee is established."
               ]
             }
           ],
@@ -323,8 +362,14 @@
             "Low-level lifecycle/inventory; no managed scheduling, durable recovery or automatic complete replay.",
             "Hosted AWS qualification pending."
           ],
-          "implementations": ["packages/storage/src/s3/multipart.ts"],
-          "tests": ["packages/storage/test/s3/native.test.ts"],
+          "implementations": [
+            "packages/storage/src/s3/multipart.ts",
+            "packages/storage/src/s3/transfers.ts"
+          ],
+          "tests": [
+            "packages/storage/test/s3/native.test.ts",
+            "packages/storage/test/provider/transfers.acceptance.ts"
+          ],
           "evidence": [
             {
               "kind": "local-protocol",
@@ -337,6 +382,19 @@
               "testId": "packages/storage/test/s3/native.test.ts",
               "limitations": [
                 "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+              ]
+            },
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-29",
+              "source": "docs/evidence/phase-4.md",
+              "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+              "apiVersion": "2006-03-01",
+              "runtime": "node-24.22.0",
+              "configuration": "local-rustfs-versioned",
+              "testId": "packages/storage/test/provider/transfers.acceptance.ts",
+              "limitations": [
+                "Local managed transfer/native-copy/resource evidence only. Hosted AWS remains pending; no cloud throughput, billing or service guarantee is established."
               ]
             }
           ],

@@ -4,7 +4,7 @@ Object storage services and workflows for Effect.
 
 Development status: the portable API, memory reference and official-SDK S3 adapter
 are implemented. S3 has local protocol evidence; hosted AWS acceptance is pending.
-Managed transfers and durable sessions follow in later phases.
+Managed transfers are implemented; durable sessions follow in phase 5.
 Published-package installation instructions will accompany the first release.
 
 ## Use storage
@@ -68,6 +68,16 @@ optional official `@aws-sdk/client-s3` peer. Signing and POST policies use
 See [S3 setup, ownership and limits](../../docs/s3.md). Known-length streams use
 backpressure; unknown-length streams stage within an explicit per-operation limit.
 `pnpm test:s3:local` runs owned RustFS protocol acceptance without an AWS account.
+
+## Managed transfers
+
+Use `Transfers` and `UploadSource` from `@effect-kit/storage/transfers`, Node `sha256`
+from `/transfers/node`, and `s3TransferEndpoint(storage)` from `/s3/transfers`.
+The engine owns shared memory/request budgets, retained-part retries, pinned download
+continuation, verified native/streamed copy, explicit move outcomes and lazy batches.
+See [the transfer API and resource policy](../../docs/transfers.md) and
+[measured local evidence](../../docs/evidence/phase-4.md). The engine is in-process;
+persistent restart and required audit/observer effects are phase 5 work.
 
 ## License
 

@@ -140,13 +140,17 @@ try {
           "public custom adapter and optional capability",
           "S3-only import without signing peers",
           "explicit S3/signing/POST peers and packed public contracts",
+          "SDK-free managed transfer runtime and source/sink E/R declarations",
+          "isolated Node streaming digest and S3 transfer hooks",
         ],
       },
       null,
       2,
     )}\n`,
   );
-  console.log("Packed core/testing pass without SDK peers; S3 consumers pass with explicit peers.");
+  console.log(
+    "Packed core/testing/transfers pass without SDK peers; S3 consumers pass with explicit peers.",
+  );
 } catch (error) {
   if (error !== null && typeof error === "object" && "stderr" in error) {
     process.stderr.write(String(error.stderr));

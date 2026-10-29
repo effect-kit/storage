@@ -4,6 +4,9 @@ import type { Scope } from "effect";
 import { ObjectKey, ObjectSize, StorageSigning } from "@effect-kit/storage";
 import type { ObjectMetadata, StorageError, StorageService, Storage } from "@effect-kit/storage";
 import { Faults, MemoryStorage } from "@effect-kit/storage/testing";
+import { Transfers, UploadSource } from "@effect-kit/storage/transfers";
+import type { TransferReceipt } from "@effect-kit/storage/transfers";
+import { sha256 } from "@effect-kit/storage/transfers/node";
 
 const key: ObjectKey = Schema.decodeUnknownSync(ObjectKey)("a//b");
 const size: ObjectSize = Schema.decodeUnknownSync(ObjectSize)(42);
@@ -24,6 +27,31 @@ const preserved: Effect.Effect<ObjectMetadata, StorageError | SourceError, Sourc
 const missingEnvironment: Effect.Effect<ObjectMetadata, StorageError | SourceError> = upload;
 // @ts-expect-error source failure must survive through published declarations
 const missingError: Effect.Effect<ObjectMetadata, StorageError, Source> = upload;
+const managed = Transfers.upload({ key, source: UploadSource.stream(body) });
+const managedPreserved: Effect.Effect<
+  TransferReceipt,
+  StorageError | SourceError,
+  Transfers | Source
+> = managed;
+// @ts-expect-error managed upload must preserve source dependencies
+const managedMissingEnvironment: Effect.Effect<
+  TransferReceipt,
+  StorageError | SourceError,
+  Transfers
+> = managed;
+// @ts-expect-error managed upload must preserve source failures
+const managedMissingError: Effect.Effect<TransferReceipt, StorageError, Transfers | Source> =
+  managed;
+const downloaded = Transfers.download({
+  key,
+  target: { write: () => Effect.flatMap(Source, () => Effect.fail(new SourceError())) },
+});
+const sinkPreserved: Effect.Effect<
+  TransferReceipt,
+  StorageError | SourceError,
+  Transfers | Source
+> = downloaded;
+void [managedPreserved, managedMissingEnvironment, managedMissingError, sinkPreserved, sha256];
 const memory = MemoryStorage.make().pipe(Effect.flatMap((storage) => storage.put({ key, body })));
 const memoryPreserved: Effect.Effect<ObjectMetadata, StorageError | SourceError, Source> = memory;
 const faults = Faults.make(adapter, [{ operation: "put" }]).pipe(

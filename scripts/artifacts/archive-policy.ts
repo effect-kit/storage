@@ -35,6 +35,18 @@ const Manifest = Schema.Struct({
       types: Schema.Literal("./dist/s3/signing.d.ts"),
       import: Schema.Literal("./dist/s3/signing.js"),
     }),
+    "./transfers": Schema.Struct({
+      types: Schema.Literal("./dist/transfers.d.ts"),
+      import: Schema.Literal("./dist/transfers.js"),
+    }),
+    "./transfers/node": Schema.Struct({
+      types: Schema.Literal("./dist/transfers/node.d.ts"),
+      import: Schema.Literal("./dist/transfers/node.js"),
+    }),
+    "./s3/transfers": Schema.Struct({
+      types: Schema.Literal("./dist/s3/transfers.d.ts"),
+      import: Schema.Literal("./dist/s3/transfers.js"),
+    }),
     "./s3/post": Schema.Struct({
       types: Schema.Literal("./dist/s3/post.d.ts"),
       import: Schema.Literal("./dist/s3/post.js"),
@@ -72,6 +84,12 @@ export function checkArchive(manifestInput: unknown, entries: readonly string[])
     "dist/s3/signing.d.ts",
     "dist/s3/post.js",
     "dist/s3/post.d.ts",
+    "dist/transfers.js",
+    "dist/transfers.d.ts",
+    "dist/transfers/node.js",
+    "dist/transfers/node.d.ts",
+    "dist/s3/transfers.js",
+    "dist/s3/transfers.d.ts",
   ]) {
     if (!entries.includes(`package/${required}`))
       throw new Error(`Missing packed file: ${required}`);

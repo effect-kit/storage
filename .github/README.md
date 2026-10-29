@@ -237,3 +237,9 @@ It needs Docker and no AWS account. The automatic CI and artifact lanes remain
 independent of services. The [S3 guide](../docs/s3.md) documents a separate explicit
 `test:s3:aws` lane for an authorized existing versioned bucket/prefix. Real AWS
 acceptance is pending at the owner's request; local evidence cannot certify it.
+
+The manually dispatched local S3 lane also runs managed native/multipart copy and a
+generated 320 MiB transfer with a 32 MiB engine budget. It writes
+`.artifacts/transfers-resources.json` alongside the provider report. The manual provider config exposes GC for retained-memory sampling; this is a
+resource profile, not a throughput benchmark. These tests are
+local-only, do not run in default CI and do not establish hosted AWS qualification.

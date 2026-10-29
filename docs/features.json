@@ -7,21 +7,25 @@
       "title": "Upload",
       "target": "Bytes, byte streams, known/unknown lengths, empty objects, metadata, overwrite behavior",
       "completionPhase": 4,
-      "status": "in-progress",
-      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md"],
+      "status": "implemented",
+      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md", "docs/transfers.md"],
       "implementations": [
         "packages/storage/src/requests.ts",
         "packages/storage/src/testing/memory-upload.ts",
         "packages/storage/src/s3/primitives.ts",
-        "packages/storage/src/s3/upload-body.ts"
+        "packages/storage/src/s3/upload-body.ts",
+        "packages/storage/src/transfers.ts",
+        "packages/storage/src/transfers/upload.ts",
+        "packages/storage/src/transfers/sources.ts"
       ],
       "tests": [
         "packages/storage/test/memory.test.ts",
         "packages/storage/test/conformance.test.ts",
         "packages/storage/test/s3/primitives.test.ts",
-        "packages/storage/test/s3/resources.test.ts"
+        "packages/storage/test/s3/resources.test.ts",
+        "packages/storage/test/transfers/upload.test.ts"
       ],
-      "examples": ["packages/storage/README.md"],
+      "examples": ["packages/storage/README.md", "docs/transfers.md"],
       "evidence": [
         {
           "kind": "runtime",
@@ -48,6 +52,19 @@
           "limitations": [
             "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
           ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-4.md",
+          "sdkVersion": "effect@4.0.6",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "managed-transfer-offline-and-local-s3",
+          "testId": "packages/storage/test/transfers/upload.test.ts",
+          "limitations": [
+            "In-process transfer behavior; persistent recovery/batch checkpoints remain phase 5. Hosted AWS qualification remains pending at owner request."
+          ]
         }
       ],
       "deferral": null
@@ -57,20 +74,24 @@
       "title": "Download",
       "target": "Scoped byte streams, bounded collection helpers, metadata, cancellation, response disposal",
       "completionPhase": 4,
-      "status": "in-progress",
-      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md"],
+      "status": "implemented",
+      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md", "docs/transfers.md"],
       "implementations": [
         "packages/storage/src/storage.ts",
         "packages/storage/src/testing/memory.ts",
-        "packages/storage/src/s3/primitives.ts"
+        "packages/storage/src/s3/primitives.ts",
+        "packages/storage/src/transfers.ts",
+        "packages/storage/src/transfers/download.ts"
       ],
       "tests": [
         "packages/storage/test/storage.test.ts",
         "packages/storage/test/memory.test.ts",
         "packages/storage/test/s3/primitives.test.ts",
-        "packages/storage/test/s3/resources.test.ts"
+        "packages/storage/test/s3/resources.test.ts",
+        "packages/storage/test/transfers/download-copy.test.ts",
+        "packages/storage/test/transfers/files.test.ts"
       ],
-      "examples": ["packages/storage/README.md"],
+      "examples": ["packages/storage/README.md", "docs/transfers.md"],
       "evidence": [
         {
           "kind": "runtime",
@@ -96,6 +117,19 @@
           "testId": "packages/storage/test/s3/primitives.test.ts",
           "limitations": [
             "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-4.md",
+          "sdkVersion": "effect@4.0.6",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "managed-transfer-offline-and-local-s3",
+          "testId": "packages/storage/test/transfers/download-copy.test.ts",
+          "limitations": [
+            "In-process transfer behavior; persistent recovery/batch checkpoints remain phase 5. Hosted AWS qualification remains pending at owner request."
           ]
         }
       ],
@@ -156,20 +190,23 @@
       "title": "Delete",
       "target": "Idempotent missing-delete contract, conditional/version-specific deletion, per-key bulk results",
       "completionPhase": 4,
-      "status": "in-progress",
-      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md"],
+      "status": "implemented",
+      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md", "docs/transfers.md"],
       "implementations": [
         "packages/storage/src/storage.ts",
         "packages/storage/src/testing/memory.ts",
         "packages/storage/src/s3/primitives.ts",
-        "packages/storage/src/s3/bulk-delete.ts"
+        "packages/storage/src/s3/bulk-delete.ts",
+        "packages/storage/src/transfers.ts",
+        "packages/storage/src/transfers/copy.ts"
       ],
       "tests": [
         "packages/storage/test/faults.test.ts",
         "packages/storage/test/conformance.test.ts",
-        "packages/storage/test/s3/native.test.ts"
+        "packages/storage/test/s3/native.test.ts",
+        "packages/storage/test/transfers/download-copy.test.ts"
       ],
-      "examples": ["packages/storage/README.md"],
+      "examples": ["packages/storage/README.md", "docs/transfers.md"],
       "evidence": [
         {
           "kind": "runtime",
@@ -195,6 +232,19 @@
           "testId": "packages/storage/test/s3/native.test.ts",
           "limitations": [
             "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-4.md",
+          "sdkVersion": "effect@4.0.6",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "managed-transfer-offline-and-local-s3",
+          "testId": "packages/storage/test/transfers/download-copy.test.ts",
+          "limitations": [
+            "In-process transfer behavior; persistent recovery/batch checkpoints remain phase 5. Hosted AWS qualification remains pending at owner request."
           ]
         }
       ],
@@ -253,11 +303,18 @@
       "title": "Copy/move",
       "target": "Native copy when valid, streamed cross-store copy, conditional source, explicit non-atomic move",
       "completionPhase": 4,
-      "status": "in-progress",
-      "specifications": ["docs/s3.md"],
-      "implementations": ["packages/storage/src/s3/copy.ts"],
-      "tests": ["packages/storage/test/s3/native.test.ts"],
-      "examples": ["packages/storage/README.md"],
+      "status": "implemented",
+      "specifications": ["docs/s3.md", "docs/transfers.md"],
+      "implementations": [
+        "packages/storage/src/s3/copy.ts",
+        "packages/storage/src/transfers.ts",
+        "packages/storage/src/transfers/copy.ts"
+      ],
+      "tests": [
+        "packages/storage/test/s3/native.test.ts",
+        "packages/storage/test/transfers/download-copy.test.ts"
+      ],
+      "examples": ["packages/storage/README.md", "docs/transfers.md"],
       "evidence": [
         {
           "kind": "local-protocol",
@@ -270,6 +327,19 @@
           "testId": "packages/storage/test/s3/native.test.ts",
           "limitations": [
             "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-4.md",
+          "sdkVersion": "effect@4.0.6",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "managed-transfer-offline-and-local-s3",
+          "testId": "packages/storage/test/transfers/download-copy.test.ts",
+          "limitations": [
+            "In-process transfer behavior; persistent recovery/batch checkpoints remain phase 5. Hosted AWS qualification remains pending at owner request."
           ]
         }
       ],
@@ -332,19 +402,22 @@
       "title": "Ranges",
       "target": "Single/suffix/open-ended byte ranges, response bounds, unsatisfiable ranges, safe resume",
       "completionPhase": 4,
-      "status": "in-progress",
-      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md"],
+      "status": "implemented",
+      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md", "docs/transfers.md"],
       "implementations": [
         "packages/storage/src/ranges.ts",
         "packages/storage/src/testing/memory.ts",
-        "packages/storage/src/s3/primitives.ts"
+        "packages/storage/src/s3/primitives.ts",
+        "packages/storage/src/transfers.ts",
+        "packages/storage/src/transfers/download.ts"
       ],
       "tests": [
         "packages/storage/test/models.test.ts",
         "packages/storage/test/conformance.test.ts",
-        "packages/storage/test/s3/primitives.test.ts"
+        "packages/storage/test/s3/primitives.test.ts",
+        "packages/storage/test/transfers/download-copy.test.ts"
       ],
-      "examples": ["packages/storage/README.md"],
+      "examples": ["packages/storage/README.md", "docs/transfers.md"],
       "evidence": [
         {
           "kind": "runtime",
@@ -370,6 +443,19 @@
           "testId": "packages/storage/test/s3/primitives.test.ts",
           "limitations": [
             "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-4.md",
+          "sdkVersion": "effect@4.0.6",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "managed-transfer-offline-and-local-s3",
+          "testId": "packages/storage/test/transfers/download-copy.test.ts",
+          "limitations": [
+            "In-process transfer behavior; persistent recovery/batch checkpoints remain phase 5. Hosted AWS qualification remains pending at owner request."
           ]
         }
       ],
@@ -510,12 +596,35 @@
       "title": "Managed upload",
       "target": "Bounded concurrency and bytes, transfer thresholds, progress, cancellation, retry safety",
       "completionPhase": 4,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "implemented",
+      "specifications": ["docs/transfers.md"],
+      "implementations": [
+        "packages/storage/src/transfers.ts",
+        "packages/storage/src/transfers/upload.ts",
+        "packages/storage/src/transfers/planner.ts",
+        "packages/storage/src/transfers/budget.ts",
+        "packages/storage/src/transfers/runtime.ts"
+      ],
+      "tests": [
+        "packages/storage/test/transfers/resources.test.ts",
+        "packages/storage/test/transfers/s3.test.ts"
+      ],
+      "examples": ["docs/transfers.md"],
+      "evidence": [
+        {
+          "kind": "runtime",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-4.md",
+          "sdkVersion": "effect@4.0.6",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "managed-transfer-offline-and-local-s3",
+          "testId": "packages/storage/test/transfers/resources.test.ts",
+          "limitations": [
+            "In-process transfer behavior; persistent recovery/batch checkpoints remain phase 5. Hosted AWS qualification remains pending at owner request."
+          ]
+        }
+      ],
       "deferral": null
     },
     {
@@ -523,14 +632,21 @@
       "title": "Multipart",
       "target": "Initiate, parts, list, complete, abort, signing parts, native constraints, orphan cleanup",
       "completionPhase": 4,
-      "status": "in-progress",
-      "specifications": ["docs/s3.md"],
+      "status": "implemented",
+      "specifications": ["docs/s3.md", "docs/transfers.md"],
       "implementations": [
         "packages/storage/src/s3/multipart.ts",
-        "packages/storage/src/s3/copy.ts"
+        "packages/storage/src/s3/copy.ts",
+        "packages/storage/src/transfers.ts",
+        "packages/storage/src/transfers/upload.ts",
+        "packages/storage/src/transfers/part-receipts.ts"
       ],
-      "tests": ["packages/storage/test/s3/native.test.ts"],
-      "examples": ["packages/storage/README.md"],
+      "tests": [
+        "packages/storage/test/s3/native.test.ts",
+        "packages/storage/test/transfers/upload.test.ts",
+        "packages/storage/test/transfers/s3.test.ts"
+      ],
+      "examples": ["packages/storage/README.md", "docs/transfers.md"],
       "evidence": [
         {
           "kind": "local-protocol",
@@ -543,6 +659,19 @@
           "testId": "packages/storage/test/s3/native.test.ts",
           "limitations": [
             "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-4.md",
+          "sdkVersion": "effect@4.0.6",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "managed-transfer-offline-and-local-s3",
+          "testId": "packages/storage/test/transfers/upload.test.ts",
+          "limitations": [
+            "In-process transfer behavior; persistent recovery/batch checkpoints remain phase 5. Hosted AWS qualification remains pending at owner request."
           ]
         }
       ],
@@ -579,12 +708,29 @@
       "title": "Download recovery",
       "target": "Range continuation pinned to object identity, integrity, cancellation, restart state",
       "completionPhase": 5,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "in-progress",
+      "specifications": ["docs/transfers.md"],
+      "implementations": [
+        "packages/storage/src/transfers.ts",
+        "packages/storage/src/transfers/download.ts"
+      ],
+      "tests": ["packages/storage/test/transfers/download-copy.test.ts"],
+      "examples": ["docs/transfers.md"],
+      "evidence": [
+        {
+          "kind": "runtime",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-4.md",
+          "sdkVersion": "effect@4.0.6",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "managed-transfer-offline-and-local-s3",
+          "testId": "packages/storage/test/transfers/download-copy.test.ts",
+          "limitations": [
+            "In-process transfer behavior; persistent recovery/batch checkpoints remain phase 5. Hosted AWS qualification remains pending at owner request."
+          ]
+        }
+      ],
       "deferral": null
     },
     {
@@ -592,12 +738,29 @@
       "title": "Bulk transfers",
       "target": "Lazy inputs, bounded workers, partial success, progress, checkpoints, safe retries",
       "completionPhase": 4,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "in-progress",
+      "specifications": ["docs/transfers.md"],
+      "implementations": [
+        "packages/storage/src/transfers.ts",
+        "packages/storage/src/transfers/runtime.ts"
+      ],
+      "tests": ["packages/storage/test/transfers/download-copy.test.ts"],
+      "examples": ["docs/transfers.md"],
+      "evidence": [
+        {
+          "kind": "runtime",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-4.md",
+          "sdkVersion": "effect@4.0.6",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "managed-transfer-offline-and-local-s3",
+          "testId": "packages/storage/test/transfers/download-copy.test.ts",
+          "limitations": [
+            "In-process transfer behavior; persistent recovery/batch checkpoints remain phase 5. Hosted AWS qualification remains pending at owner request."
+          ]
+        }
+      ],
       "deferral": null
     },
     {
@@ -605,17 +768,22 @@
       "title": "Checksums",
       "target": "Algorithm/type distinctions, streaming digests, native validation, mismatch behavior",
       "completionPhase": 4,
-      "status": "in-progress",
-      "specifications": ["docs/s3.md"],
+      "status": "implemented",
+      "specifications": ["docs/s3.md", "docs/transfers.md"],
       "implementations": [
         "packages/storage/src/s3/object-mapping.ts",
-        "packages/storage/src/s3/native-models.ts"
+        "packages/storage/src/s3/native-models.ts",
+        "packages/storage/src/transfers.ts",
+        "packages/storage/src/transfers/reader.ts",
+        "packages/storage/src/transfers/node.ts"
       ],
       "tests": [
         "packages/storage/test/s3/primitives.test.ts",
-        "packages/storage/test/s3/native.test.ts"
+        "packages/storage/test/s3/native.test.ts",
+        "packages/storage/test/transfers/upload.test.ts",
+        "packages/storage/test/transfers/download-copy.test.ts"
       ],
-      "examples": ["packages/storage/README.md"],
+      "examples": ["packages/storage/README.md", "docs/transfers.md"],
       "evidence": [
         {
           "kind": "local-protocol",
@@ -629,6 +797,19 @@
           "limitations": [
             "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
           ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-4.md",
+          "sdkVersion": "effect@4.0.6",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "managed-transfer-offline-and-local-s3",
+          "testId": "packages/storage/test/transfers/upload.test.ts",
+          "limitations": [
+            "In-process transfer behavior; persistent recovery/batch checkpoints remain phase 5. Hosted AWS qualification remains pending at owner request."
+          ]
         }
       ],
       "deferral": null
@@ -638,22 +819,27 @@
       "title": "Validation",
       "target": "Byte limits, metadata rules, declared/sniffed MIME distinction, source length verification",
       "completionPhase": 4,
-      "status": "in-progress",
-      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md"],
+      "status": "implemented",
+      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md", "docs/transfers.md"],
       "implementations": [
         "packages/storage/src/object.ts",
         "packages/storage/src/requests.ts",
         "packages/storage/src/testing/memory-upload.ts",
         "packages/storage/src/s3/validation.ts",
-        "packages/storage/src/s3/upload-body.ts"
+        "packages/storage/src/s3/upload-body.ts",
+        "packages/storage/src/transfers.ts",
+        "packages/storage/src/transfers/reader.ts",
+        "packages/storage/src/transfers/sources.ts"
       ],
       "tests": [
         "packages/storage/test/models.test.ts",
         "packages/storage/test/memory.test.ts",
         "packages/storage/test/s3/primitives.test.ts",
-        "packages/storage/test/s3/resources.test.ts"
+        "packages/storage/test/s3/resources.test.ts",
+        "packages/storage/test/transfers/upload.test.ts",
+        "packages/storage/test/transfers/files.test.ts"
       ],
-      "examples": ["packages/storage/README.md"],
+      "examples": ["packages/storage/README.md", "docs/transfers.md"],
       "evidence": [
         {
           "kind": "runtime",
@@ -679,6 +865,19 @@
           "testId": "packages/storage/test/s3/primitives.test.ts",
           "limitations": [
             "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-4.md",
+          "sdkVersion": "effect@4.0.6",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "managed-transfer-offline-and-local-s3",
+          "testId": "packages/storage/test/transfers/upload.test.ts",
+          "limitations": [
+            "In-process transfer behavior; persistent recovery/batch checkpoints remain phase 5. Hosted AWS qualification remains pending at owner request."
           ]
         }
       ],
@@ -1109,12 +1308,32 @@
       "title": "Operations",
       "target": "Tracing, metrics, structured errors, request IDs, bounded labels and secret-safe diagnostics",
       "completionPhase": 4,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "implemented",
+      "specifications": ["docs/transfers.md"],
+      "implementations": [
+        "packages/storage/src/transfers.ts",
+        "packages/storage/src/transfers/runtime.ts"
+      ],
+      "tests": [
+        "packages/storage/test/transfers/resources.test.ts",
+        "packages/storage/test/transfers/upload.test.ts"
+      ],
+      "examples": ["docs/transfers.md"],
+      "evidence": [
+        {
+          "kind": "runtime",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-4.md",
+          "sdkVersion": "effect@4.0.6",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "managed-transfer-offline-and-local-s3",
+          "testId": "packages/storage/test/transfers/resources.test.ts",
+          "limitations": [
+            "In-process transfer behavior; persistent recovery/batch checkpoints remain phase 5. Hosted AWS qualification remains pending at owner request."
+          ]
+        }
+      ],
       "deferral": null
     },
     {

@@ -5,6 +5,7 @@ import { createRequire } from "node:module";
 import { Effect } from "effect";
 
 import { S3Storage, s3Limits } from "@effect-kit/storage/s3";
+import { s3TransferEndpoint } from "@effect-kit/storage/s3/transfers";
 
 const require = createRequire(import.meta.url);
 for (const peer of ["@aws-sdk/s3-request-presigner", "@aws-sdk/s3-presigned-post"])
@@ -23,6 +24,7 @@ await Effect.runPromise(
       assert.equal(storage.provider, "s3");
       assert.equal(storage.capabilities.versionedReads, "history");
       assert.equal(s3Limits.maximumParts, 10000);
+      assert.equal(s3TransferEndpoint(storage).multipart, storage.multipart);
     }),
   ),
 );

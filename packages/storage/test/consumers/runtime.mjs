@@ -5,6 +5,8 @@ import { Effect, Layer, Result, Schema } from "effect";
 
 import { ObjectKey, ObjectSize, Storage, StoragePublicUrls } from "@effect-kit/storage";
 import { Faults, MemoryStorage, runStorageConformance } from "@effect-kit/storage/testing";
+import { Transfers, UploadSource } from "@effect-kit/storage/transfers";
+import { sha256 } from "@effect-kit/storage/transfers/node";
 
 import { makeCustomAdapter, publicUrls } from "./build/custom-adapter.js";
 
@@ -28,6 +30,25 @@ for (const peer of [
 await Effect.runPromise(
   Effect.gen(function* () {
     const memory = yield* MemoryStorage.make();
+    const transfers = yield* Transfers.make(
+      {
+        storage: memory,
+        maximumObjectBytes: 1024,
+        maximumSingleUploadBytes: 1024,
+        transportOverheadBytes: 0,
+      },
+      { digest: sha256, maxBytes: 1024 },
+    );
+    const transfer = yield* transfers.upload({
+      key: "managed",
+      source: UploadSource.bytes(new Uint8Array([1, 2])),
+    });
+    const verified = yield* transfers.download({
+      ref: transfer.metadata.ref,
+      expectedChecksum: transfer.checksum,
+      target: { write: () => Effect.void },
+    });
+    assert.equal(verified.progress.bytesVerified, 2);
     const faults = yield* Faults.make(memory, [
       {
         operation: "put",
