@@ -5,8 +5,8 @@ catalog:
   "@aws-sdk/client-s3": 3.1159.0
   "@aws-sdk/s3-request-presigner": 3.1159.0
   "@aws-sdk/s3-presigned-post": 3.1159.0
-  effect: 4.0.6
-  "@effect/vitest": 4.0.6
+  effect: 4.1.0
+  "@effect/vitest": 4.1.0
   typescript: 7.0.2
   klarity: 0.3.0
   turbo: 2.11.10
@@ -48,3 +48,5 @@ minimumReleaseAgeExclude:
   - "@aws-sdk/signature-v4-multi-region@3.996.50"
   - "@aws-sdk/token-providers@3.1159.0"
   - "@aws-sdk/xml-builder@3.972.42"
+  - "@effect/vitest@4.1.0"
+  - effect@4.1.0

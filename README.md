@@ -58,6 +58,7 @@ Local investigations stay in ignored `research/` and are never required by CI.
 - [Provider catalog](docs/providers.json): 16 distinct targets, configuration-specific operations and evidence.
 - [Catalog conventions](docs/catalogs.md)
 - [Portable API](docs/core.md), [memory/testing tools](docs/testing.md), [S3 adapter](docs/s3.md), and [managed transfers](docs/transfers.md), and [durable sessions](docs/sessions.md)
+- [Effect 4.1 baseline upgrade evidence](docs/evidence/effect-4-1.md)
 - [Phase 5 persistence/restart evidence](docs/evidence/phase-5.md)
 - [Phase 4 transfer/resource evidence](docs/evidence/phase-4.md)
 - [Phase 1 evidence](docs/evidence/phase-1.md), [phase 2 evidence](docs/evidence/phase-2.md), and [phase 3 evidence](docs/evidence/phase-3.md)

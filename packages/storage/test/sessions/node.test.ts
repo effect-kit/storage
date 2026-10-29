@@ -13,6 +13,27 @@ import { UploadSource } from "../../src/transfers.js";
 import { policy } from "../transfers/fixture.js";
 import { handles, setup } from "./fixture.js";
 
+it.live("file backing rejects enumeration and prefix removal without losing checkpoints", () =>
+  Effect.scoped(
+    Effect.gen(function* () {
+      const directory = yield* Effect.acquireRelease(
+        Effect.promise(() => mkdtemp(join(tmpdir(), "storage-session-inventory-"))),
+        (path) => Effect.promise(() => rm(path, { recursive: true, force: true })),
+      );
+      const backing = yield* atomicFileStore(directory);
+      yield* backing.set("test:session", "protected-checkpoint");
+
+      const inventory = yield* backing.keys.pipe(Effect.result);
+      assert.isTrue(Result.isFailure(inventory));
+      if (Result.isFailure(inventory)) assert.strictEqual(inventory.failure.method, "keys");
+
+      const removal = yield* backing.clearPrefix("test:").pipe(Effect.result);
+      assert.isTrue(Result.isFailure(removal));
+      assert.strictEqual(yield* backing.get("test:session"), "protected-checkpoint");
+    }),
+  ),
+);
+
 it.live("real disk stores survive reconstruction and download publication is idempotent", () =>
   Effect.scoped(
     Effect.gen(function* () {

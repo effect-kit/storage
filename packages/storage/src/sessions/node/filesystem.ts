@@ -34,6 +34,13 @@ export const atomicFileStore = Effect.fnUntraced(function* (directory: string) {
   const pathFor = (key: string) =>
     join(root, `checkpoint-${createHash("sha256").update(key).digest("hex")}.json`);
   return KeyValueStore.makeStringOnly({
+    // Hashed filenames cannot reconstruct logical keys. Recovery uses application-known IDs.
+    keys: Effect.fail(
+      new KeyValueStore.KeyValueStoreError({
+        method: "keys",
+        message: "Checkpoint backing does not support key enumeration",
+      }),
+    ),
     get: (key) =>
       fileEffect(async () => {
         try {

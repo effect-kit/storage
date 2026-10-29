@@ -9,7 +9,7 @@ Published-package installation instructions will accompany the first release.
 
 ## Use storage
 
-Requires the workspace's Node 24.22+ baseline and Effect 4.
+Requires the workspace's Node 24.22+ baseline and Effect 4.1 or newer within the supported peer range.
 
 ```ts
 import { Effect } from "effect";

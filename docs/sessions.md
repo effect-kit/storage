@@ -1,7 +1,7 @@
 # Durable sessions with Effect persistence
 
 `@effect-kit/storage/sessions` stores protected, schema-versioned checkpoints using
-Effect 4's `KeyValueStore.toSchemaStore`. Applications supply the KeyValueStore
+Effect 4.1's `KeyValueStore.toSchemaStore`. Applications supply the KeyValueStore
 layer. There is no PostgreSQL, Redis, ORM or hosted coordinator requirement.
 `/sessions/node` adds Node AES-GCM protection, atomic filesystem persistence and a
 restartable file download target. No new package dependency is needed.
@@ -30,6 +30,11 @@ It fails when the platform cannot support those operations, rather than claiming
 durability. Local Darwin process tests are evidence; power-cut/OS/network-filesystem
 qualification is not implied. An abrupt kill can leave encrypted `.pending-*` files;
 readers ignore them. Remove abandoned temporaries only after proving exclusive ownership.
+
+The atomic checkpoint backing cannot reconstruct logical keys from its hashed
+filenames. Its `keys` operation fails with a typed KeyValueStoreError; nonempty
+`clearPrefix` calls fail without removing records. Use application-known session IDs
+for recovery. Other application-supplied KeyValueStores may support enumeration.
 
 ## Configure a session service
 
@@ -162,8 +167,8 @@ claimed. Callbacks must not recursively acquire the same session store owner.
 records failed/unknown outcomes. Restart inspects each child's durable state before
 running it again. Application callbacks provide sources/targets, dependencies and
 reconciliation policy; a status record alone cannot reopen an arbitrary stream.
-Keep session/manifest IDs in your application registry; generic KVS has no portable
-key enumeration. There is no hidden daemon or automatically installed queue.
+Keep session/manifest IDs in your application registry; these recovery APIs use
+known IDs and do not depend on backing-store key enumeration. There is no hidden daemon or automatically installed queue.
 
 `forget(id)` removes only terminal records after required upload events are delivered.
 Expiry does not erase cleanup debt or pending events. Applications choose retention

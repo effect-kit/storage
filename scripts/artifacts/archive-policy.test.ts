@@ -10,7 +10,7 @@ const manifest = {
   main: "./dist/index.js",
   types: "./dist/index.d.ts",
   peerDependencies: {
-    effect: "^4.0.6",
+    effect: "^4.1.0",
     "@aws-sdk/client-s3": "^3.1159.0",
     "@aws-sdk/s3-request-presigner": "^3.1159.0",
     "@aws-sdk/s3-presigned-post": "^3.1159.0",
