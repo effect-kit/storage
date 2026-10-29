@@ -229,3 +229,13 @@ Environment: S3_BUCKET, S3_REGION, optional S3_ENDPOINT, STORAGE_CHECKPOINT_KEY,
 STORAGE_CHECKPOINT_DIRECTORY and STORAGE_CONFIGURATION_ID. Normal SDK credential
 configuration stays outside checkpoints. Use an authorized bucket/prefix; hosted
 AWS acceptance remains postponed at the owner's request.
+
+## Additional provider profiles
+
+Filesystem storage provides pinned conditional reads for download sessions and no
+native multipart upload protocol. Native R2 Workers also supports the download
+session contract, but its missing inventory/conditional multipart completion means
+no durable upload handle codec is supplied. Upload creation fails before source
+reads. Neither a primitive driver nor local handle reconstruction implies restartable
+multipart upload support. See the [filesystem](filesystem.md) and [R2](r2-workers.md)
+provider guides for exact capabilities and runtime evidence.

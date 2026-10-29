@@ -182,3 +182,8 @@ await Effect.runPromise(
     }),
   ),
 );
+
+assert.equal(
+  typeof (await import("@effect-kit/storage/r2-workers")).R2WorkersStorage.layer,
+  "function",
+);

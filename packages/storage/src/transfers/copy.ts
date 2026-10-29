@@ -150,6 +150,7 @@ const copy = Effect.fnUntraced(function* (
         runtime.input.digest.workspaceBytes,
         "multipart",
         true,
+        request.condition,
       );
       copied = yield* runtime.lease(
         plan.workspaceBytes,
@@ -248,6 +249,9 @@ const copy = Effect.fnUntraced(function* (
       runtime.policy,
       size,
       runtime.input.digest.workspaceBytes,
+      "auto",
+      false,
+      request.condition,
     );
     const sourceWorkspace =
       runtime.policy.maxSourceChunkBytes * 2 +

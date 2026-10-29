@@ -41,3 +41,7 @@ separates actual helper runtimes from provider/OS/release qualification.
 [009 — Filesystem envelopes](decisions/009-filesystem-envelope.md) records atomic
 single-generation publication, opaque key mapping, explicit staging ownership and
 the qualified Bun positional IO adaptation.
+
+[010 — Native R2 binding](decisions/010-r2-worker-binding.md) records native result
+mapping, stream ownership, multipart completion limits and the explicit boundary
+between local workerd acceptance and hosted qualification.

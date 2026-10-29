@@ -607,74 +607,358 @@
       "name": "Cloudflare R2 Workers",
       "transport": "R2Bucket binding",
       "implementationPhase": 6,
-      "implementation": "planned",
-      "runtimes": ["workers"],
-      "sources": ["https://developers.cloudflare.com/r2/api/workers/workers-api-reference/"],
-      "notes": ["No binding-based signer or remote part inventory; scope recovery precisely."],
+      "implementation": "implemented",
+      "runtimes": ["workerd-1.20260730.1"],
+      "sources": [
+        "https://developers.cloudflare.com/r2/api/workers/workers-api-reference/",
+        "docs/r2-workers.md",
+        "docs/evidence/phase-6-r2-workers.md",
+        "https://developers.cloudflare.com/r2/api/error-codes/"
+      ],
+      "notes": [
+        "No binding-based signer or remote part inventory; scope recovery precisely.",
+        "Effect-only native binding adapter; caller-owned authority, no runtime SDK or global Workers type peer.",
+        "All 13 portable cases and native/managed multipart, FixedLengthStream and protected download session pass under pinned local workerd; hosted acceptance remains pending.",
+        "No part/upload inventory, conditional multipart completion, native copy/conditional delete/signing/admin or durable multipart upload codec."
+      ],
       "operations": [
         {
           "featureId": "OBJ-01",
           "operation": "put",
-          "configuration": "unqualified",
-          "runtime": "workers",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "owned-local-binding",
+          "runtime": "workerd-1.20260730.1",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Native result unions and length-aware Web streams; hosted R2 pending. No version history or conditional deletion."
+          ],
+          "implementations": [
+            "packages/storage/src/r2-workers.ts",
+            "packages/storage/src/r2-workers/primitives.ts"
+          ],
+          "tests": [
+            "packages/storage/test/r2-workers/storage.test.ts",
+            "scripts/r2-workers/check.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-6-r2-workers.md",
+              "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
+              "apiVersion": "2026-07-30",
+              "runtime": "workerd-1.20260730.1",
+              "configuration": "owned-local-binding",
+              "testId": "scripts/r2-workers/check.ts",
+              "limitations": [
+                "Local emulation only; no hosted bucket/Worker, cloud rate-limit races or deployed lifecycle/memory qualification."
+              ]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-02",
           "operation": "get",
-          "configuration": "unqualified",
-          "runtime": "workers",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "owned-local-binding",
+          "runtime": "workerd-1.20260730.1",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Native result unions and length-aware Web streams; hosted R2 pending. No version history or conditional deletion."
+          ],
+          "implementations": [
+            "packages/storage/src/r2-workers.ts",
+            "packages/storage/src/r2-workers/primitives.ts"
+          ],
+          "tests": [
+            "packages/storage/test/r2-workers/storage.test.ts",
+            "scripts/r2-workers/check.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-6-r2-workers.md",
+              "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
+              "apiVersion": "2026-07-30",
+              "runtime": "workerd-1.20260730.1",
+              "configuration": "owned-local-binding",
+              "testId": "scripts/r2-workers/check.ts",
+              "limitations": [
+                "Local emulation only; no hosted bucket/Worker, cloud rate-limit races or deployed lifecycle/memory qualification."
+              ]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-03",
           "operation": "head",
-          "configuration": "unqualified",
-          "runtime": "workers",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "owned-local-binding",
+          "runtime": "workerd-1.20260730.1",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Native result unions and length-aware Web streams; hosted R2 pending. No version history or conditional deletion."
+          ],
+          "implementations": [
+            "packages/storage/src/r2-workers.ts",
+            "packages/storage/src/r2-workers/primitives.ts"
+          ],
+          "tests": [
+            "packages/storage/test/r2-workers/storage.test.ts",
+            "scripts/r2-workers/check.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-6-r2-workers.md",
+              "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
+              "apiVersion": "2026-07-30",
+              "runtime": "workerd-1.20260730.1",
+              "configuration": "owned-local-binding",
+              "testId": "scripts/r2-workers/check.ts",
+              "limitations": [
+                "Local emulation only; no hosted bucket/Worker, cloud rate-limit races or deployed lifecycle/memory qualification."
+              ]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-04",
           "operation": "delete",
-          "configuration": "unqualified",
-          "runtime": "workers",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "owned-local-binding",
+          "runtime": "workerd-1.20260730.1",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Native result unions and length-aware Web streams; hosted R2 pending. No version history or conditional deletion."
+          ],
+          "implementations": [
+            "packages/storage/src/r2-workers.ts",
+            "packages/storage/src/r2-workers/primitives.ts"
+          ],
+          "tests": [
+            "packages/storage/test/r2-workers/storage.test.ts",
+            "scripts/r2-workers/check.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-6-r2-workers.md",
+              "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
+              "apiVersion": "2026-07-30",
+              "runtime": "workerd-1.20260730.1",
+              "configuration": "owned-local-binding",
+              "testId": "scripts/r2-workers/check.ts",
+              "limitations": [
+                "Local emulation only; no hosted bucket/Worker, cloud rate-limit races or deployed lifecycle/memory qualification."
+              ]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-05",
           "operation": "listPage",
-          "configuration": "unqualified",
-          "runtime": "workers",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
+          "configuration": "owned-local-binding",
+          "runtime": "workerd-1.20260730.1",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Native result unions and length-aware Web streams; hosted R2 pending. No version history or conditional deletion."
+          ],
+          "implementations": [
+            "packages/storage/src/r2-workers.ts",
+            "packages/storage/src/r2-workers/primitives.ts"
+          ],
+          "tests": [
+            "packages/storage/test/r2-workers/storage.test.ts",
+            "scripts/r2-workers/check.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-6-r2-workers.md",
+              "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
+              "apiVersion": "2026-07-30",
+              "runtime": "workerd-1.20260730.1",
+              "configuration": "owned-local-binding",
+              "testId": "scripts/r2-workers/check.ts",
+              "limitations": [
+                "Local emulation only; no hosted bucket/Worker, cloud rate-limit races or deployed lifecycle/memory qualification."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "XFR-02",
+          "operation": "multipart",
+          "configuration": "owned-local-binding",
+          "runtime": "workerd-1.20260730.1",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "No inventory or conditional completion; no durable upload handle codec."
+          ],
+          "implementations": ["packages/storage/src/r2-workers/multipart.ts"],
+          "tests": ["scripts/r2-workers/check.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-6-r2-workers.md",
+              "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
+              "apiVersion": "2026-07-30",
+              "runtime": "workerd-1.20260730.1",
+              "configuration": "owned-local-binding",
+              "testId": "scripts/r2-workers/check.ts",
+              "limitations": [
+                "Local emulation only; no hosted bucket/Worker, cloud rate-limit races or deployed lifecycle/memory qualification."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "XFR-02",
+          "operation": "listParts",
+          "configuration": "binding-only",
+          "runtime": "workerd-1.20260730.1",
+          "support": "unavailable",
+          "status": "unsupported-native",
+          "constraints": ["Not inferred or emulated from the bucket binding."],
           "implementations": [],
           "tests": [],
-          "evidence": [],
+          "evidence": [
+            {
+              "kind": "documentation",
+              "date": "2026-10-30",
+              "source": "https://developers.cloudflare.com/r2/api/workers/workers-api-reference/",
+              "sdkVersion": "native-binding",
+              "apiVersion": "2026-07-30",
+              "runtime": "workerd-1.20260730.1",
+              "configuration": "binding-only",
+              "testId": null,
+              "limitations": [
+                "The binding does not expose this authority/operation; another separately configured capability would be required."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "OBJ-07",
+          "operation": "multipart.conditionalComplete",
+          "configuration": "binding-only",
+          "runtime": "workerd-1.20260730.1",
+          "support": "unavailable",
+          "status": "unsupported-native",
+          "constraints": ["Not inferred or emulated from the bucket binding."],
+          "implementations": [],
+          "tests": [],
+          "evidence": [
+            {
+              "kind": "documentation",
+              "date": "2026-10-30",
+              "source": "https://developers.cloudflare.com/r2/api/workers/workers-api-reference/",
+              "sdkVersion": "native-binding",
+              "apiVersion": "2026-07-30",
+              "runtime": "workerd-1.20260730.1",
+              "configuration": "binding-only",
+              "testId": null,
+              "limitations": [
+                "The binding does not expose this authority/operation; another separately configured capability would be required."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "OBJ-04",
+          "operation": "conditionalDelete",
+          "configuration": "binding-only",
+          "runtime": "workerd-1.20260730.1",
+          "support": "unavailable",
+          "status": "unsupported-native",
+          "constraints": ["Not inferred or emulated from the bucket binding."],
+          "implementations": [],
+          "tests": [],
+          "evidence": [
+            {
+              "kind": "documentation",
+              "date": "2026-10-30",
+              "source": "https://developers.cloudflare.com/r2/api/workers/workers-api-reference/",
+              "sdkVersion": "native-binding",
+              "apiVersion": "2026-07-30",
+              "runtime": "workerd-1.20260730.1",
+              "configuration": "binding-only",
+              "testId": null,
+              "limitations": [
+                "The binding does not expose this authority/operation; another separately configured capability would be required."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "OBJ-06",
+          "operation": "nativeCopy",
+          "configuration": "binding-only",
+          "runtime": "workerd-1.20260730.1",
+          "support": "unavailable",
+          "status": "unsupported-native",
+          "constraints": ["Not inferred or emulated from the bucket binding."],
+          "implementations": [],
+          "tests": [],
+          "evidence": [
+            {
+              "kind": "documentation",
+              "date": "2026-10-30",
+              "source": "https://developers.cloudflare.com/r2/api/workers/workers-api-reference/",
+              "sdkVersion": "native-binding",
+              "apiVersion": "2026-07-30",
+              "runtime": "workerd-1.20260730.1",
+              "configuration": "binding-only",
+              "testId": null,
+              "limitations": [
+                "The binding does not expose this authority/operation; another separately configured capability would be required."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "SIG-01",
+          "operation": "sign",
+          "configuration": "binding-only",
+          "runtime": "workerd-1.20260730.1",
+          "support": "unavailable",
+          "status": "unsupported-native",
+          "constraints": ["Not inferred or emulated from the bucket binding."],
+          "implementations": [],
+          "tests": [],
+          "evidence": [
+            {
+              "kind": "documentation",
+              "date": "2026-10-30",
+              "source": "https://developers.cloudflare.com/r2/api/workers/workers-api-reference/",
+              "sdkVersion": "native-binding",
+              "apiVersion": "2026-07-30",
+              "runtime": "workerd-1.20260730.1",
+              "configuration": "binding-only",
+              "testId": null,
+              "limitations": [
+                "The binding does not expose this authority/operation; another separately configured capability would be required."
+              ]
+            }
+          ],
           "deferral": null
         }
       ]

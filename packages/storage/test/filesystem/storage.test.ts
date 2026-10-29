@@ -1,9 +1,11 @@
 import { assert, it } from "@effect/vitest";
-import { Effect, FileSystem, Layer, Path, Result, Stream } from "effect";
-import { Digest } from "effect/crypto";
+import { Context, Effect, FileSystem, Layer, Path, Redacted, Result, Stream } from "effect";
+import { Digest, SecureRandom } from "effect/crypto";
+import { KeyValueStore } from "effect/persistence";
 
 import { FilesystemStorage } from "../../src/filesystem.js";
 import * as NodeStorage from "../../src/node.js";
+import { UploadSessions, UploadSessionStore } from "../../src/sessions.js";
 import { Storage } from "../../src/storage.js";
 import { runStorageConformance } from "../../src/testing.js";
 import { TransferDriver, Transfers, UploadSource } from "../../src/transfers.js";
@@ -258,4 +260,37 @@ it.effect("provider layers supply a matching driver for managed upload and verif
       assert.deepEqual(chunks, [1, 2, 3]);
     }),
   ).pipe(Effect.provide(NodeStorage.layer)),
+);
+
+it.effect(
+  "filesystem sources support protected download sessions and verified file publication",
+  () =>
+    Effect.scoped(
+      Effect.gen(function* () {
+        const test = yield* fixture();
+        const context = yield* Layer.build(
+          Transfers.layer({ maxBytes: 1024 }).pipe(
+            Layer.provideMerge(FilesystemStorage.layer(test.options)),
+          ),
+        );
+        const source = Context.get(context, Storage);
+        const saved = yield* source.put({ key: "durable-read", body: new Uint8Array([3, 2, 1]) });
+        const secret = Redacted.make(yield* (yield* SecureRandom.SecureRandom).randomBytes(32));
+        const store = yield* UploadSessionStore.make({
+          namespace: "filesystem",
+          ownership: "exclusive",
+          protection: NodeStorage.aes256Gcm(secret),
+        }).pipe(Effect.provide(KeyValueStore.layerMemory));
+        const sessions = yield* UploadSessions.make({ configurationId: "filesystem" }).pipe(
+          Effect.provide(context),
+          Effect.provideService(UploadSessionStore, store),
+        );
+        const id = yield* sessions.createDownload({ id: "owned-download", ref: saved.ref });
+        const filename = test.path.join(test.root, "downloaded.bin");
+        const target = yield* NodeStorage.fileDownloadTarget({ id, path: filename });
+        yield* sessions.resumeDownload(id, target);
+        assert.strictEqual((yield* sessions.status(id)).state, "completed");
+        assert.deepEqual(yield* test.fs.readFile(filename), new Uint8Array([3, 2, 1]));
+      }),
+    ).pipe(Effect.provide(NodeStorage.layer)),
 );

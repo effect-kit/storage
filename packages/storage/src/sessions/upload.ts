@@ -72,6 +72,8 @@ export const runUpload = Effect.fnUntraced(function* <E, R>(
     checkpoint.length,
     runtime.input.digest.workspaceBytes * 2 + (source.workspaceBytes ?? 0),
     "multipart",
+    false,
+    checkpoint.condition,
   );
   if (plan.partBytes !== checkpoint.partBytes) return yield* sessionError("ChangedTransferPolicy");
   const save = Effect.fnUntraced(function* (next: UploadCheckpoint) {

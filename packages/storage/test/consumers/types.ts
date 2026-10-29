@@ -102,3 +102,8 @@ export const fileProvider = FilesystemStorage.layer({
   root: "application-files",
   storeId: "application",
 });
+
+import { R2WorkersStorage } from "@effect-kit/storage/r2-workers";
+import type { R2BucketBinding } from "@effect-kit/storage/r2-workers";
+declare const nativeBinding: R2BucketBinding;
+export const workerProvider = R2WorkersStorage.layer({ bucket: nativeBinding, storeId: "worker" });

@@ -8,7 +8,13 @@
       "target": "Bytes, byte streams, known/unknown lengths, empty objects, metadata, overwrite behavior",
       "completionPhase": 4,
       "status": "implemented",
-      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md", "docs/transfers.md"],
+      "specifications": [
+        "docs/core.md",
+        "docs/testing.md",
+        "docs/s3.md",
+        "docs/transfers.md",
+        "docs/r2-workers.md"
+      ],
       "implementations": [
         "packages/storage/src/requests.ts",
         "packages/storage/src/testing/memory-upload.ts",
@@ -65,6 +71,19 @@
           "limitations": [
             "In-process transfer behavior; persistent recovery/batch checkpoints remain phase 5. Hosted AWS qualification remains pending at owner request."
           ]
+        },
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-30",
+          "source": "docs/evidence/phase-6-r2-workers.md",
+          "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
+          "apiVersion": "2026-07-30",
+          "runtime": "workerd-1.20260730.1",
+          "configuration": "owned-local-binding",
+          "testId": "scripts/r2-workers/check.ts",
+          "limitations": [
+            "Owned local workerd only; hosted R2 and production platform limits remain unqualified. No binding-only durable multipart upload/inventory/conditional completion."
+          ]
         }
       ],
       "deferral": null
@@ -75,7 +94,13 @@
       "target": "Scoped byte streams, bounded collection helpers, metadata, cancellation, response disposal",
       "completionPhase": 4,
       "status": "implemented",
-      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md", "docs/transfers.md"],
+      "specifications": [
+        "docs/core.md",
+        "docs/testing.md",
+        "docs/s3.md",
+        "docs/transfers.md",
+        "docs/r2-workers.md"
+      ],
       "implementations": [
         "packages/storage/src/storage.ts",
         "packages/storage/src/testing/memory.ts",
@@ -131,6 +156,19 @@
           "limitations": [
             "In-process transfer behavior; persistent recovery/batch checkpoints remain phase 5. Hosted AWS qualification remains pending at owner request."
           ]
+        },
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-30",
+          "source": "docs/evidence/phase-6-r2-workers.md",
+          "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
+          "apiVersion": "2026-07-30",
+          "runtime": "workerd-1.20260730.1",
+          "configuration": "owned-local-binding",
+          "testId": "scripts/r2-workers/check.ts",
+          "limitations": [
+            "Owned local workerd only; hosted R2 and production platform limits remain unqualified. No binding-only durable multipart upload/inventory/conditional completion."
+          ]
         }
       ],
       "deferral": null
@@ -141,7 +179,7 @@
       "target": "Head, existence helper, MIME/cache/disposition fields, custom metadata, explicit update semantics",
       "completionPhase": 10,
       "status": "in-progress",
-      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md"],
+      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md", "docs/r2-workers.md"],
       "implementations": [
         "packages/storage/src/object.ts",
         "packages/storage/src/storage.ts",
@@ -181,6 +219,19 @@
           "limitations": [
             "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
           ]
+        },
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-30",
+          "source": "docs/evidence/phase-6-r2-workers.md",
+          "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
+          "apiVersion": "2026-07-30",
+          "runtime": "workerd-1.20260730.1",
+          "configuration": "owned-local-binding",
+          "testId": "scripts/r2-workers/check.ts",
+          "limitations": [
+            "Owned local workerd only; hosted R2 and production platform limits remain unqualified. No binding-only durable multipart upload/inventory/conditional completion."
+          ]
         }
       ],
       "deferral": null
@@ -191,7 +242,13 @@
       "target": "Idempotent missing-delete contract, conditional/version-specific deletion, per-key bulk results",
       "completionPhase": 4,
       "status": "implemented",
-      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md", "docs/transfers.md"],
+      "specifications": [
+        "docs/core.md",
+        "docs/testing.md",
+        "docs/s3.md",
+        "docs/transfers.md",
+        "docs/r2-workers.md"
+      ],
       "implementations": [
         "packages/storage/src/storage.ts",
         "packages/storage/src/testing/memory.ts",
@@ -246,6 +303,19 @@
           "limitations": [
             "In-process transfer behavior; persistent recovery/batch checkpoints remain phase 5. Hosted AWS qualification remains pending at owner request."
           ]
+        },
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-30",
+          "source": "docs/evidence/phase-6-r2-workers.md",
+          "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
+          "apiVersion": "2026-07-30",
+          "runtime": "workerd-1.20260730.1",
+          "configuration": "owned-local-binding",
+          "testId": "scripts/r2-workers/check.ts",
+          "limitations": [
+            "Owned local workerd only; hosted R2 and production platform limits remain unqualified. No binding-only durable multipart upload/inventory/conditional completion."
+          ]
         }
       ],
       "deferral": null
@@ -256,7 +326,7 @@
       "target": "Prefix, delimiter/common prefixes, pages and lazy streams, limits, opaque cursors, cancellation",
       "completionPhase": 2,
       "status": "implemented",
-      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md"],
+      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md", "docs/r2-workers.md"],
       "implementations": [
         "packages/storage/src/storage.ts",
         "packages/storage/src/testing/memory-list.ts",
@@ -293,6 +363,19 @@
           "testId": "packages/storage/test/s3/primitives.test.ts",
           "limitations": [
             "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+          ]
+        },
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-30",
+          "source": "docs/evidence/phase-6-r2-workers.md",
+          "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
+          "apiVersion": "2026-07-30",
+          "runtime": "workerd-1.20260730.1",
+          "configuration": "owned-local-binding",
+          "testId": "scripts/r2-workers/check.ts",
+          "limitations": [
+            "Owned local workerd only; hosted R2 and production platform limits remain unqualified. No binding-only durable multipart upload/inventory/conditional completion."
           ]
         }
       ],
@@ -351,7 +434,7 @@
       "target": "Create-only, match-current, not-modified reads, source/destination conditions where supported",
       "completionPhase": 3,
       "status": "implemented",
-      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md"],
+      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md", "docs/r2-workers.md"],
       "implementations": [
         "packages/storage/src/requests.ts",
         "packages/storage/src/testing/memory-upload.ts",
@@ -393,6 +476,19 @@
           "limitations": [
             "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
           ]
+        },
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-30",
+          "source": "docs/evidence/phase-6-r2-workers.md",
+          "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
+          "apiVersion": "2026-07-30",
+          "runtime": "workerd-1.20260730.1",
+          "configuration": "owned-local-binding",
+          "testId": "scripts/r2-workers/check.ts",
+          "limitations": [
+            "Owned local workerd only; hosted R2 and production platform limits remain unqualified. No binding-only durable multipart upload/inventory/conditional completion."
+          ]
         }
       ],
       "deferral": null
@@ -403,7 +499,13 @@
       "target": "Single/suffix/open-ended byte ranges, response bounds, unsatisfiable ranges, safe resume",
       "completionPhase": 4,
       "status": "implemented",
-      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md", "docs/transfers.md"],
+      "specifications": [
+        "docs/core.md",
+        "docs/testing.md",
+        "docs/s3.md",
+        "docs/transfers.md",
+        "docs/r2-workers.md"
+      ],
       "implementations": [
         "packages/storage/src/ranges.ts",
         "packages/storage/src/testing/memory.ts",
@@ -456,6 +558,19 @@
           "testId": "packages/storage/test/transfers/download-copy.test.ts",
           "limitations": [
             "In-process transfer behavior; persistent recovery/batch checkpoints remain phase 5. Hosted AWS qualification remains pending at owner request."
+          ]
+        },
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-30",
+          "source": "docs/evidence/phase-6-r2-workers.md",
+          "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
+          "apiVersion": "2026-07-30",
+          "runtime": "workerd-1.20260730.1",
+          "configuration": "owned-local-binding",
+          "testId": "scripts/r2-workers/check.ts",
+          "limitations": [
+            "Owned local workerd only; hosted R2 and production platform limits remain unqualified. No binding-only durable multipart upload/inventory/conditional completion."
           ]
         }
       ],
@@ -600,7 +715,8 @@
       "specifications": [
         "docs/transfers.md",
         "docs/runtimes.md",
-        "architecture/decisions/008-workflow-runtime-layers.md"
+        "architecture/decisions/008-workflow-runtime-layers.md",
+        "docs/r2-workers.md"
       ],
       "implementations": [
         "packages/storage/src/transfers.ts",
@@ -694,6 +810,19 @@
           "limitations": [
             "Helper smoke only; no provider transport qualification. Browser uses memory KVS/target; Bun/Deno reconstruct file backing in the same process."
           ]
+        },
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-30",
+          "source": "docs/evidence/phase-6-r2-workers.md",
+          "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
+          "apiVersion": "2026-07-30",
+          "runtime": "workerd-1.20260730.1",
+          "configuration": "owned-local-binding",
+          "testId": "scripts/r2-workers/check.ts",
+          "limitations": [
+            "Owned local workerd only; hosted R2 and production platform limits remain unqualified. No binding-only durable multipart upload/inventory/conditional completion."
+          ]
         }
       ],
       "deferral": null
@@ -704,7 +833,7 @@
       "target": "Initiate, parts, list, complete, abort, signing parts, native constraints, orphan cleanup",
       "completionPhase": 4,
       "status": "implemented",
-      "specifications": ["docs/s3.md", "docs/transfers.md"],
+      "specifications": ["docs/s3.md", "docs/transfers.md", "docs/r2-workers.md"],
       "implementations": [
         "packages/storage/src/s3/multipart.ts",
         "packages/storage/src/s3/copy.ts",
@@ -743,6 +872,19 @@
           "testId": "packages/storage/test/transfers/upload.test.ts",
           "limitations": [
             "In-process transfer behavior; persistent recovery/batch checkpoints remain phase 5. Hosted AWS qualification remains pending at owner request."
+          ]
+        },
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-30",
+          "source": "docs/evidence/phase-6-r2-workers.md",
+          "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
+          "apiVersion": "2026-07-30",
+          "runtime": "workerd-1.20260730.1",
+          "configuration": "owned-local-binding",
+          "testId": "scripts/r2-workers/check.ts",
+          "limitations": [
+            "Owned local workerd only; hosted R2 and production platform limits remain unqualified. No binding-only durable multipart upload/inventory/conditional completion."
           ]
         }
       ],
@@ -881,7 +1023,8 @@
         "docs/sessions.md",
         "architecture/decisions/005-persistence-and-fixtures.md",
         "docs/runtimes.md",
-        "architecture/decisions/008-workflow-runtime-layers.md"
+        "architecture/decisions/008-workflow-runtime-layers.md",
+        "docs/r2-workers.md"
       ],
       "implementations": [
         "packages/storage/src/transfers.ts",
@@ -992,6 +1135,19 @@
           "limitations": [
             "Helper smoke only; no provider transport qualification. Browser uses memory KVS/target; Bun/Deno reconstruct file backing in the same process."
           ]
+        },
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-30",
+          "source": "docs/evidence/phase-6-r2-workers.md",
+          "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
+          "apiVersion": "2026-07-30",
+          "runtime": "workerd-1.20260730.1",
+          "configuration": "owned-local-binding",
+          "testId": "scripts/r2-workers/check.ts",
+          "limitations": [
+            "Owned local workerd only; hosted R2 and production platform limits remain unqualified. No binding-only durable multipart upload/inventory/conditional completion."
+          ]
         }
       ],
       "deferral": null
@@ -1063,7 +1219,8 @@
         "docs/s3.md",
         "docs/transfers.md",
         "docs/runtimes.md",
-        "architecture/decisions/008-workflow-runtime-layers.md"
+        "architecture/decisions/008-workflow-runtime-layers.md",
+        "docs/r2-workers.md"
       ],
       "implementations": [
         "packages/storage/src/s3/object-mapping.ts",
@@ -1173,6 +1330,19 @@
           "testId": "packages/storage/test/runtime/program.mjs",
           "limitations": [
             "Helper smoke only; no provider transport qualification. Browser uses memory KVS/target; Bun/Deno reconstruct file backing in the same process."
+          ]
+        },
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-30",
+          "source": "docs/evidence/phase-6-r2-workers.md",
+          "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
+          "apiVersion": "2026-07-30",
+          "runtime": "workerd-1.20260730.1",
+          "configuration": "owned-local-binding",
+          "testId": "scripts/r2-workers/check.ts",
+          "limitations": [
+            "Owned local workerd only; hosted R2 and production platform limits remain unqualified. No binding-only durable multipart upload/inventory/conditional completion."
           ]
         }
       ],

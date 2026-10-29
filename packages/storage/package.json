@@ -88,6 +88,11 @@
       "workspace-source": "./src/filesystem.ts",
       "types": "./dist/filesystem.d.ts",
       "default": "./dist/filesystem.js"
+    },
+    "./r2-workers": {
+      "workspace-source": "./src/r2-workers.ts",
+      "types": "./dist/r2-workers.d.ts",
+      "default": "./dist/r2-workers.js"
     }
   },
   "publishConfig": {
@@ -140,6 +145,10 @@
       "./filesystem": {
         "types": "./dist/filesystem.d.ts",
         "import": "./dist/filesystem.js"
+      },
+      "./r2-workers": {
+        "types": "./dist/r2-workers.d.ts",
+        "import": "./dist/r2-workers.js"
       }
     },
     "access": "public",
@@ -163,6 +172,7 @@
     "@aws-sdk/client-s3": "catalog:",
     "@aws-sdk/s3-presigned-post": "catalog:",
     "@aws-sdk/s3-request-presigner": "catalog:",
+    "@cloudflare/workers-types": "catalog:",
     "@effect/platform-browser": "catalog:",
     "@effect/platform-bun": "catalog:",
     "@effect/platform-deno": "catalog:",

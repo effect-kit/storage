@@ -10,6 +10,7 @@ protocol evidence; hosted AWS acceptance is pending. Managed transfers add bound
 uploads, pinned downloads, verified copy/move and lazy batches. Durable sessions reuse Effect persistence with explicit exclusive ownership.
 Runtime layers for Node, Bun, Deno and browsers supply hashing and platform services.
 The filesystem provider adds atomic object envelopes on an application-owned directory.
+Native R2 Workers uses caller-owned bindings and has local workerd acceptance.
 
 ## Package
 
@@ -29,20 +30,22 @@ pnpm ci:check
 pnpm test:extended
 ```
 
-| Command                        | Purpose                                                     |
-| ------------------------------ | ----------------------------------------------------------- |
-| `pnpm dev`                     | Watch package builds                                        |
-| `pnpm build`                   | Build ESM and declarations with tsdown                      |
-| `pnpm format` / `format:check` | Oxfmt formatting                                            |
-| `pnpm lint`                    | Oxlint, including tooling                                   |
-| `pnpm typecheck`               | Source, tests, tooling and configurations                   |
-| `pnpm test`                    | Offline catalog/archive-policy and package tests            |
-| `pnpm catalog:check`           | Validate complete feature/provider inventories and evidence |
-| `pnpm ci:check`                | Formatting, catalogs, lint, types, tests and build          |
-| `pnpm check:package`           | Publint and Are the Types Wrong                             |
-| `pnpm test:artifacts`          | Build, pack and test isolated production consumers          |
-| `pnpm test:runtimes [runtime]` | Exact packed runtime helpers and isolated declarations      |
-| `pnpm test:extended`           | Artifact checks; add later manual suites as they exist      |
+| Command                          | Purpose                                                      |
+| -------------------------------- | ------------------------------------------------------------ |
+| `pnpm dev`                       | Watch package builds                                         |
+| `pnpm build`                     | Build ESM and declarations with tsdown                       |
+| `pnpm format` / `format:check`   | Oxfmt formatting                                             |
+| `pnpm lint`                      | Oxlint, including tooling                                    |
+| `pnpm typecheck`                 | Source, tests, tooling and configurations                    |
+| `pnpm test`                      | Offline catalog/archive-policy and package tests             |
+| `pnpm catalog:check`             | Validate complete feature/provider inventories and evidence  |
+| `pnpm ci:check`                  | Formatting, catalogs, lint, types, tests and build           |
+| `pnpm check:package`             | Publint and Are the Types Wrong                              |
+| `pnpm test:artifacts`            | Build, pack and test isolated production consumers           |
+| `pnpm test:runtimes [runtime]`   | Exact packed runtime helpers and isolated declarations       |
+| `pnpm test:filesystem [runtime]` | Real Node/Bun file, process race and crash acceptance        |
+| `pnpm test:r2:workers`           | Isolated packed Worker and owned local R2 binding acceptance |
+| `pnpm test:extended`             | Artifact checks; add later manual suites as they exist       |
 
 The artifact lane installs exact local tarballs with Effect and TypeScript from the
 local pnpm store in offline mode. A frozen workspace install seeds the required store;
@@ -61,6 +64,7 @@ Local investigations stay in ignored `research/` and are never required by CI.
 - [Provider catalog](docs/providers.json): 16 distinct targets, configuration-specific operations and evidence.
 - [Catalog conventions](docs/catalogs.md)
 - [Portable API](docs/core.md), [memory/testing tools](docs/testing.md), [S3 adapter](docs/s3.md), and [managed transfers](docs/transfers.md), and [durable sessions](docs/sessions.md)
+- [Native R2 Workers](docs/r2-workers.md) and [local binding evidence](docs/evidence/phase-6-r2-workers.md)
 - [Filesystem provider](docs/filesystem.md) and [filesystem evidence](docs/evidence/phase-6-filesystem.md)
 - [Runtime setup](docs/runtimes.md) and [current runtime evidence](docs/evidence/pre-phase-6.md)
 - [Effect 4.1 baseline upgrade evidence](docs/evidence/effect-4-1.md)

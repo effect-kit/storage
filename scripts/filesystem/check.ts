@@ -26,9 +26,10 @@ async function crash(root: string, boundary: string) {
     let stdout = "";
     let stderr = "";
     let reached = false;
+    let timedOut = false;
     const timeout = setTimeout(() => {
+      timedOut = true;
       child.kill("SIGKILL");
-      reject(new Error(`Boundary timeout: ${boundary}`));
     }, 15000);
     child.stdout.on("data", (bytes: Buffer) => {
       stdout += bytes.toString();
@@ -46,13 +47,16 @@ async function crash(root: string, boundary: string) {
     });
     child.on("close", () => {
       clearTimeout(timeout);
-      if (reached) accept();
+      if (reached && !timedOut) accept();
       else reject(new Error(`Boundary not reached: ${boundary}\n${stderr}\n${stdout}`));
     });
   });
 }
 
+const output = resolve(`.artifacts/filesystem-${runtime}.json`);
 try {
+  await mkdir(resolve(".artifacts"), { recursive: true });
+  await writeFile(output, JSON.stringify({ status: "running", runtime }));
   const boundaries = [
     "body-written",
     "staged-synced",
@@ -63,7 +67,7 @@ try {
     "link-before",
     "link-after",
   ];
-  const results = await Promise.all(
+  const completed = await Promise.allSettled(
     boundaries.map(async (boundary) => {
       const root = join(temporary, boundary);
       await invoke(root, "seed");
@@ -82,16 +86,32 @@ try {
       return { boundary, matchedGeneration: true, stagingReclaimed: result.removed };
     }),
   );
+  const failures = completed.filter((result) => result.status === "rejected");
+  if (failures.length)
+    throw new AggregateError(
+      failures.map((result) => result.reason),
+      "Filesystem crash suite failed",
+    );
+  const results = completed.flatMap((result) =>
+    result.status === "fulfilled" ? [result.value] : [],
+  );
   const raceRoot = join(temporary, "race");
   await invoke(raceRoot, "seed");
-  const races = await Promise.all(
+  const raceResults = await Promise.allSettled(
     ["3", "4", "5", "6"].map((byte) => invoke(raceRoot, "race", byte)),
+  );
+  const raceFailures = raceResults.filter((result) => result.status === "rejected");
+  if (raceFailures.length)
+    throw new AggregateError(
+      raceFailures.map((result) => result.reason),
+      "Filesystem race failed",
+    );
+  const races = raceResults.flatMap((result) =>
+    result.status === "fulfilled" ? [result.value] : [],
   );
   assert.equal(races.filter((result) => result.result === "winner").length, 1);
   assert.equal(races.filter((result) => result.result === "PreconditionFailed").length, 3);
   const conformance = await invoke(join(temporary, "conformance"), "conformance");
-  const output = resolve(`.artifacts/filesystem-${runtime}.json`);
-  await mkdir(resolve(".artifacts"), { recursive: true });
   await writeFile(
     output,
     `${JSON.stringify({ status: "passed", host: { os: process.platform, arch: process.arch }, runtime, conformance, results, createOnlyProcesses: 4 }, null, 2)}\n`,
@@ -99,6 +119,9 @@ try {
   console.log(
     `${runtime}: filesystem conformance, 32 MiB streaming, four-process create-only and eight crash boundaries passed`,
   );
+} catch (error) {
+  await writeFile(output, JSON.stringify({ status: "failed", runtime }));
+  throw error;
 } finally {
   await rm(temporary, { recursive: true, force: true });
 }

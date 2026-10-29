@@ -181,6 +181,8 @@ export class UploadSessions extends Context.Service<UploadSessions, SessionsServ
               source.length,
               policy.digest.workspaceBytes * 2 + (source.workspaceBytes ?? 0),
               "multipart",
+              false,
+              condition,
             );
             if (
               Math.max(1, Math.ceil((source.length ?? 0) / plan.partBytes)) + 5 >

@@ -66,6 +66,10 @@ endpoint rather than merging two providers under the same Storage tag.
   fingerprints again. Reads use scoped 64 KiB handles without stream prefetch.
   Preparation is a separate caller effect; give it a timeout where appropriate.
 
+Multipart limits may declare completeConditions. A provider with no conditional
+completion rejects such multipart uploads during planning, before source opening
+or initiation. Single-request conditional writes still use Storage capabilities.
+
 Known small objects use a staged single request. Larger/unknown objects use the
 endpoint's numbered multipart protocol when available. `strategy` can force single
 or multipart. A single request stages its entire bounded body before publication;

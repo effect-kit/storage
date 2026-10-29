@@ -14,6 +14,7 @@ export default defineConfig({
     "src/deno.ts",
     "src/browser.ts",
     "src/filesystem.ts",
+    "src/r2-workers.ts",
   ],
   unbundle: true,
   deps: { neverBundle: [/^node:/u] },

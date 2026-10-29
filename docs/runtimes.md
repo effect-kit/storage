@@ -128,3 +128,7 @@ Bun 1.4.4 needs a focused scoped file-handle adapter for positional IO: its nati
 Node compatibility path ignores the overload used by Effect 4.1. Other filesystem
 operations retain the official Bun layer. [Filesystem evidence](evidence/phase-6-filesystem.md)
 records actual offset/cursor and fresh-process crash regressions.
+
+Native R2 Workers also exercises /browser's web-safe crypto composition under
+workerd 1.20260730.1. This qualifies that local Worker helper/provider combination;
+it does not add hosted R2, browser reload or other provider transport claims.

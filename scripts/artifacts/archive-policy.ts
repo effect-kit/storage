@@ -46,6 +46,10 @@ const Manifest = Schema.Struct({
       types: Schema.Literal("./dist/deno.d.ts"),
       import: Schema.Literal("./dist/deno.js"),
     }),
+    "./r2-workers": Schema.Struct({
+      types: Schema.Literal("./dist/r2-workers.d.ts"),
+      import: Schema.Literal("./dist/r2-workers.js"),
+    }),
     "./filesystem": Schema.Struct({
       types: Schema.Literal("./dist/filesystem.d.ts"),
       import: Schema.Literal("./dist/filesystem.js"),
@@ -110,6 +114,8 @@ export function checkArchive(manifestInput: unknown, entries: readonly string[])
     "dist/bun.d.ts",
     "dist/deno.js",
     "dist/deno.d.ts",
+    "dist/r2-workers.js",
+    "dist/r2-workers.d.ts",
     "dist/filesystem.js",
     "dist/filesystem.d.ts",
     "dist/browser.js",

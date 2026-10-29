@@ -45,7 +45,8 @@
     "test:s3:local": "pnpm build && node scripts/s3/local.ts",
     "test:s3:aws": "pnpm --filter @effect-kit/storage exec vitest run --config vitest.s3.config.ts",
     "test:runtimes": "pnpm build && node scripts/runtime/check.ts",
-    "test:filesystem": "pnpm build && node scripts/filesystem/check.ts"
+    "test:filesystem": "pnpm build && node scripts/filesystem/check.ts",
+    "test:r2:workers": "pnpm build && node scripts/r2-workers/check.ts"
   },
   "dependencies": {
     "effect": "catalog:"
@@ -60,6 +61,7 @@
     "@types/node": "catalog:",
     "klarity": "catalog:",
     "lefthook": "catalog:",
+    "miniflare": "catalog:",
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
     "playwright": "catalog:",

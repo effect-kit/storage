@@ -31,6 +31,8 @@ export interface MultipartUploads {
     readonly minimumPartBytes: number;
     readonly maximumPartBytes: number;
     readonly maximumParts: number;
+    /** Omitted retains the full protocol contract; an empty array explicitly forbids conditional completion. */
+    readonly completeConditions?: ReadonlyArray<"create-only" | "if-match">;
   };
   readonly initiate: (request: {
     readonly key: string;

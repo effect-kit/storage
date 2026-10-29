@@ -155,6 +155,8 @@ export const upload = Effect.fn("Transfers.upload")(function* <E, R>(
     request.source.length,
     runtime.input.digest.workspaceBytes + (request.source.workspaceBytes ?? 0),
     request.strategy,
+    false,
+    request.condition,
   );
   const operation = existing ?? (yield* runtime.begin("upload", request.source.length));
   const { endpoint, policy } = runtime;

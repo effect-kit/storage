@@ -1,6 +1,7 @@
 import { Effect } from "effect";
 
 import { storageError } from "../errors.js";
+import type { WriteCondition } from "../requests.js";
 import type { TransferEndpoint, TransferConfiguration } from "./models.js";
 
 const MiB = 1024 * 1024;
@@ -93,6 +94,7 @@ export function planUpload(
   inputDigestWorkspace: number,
   strategy: "auto" | "single" | "multipart" = "auto",
   serverCopy = false,
+  condition?: WriteCondition,
 ) {
   return Effect.gen(function* () {
     const provider = endpoint.storage.provider;
@@ -147,6 +149,19 @@ export function planUpload(
           "not-started",
         );
       const limits = multipart.limits;
+      if (
+        condition &&
+        limits.completeConditions &&
+        !limits.completeConditions.includes(
+          condition._tag === "CreateOnly" ? "create-only" : "if-match",
+        )
+      )
+        return yield* storageError(
+          "upload.plan",
+          provider,
+          { _tag: "Unsupported", capability: "multipart-conditional-completion" },
+          "not-started",
+        );
       partBytes = Math.max(
         policy.partBytes,
         limits.minimumPartBytes,

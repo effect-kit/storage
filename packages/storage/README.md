@@ -102,6 +102,15 @@ Streamed envelopes publish bytes/metadata together, with atomic create-only and
 scoped reads. See [layout, trust and limits](../../docs/filesystem.md) and
 [local Node/Bun crash evidence](../../docs/evidence/phase-6-filesystem.md).
 
+## Native R2 Workers
+
+`/r2-workers` exports R2WorkersStorage.make/layer({ bucket: env.BUCKET, storeId }).
+It uses the binding directly, supplies its transfer driver and imports no cloud SDK.
+Native multipart lacks inventory and conditional completion; durable multipart upload
+sessions fail closed. See [setup and supported workflows](../../docs/r2-workers.md)
+and [actual local workerd evidence](../../docs/evidence/phase-6-r2-workers.md).
+Hosted R2 acceptance is pending; local tests need no Cloudflare account.
+
 ## License
 
 Apache-2.0, Effect Kit Contributors.

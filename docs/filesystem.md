@@ -32,7 +32,8 @@ Use the same composition with StorageBun.layer for Bun. Node/Bun runtime modules
 provide FileSystem, Path, bounded Digest, SecureRandom and incremental TransferHash.
 The provider itself imports only Effect and shared library contracts. Basic setup
 requires these services because writes calculate integrity and opaque generation
-validators. FilesystemStorage.make returns a captured service; layer also supplies
+validators. This format requires a SHA-256 TransferHash; supply any different
+managed hash override to the managed layer separately. FilesystemStorage.make returns a captured service; layer also supplies
 Storage and a matching primitive-only TransferDriver.
 
 ## Layout and publication
@@ -79,7 +80,8 @@ storeId, prefix, delimiter and limit. Keep this root dedicated to the library.
 Managed Transfers works through the supplied driver. With no native multipart,
 managed uploads use the engine's bounded single-request staging and must fit policy
 admission; use primitive streaming puts for larger disk-only writes. Managed downloads
-verify recorded checksums. Durable multipart upload sessions are unsupported; pinned
+verify recorded checksums. Moves reject before copying without safe deletion
+authority. Durable multipart upload sessions are unsupported; pinned
 conditional download sessions can use the normal session target/store interfaces.
 
 ## Trust, cleanup and durability boundaries

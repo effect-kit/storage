@@ -8,6 +8,7 @@ match-current write case skipped by capability), opaque key preservation,
 independent-instance create-only races, open-reader generation consistency,
 source/length failures, unsupported conditions before source consumption, symlink
 rejection, root identity/corrupt envelopes/cursor isolation and managed driver use.
+Protected download sessions also consume this provider and publish verified file targets.
 A separate Bun handle regression verifies positional rewrites and explicit reads
 without changing the logical cursor.
 
