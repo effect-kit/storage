@@ -1,0 +1,36 @@
+name: Runtime helpers
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        runtime: [node, bun, deno, browser]
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: effect-kit/.github/actions/setup@v1
+        with:
+          cache: pnpm
+      - uses: oven-sh/setup-bun@v2
+        if: matrix.runtime == 'bun'
+        with:
+          bun-version: 1.4.4
+      - uses: denoland/setup-deno@v2
+        if: matrix.runtime == 'deno'
+        with:
+          deno-version: 2.9.6
+      - name: Install Chromium
+        if: matrix.runtime == 'browser'
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Check the packed runtime
+        run: pnpm test:runtimes ${{ matrix.runtime }}

@@ -1,7 +1,7 @@
 import { Effect } from "effect";
 
 import { storageError } from "../errors.js";
-import type { TransferEndpoint, TransferPolicy } from "./models.js";
+import type { TransferEndpoint, TransferConfiguration } from "./models.js";
 
 const MiB = 1024 * 1024;
 
@@ -20,7 +20,7 @@ export interface ResolvedPolicy {
   readonly observerTimeoutMillis: number;
 }
 
-export function resolvePolicy(input: TransferPolicy, endpoint: TransferEndpoint) {
+export function resolvePolicy(input: TransferConfiguration, endpoint: TransferEndpoint) {
   return Effect.gen(function* () {
     const policy: ResolvedPolicy = {
       memoryBudgetBytes: input.memoryBudgetBytes ?? 64 * MiB,

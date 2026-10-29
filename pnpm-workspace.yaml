@@ -5,6 +5,13 @@ catalog:
   "@aws-sdk/client-s3": 3.1159.0
   "@aws-sdk/s3-request-presigner": 3.1159.0
   "@aws-sdk/s3-presigned-post": 3.1159.0
+  "@effect/platform-node": 4.1.0
+  "@effect/platform-bun": 4.1.0
+  "@effect/platform-deno": 4.1.0
+  "@effect/platform-browser": 4.1.0
+  "@noble/hashes": 2.4.0
+  playwright: 1.64.1
+  redis: 6.3.1
   effect: 4.1.0
   "@effect/vitest": 4.1.0
   typescript: 7.0.2
@@ -50,3 +57,14 @@ minimumReleaseAgeExclude:
   - "@aws-sdk/xml-builder@3.972.42"
   - "@effect/vitest@4.1.0"
   - effect@4.1.0
+  - "@effect/platform-browser@4.1.0"
+  - "@effect/platform-bun@4.1.0"
+  - "@effect/platform-deno@4.1.0"
+  - "@effect/platform-node-shared@4.1.0"
+  - "@effect/platform-node@4.1.0"
+  - "@redis/bloom@6.3.1"
+  - "@redis/client@6.3.1"
+  - "@redis/json@6.3.1"
+  - "@redis/search@6.3.1"
+  - "@redis/time-series@6.3.1"
+  - redis@6.3.1

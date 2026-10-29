@@ -1,13 +1,15 @@
 import { Effect, Redacted } from "effect";
+import { SecureRandom } from "effect/crypto";
 
 import type { MultipartUploads } from "../../src/contracts/multipart.js";
+import { sha256 } from "../../src/node.js";
 import type { ObjectMetadata } from "../../src/object.js";
+import { Storage } from "../../src/storage.js";
 import { MemoryStorage } from "../../src/testing.js";
+import { TransferDriver, TransferHash, Transfers } from "../../src/transfers.js";
 import type { TransferEndpoint, TransferPolicy } from "../../src/transfers.js";
-import { sha256 } from "../../src/transfers/node.js";
 
 export const policy: TransferPolicy = {
-  digest: sha256,
   memoryBudgetBytes: 512 * 1024,
   partBytes: 16,
   partConcurrency: 2,
@@ -96,3 +98,14 @@ export const fixture = Effect.fnUntraced(function* () {
     counts: () => ({ aborts, initiates, completes, partAttempts }),
   };
 });
+
+export const withEndpoint = <A, E, R>(effect: Effect.Effect<A, E, R>, endpoint: TransferEndpoint) =>
+  effect.pipe(
+    Effect.provideService(Storage, endpoint.storage),
+    Effect.provideService(TransferDriver, endpoint),
+    Effect.provideService(TransferHash, sha256),
+    Effect.provide(SecureRandom.layerWebCrypto),
+  );
+
+export const makeTransfers = (endpoint: TransferEndpoint, selected: TransferPolicy = policy) =>
+  withEndpoint(Transfers.make(selected), endpoint);

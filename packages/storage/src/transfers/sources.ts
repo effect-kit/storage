@@ -3,7 +3,7 @@ import type { PlatformError } from "effect/PlatformError";
 
 import type { StorageError } from "../errors.js";
 import { storageError } from "../errors.js";
-import type { TransferDigest } from "./models.js";
+import { TransferHash } from "./dependencies.js";
 
 export interface UploadSource<E = never, R = never> {
   readonly length?: number | undefined;
@@ -67,13 +67,13 @@ const identity = (info: FileSystem.File.Info) =>
 /** Captures FileSystem once. Every opening checks identity and a full bounded-memory fingerprint. */
 export const file = Effect.fnUntraced(function* (
   path: string,
-  digest: TransferDigest,
 ): Effect.fn.Return<
   UploadSource<PlatformError | StorageError>,
   PlatformError | StorageError,
-  FileSystem.FileSystem
+  FileSystem.FileSystem | TransferHash
 > {
   const fs = yield* FileSystem.FileSystem;
+  const digest = yield* TransferHash;
   const original = yield* fs.stat(path);
   const length = Number(ByteSize.toBigInt(original.size));
   if (original.type !== "File" || !Number.isSafeInteger(length)) return yield* sourceError("file");

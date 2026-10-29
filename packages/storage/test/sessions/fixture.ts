@@ -5,11 +5,13 @@ import { KeyValueStore } from "effect/persistence";
 
 import type { MultipartUploads } from "../../src/contracts/multipart.js";
 import { storageError } from "../../src/errors.js";
+import { aes256Gcm } from "../../src/node.js";
 import { Upload } from "../../src/s3/native-models.js";
 import { UploadSessions, UploadSessionStore } from "../../src/sessions.js";
-import { aes256Gcm } from "../../src/sessions/node.js";
+import type { SessionOptions } from "../../src/sessions.js";
 import type { TransferEndpoint } from "../../src/transfers.js";
-import { fixture, policy } from "../transfers/fixture.js";
+import { ManagedTransferRuntime, makeManagedRuntime } from "../../src/transfers/managed-runtime.js";
+import { withEndpoint, fixture, policy } from "../transfers/fixture.js";
 export const handles = {
   encode: (handle: Schema.Schema.Type<typeof Upload>) =>
     Schema.encodeEffect(Schema.fromJsonString(Schema.toCodecJson(Upload)))(handle).pipe(
@@ -26,6 +28,7 @@ export const setup = Effect.fnUntraced(function* () {
   const parts = new Map<number, { partNumber: number; etag: string; size?: number | undefined }>();
   const endpoint: TransferEndpoint & { multipart: MultipartUploads } = {
     ...test.endpoint,
+    handles,
     multipart: {
       ...test.multipart,
       uploadPart: (request) =>
@@ -47,8 +50,19 @@ export const setup = Effect.fnUntraced(function* () {
     ownership: "exclusive",
   }).pipe(Effect.provideService(KeyValueStore.KeyValueStore, kvs));
   const make = (selected = endpoint) =>
-    UploadSessions.make(selected, policy, { configurationId: "test-config", handles }).pipe(
-      Effect.provideService(UploadSessionStore, store),
-    );
+    makeSessions(selected, store, { configurationId: "test-config" });
   return { ...test, endpoint, kvs, store, protection, make };
+});
+
+export const makeSessions = Effect.fnUntraced(function* (
+  endpoint: TransferEndpoint,
+  store: UploadSessionStore["Service"],
+  options: SessionOptions,
+  selected = policy,
+) {
+  const runtime = yield* withEndpoint(makeManagedRuntime(selected), endpoint);
+  return yield* UploadSessions.make(options).pipe(
+    Effect.provideService(ManagedTransferRuntime, runtime),
+    Effect.provideService(UploadSessionStore, store),
+  );
 });

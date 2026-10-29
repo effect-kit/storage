@@ -3,10 +3,9 @@ import { Deferred, Effect, Fiber, Redacted, Result, Stream } from "effect";
 import { KeyValueStore } from "effect/persistence";
 import { TestClock } from "effect/testing";
 
-import { UploadSessions, UploadSessionStore } from "../../src/sessions.js";
+import { UploadSessionStore } from "../../src/sessions.js";
 import { UploadSource } from "../../src/transfers.js";
-import { policy } from "../transfers/fixture.js";
-import { handles, setup } from "./fixture.js";
+import { setup, makeSessions } from "./fixture.js";
 
 it.effect("corrupt and future-version records fail without deletion or remote mutation", () =>
   Effect.gen(function* () {
@@ -64,10 +63,9 @@ it.effect("two service instances serialize finalization and reject stale revisio
       ownership: "exclusive",
       protection: test.protection,
     }).pipe(Effect.provideService(KeyValueStore.KeyValueStore, test.kvs));
-    const second = yield* UploadSessions.make(test.endpoint, policy, {
+    const second = yield* makeSessions(test.endpoint, secondStore, {
       configurationId: "test-config",
-      handles,
-    }).pipe(Effect.provideService(UploadSessionStore, secondStore));
+    });
     const source = UploadSource.bytes(new Uint8Array(32));
     const id = yield* first.create({ key: "competing", source });
     const original = yield* test.store.read(id);
@@ -88,11 +86,10 @@ it.effect("two service instances serialize finalization and reject stale revisio
 it.effect("expired sessions reject work but remain inspectable and cleanable", () =>
   Effect.gen(function* () {
     const test = yield* setup();
-    const sessions = yield* UploadSessions.make(test.endpoint, policy, {
+    const sessions = yield* makeSessions(test.endpoint, test.store, {
       configurationId: "test-config",
-      handles,
       expiresInMillis: 10,
-    }).pipe(Effect.provideService(UploadSessionStore, test.store));
+    });
     const source = UploadSource.bytes(new Uint8Array(1));
     const id = yield* sessions.create({ key: "expiry", source });
     yield* TestClock.adjust(10);

@@ -8,6 +8,7 @@ provides memory storage, fault scripts and a public adapter conformance suite.
 The official-SDK S3 adapter adds native copy, multipart and signing. It has local
 protocol evidence; hosted AWS acceptance is pending. Managed transfers add bounded
 uploads, pinned downloads, verified copy/move and lazy batches. Durable sessions reuse Effect persistence with explicit exclusive ownership.
+Runtime layers for Node, Bun, Deno and browsers supply hashing and platform services.
 
 ## Package
 
@@ -39,6 +40,7 @@ pnpm test:extended
 | `pnpm ci:check`                | Formatting, catalogs, lint, types, tests and build          |
 | `pnpm check:package`           | Publint and Are the Types Wrong                             |
 | `pnpm test:artifacts`          | Build, pack and test isolated production consumers          |
+| `pnpm test:runtimes [runtime]` | Exact packed runtime helpers and isolated declarations      |
 | `pnpm test:extended`           | Artifact checks; add later manual suites as they exist      |
 
 The artifact lane installs exact local tarballs with Effect and TypeScript from the
@@ -58,6 +60,7 @@ Local investigations stay in ignored `research/` and are never required by CI.
 - [Provider catalog](docs/providers.json): 16 distinct targets, configuration-specific operations and evidence.
 - [Catalog conventions](docs/catalogs.md)
 - [Portable API](docs/core.md), [memory/testing tools](docs/testing.md), [S3 adapter](docs/s3.md), and [managed transfers](docs/transfers.md), and [durable sessions](docs/sessions.md)
+- [Runtime setup](docs/runtimes.md) and [current runtime evidence](docs/evidence/pre-phase-6.md)
 - [Effect 4.1 baseline upgrade evidence](docs/evidence/effect-4-1.md)
 - [Phase 5 persistence/restart evidence](docs/evidence/phase-5.md)
 - [Phase 4 transfer/resource evidence](docs/evidence/phase-4.md)

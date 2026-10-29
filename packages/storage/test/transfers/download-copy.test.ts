@@ -3,8 +3,8 @@ import { Effect, Result, Stream } from "effect";
 
 import { storageError } from "../../src/errors.js";
 import { Storage } from "../../src/index.js";
-import { Transfers, UploadSource } from "../../src/transfers.js";
-import { fixture, policy } from "./fixture.js";
+import { UploadSource } from "../../src/transfers.js";
+import { fixture, policy, makeTransfers } from "./fixture.js";
 
 it.effect("continues a failed download from acknowledged bytes using the pinned reference", () =>
   Effect.gen(function* () {
@@ -31,7 +31,7 @@ it.effect("continues a failed download from acknowledged bytes using the pinned 
           }),
         ),
     });
-    const transfers = yield* Transfers.make({ ...test.endpoint, storage }, policy);
+    const transfers = yield* makeTransfers({ ...test.endpoint, storage }, policy);
     const output: number[] = [];
     const receipt = yield* transfers.download({
       key: "source",
@@ -78,7 +78,7 @@ it.effect("rejects replacement during recovery and never retries a failed target
           }),
         ),
     });
-    const transfers = yield* Transfers.make({ ...test.endpoint, storage }, policy);
+    const transfers = yield* makeTransfers({ ...test.endpoint, storage }, policy);
     const output: number[] = [];
     const changed = yield* Effect.result(
       transfers.download({
@@ -108,7 +108,7 @@ it.effect("detects actual download length and full-object checksum mismatch", ()
   Effect.gen(function* () {
     const test = yield* fixture();
     yield* test.endpoint.storage.put({ key: "source", body: new Uint8Array([1, 2, 3]) });
-    const transfers = yield* Transfers.make(test.endpoint, policy);
+    const transfers = yield* makeTransfers(test.endpoint, policy);
     const mismatch = yield* Effect.result(
       transfers.download({
         key: "source",
@@ -135,7 +135,7 @@ it.effect("detects actual download length and full-object checksum mismatch", ()
             ),
           ),
     });
-    const lying = yield* Transfers.make({ ...test.endpoint, storage }, policy);
+    const lying = yield* makeTransfers({ ...test.endpoint, storage }, policy);
     const result = yield* Effect.result(
       lying.download({ key: "source", target: { write: () => Effect.void } }),
     );
@@ -151,7 +151,7 @@ it.effect("streams a verified cross-store copy and reports copy-success/delete-f
       key: "source",
       body: new Uint8Array(48).fill(7),
     });
-    const transfers = yield* Transfers.make(to.endpoint, policy);
+    const transfers = yield* makeTransfers(to.endpoint, policy);
     const receipt = yield* transfers.copy({
       source: from.endpoint,
       ref: source.ref,
@@ -182,7 +182,7 @@ it.effect("streams a verified cross-store copy and reports copy-success/delete-f
 it.effect("lazy bulk stops enumeration on cancellation and keeps per-entry failures ordered", () =>
   Effect.gen(function* () {
     const test = yield* fixture();
-    const transfers = yield* Transfers.make({ ...test.endpoint, multipart: undefined }, policy);
+    const transfers = yield* makeTransfers({ ...test.endpoint, multipart: undefined }, policy);
     let enumerated = 0;
     const requests = Stream.fromIterable(
       (function* () {

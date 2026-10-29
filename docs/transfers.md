@@ -1,52 +1,53 @@
 # Managed transfers
 
 `@effect-kit/storage/transfers` owns upload/download/copy/move orchestration and
-lazy batches. It depends only on Effect. `/transfers/node` supplies streaming
-SHA-256 through Node crypto; `/s3/transfers` connects an existing S3Storage service
-to the engine. No new dependency or managed-upload SDK is used.
+lazy batches. Its engine depends only on Effect. The provider layer supplies
+`TransferDriver`; the runtime supplies incremental `TransferHash` and secure IDs.
 
 ```ts
-import { Effect } from "effect";
+import { Effect, Layer } from "effect";
 
+import * as StorageNode from "@effect-kit/storage/node";
 import { S3Storage } from "@effect-kit/storage/s3";
-import { s3TransferEndpoint } from "@effect-kit/storage/s3/transfers";
 import { Transfers, UploadSource } from "@effect-kit/storage/transfers";
-import { sha256 } from "@effect-kit/storage/transfers/node";
 
-const program = Effect.scoped(
-  Effect.gen(function* () {
-    const storage = yield* S3Storage.make({ bucket: "application-bucket", region: "us-east-1" });
-    const endpoint = s3TransferEndpoint(storage);
-    const transfers = yield* Transfers.make(endpoint, {
-      digest: sha256,
-      memoryBudgetBytes: 64 * 1024 * 1024,
-      maxBytes: 1024 * 1024 * 1024,
-      partBytes: 8 * 1024 * 1024,
-      partConcurrency: 3,
-      requestConcurrency: 6,
-      deadlineMillis: 15 * 60 * 1000,
-      maxAttempts: 1000,
-    });
+const AppLive = Transfers.layer({
+  memoryBudgetBytes: 64 * 1024 * 1024,
+  maxBytes: 1024 * 1024 * 1024,
+  partBytes: 8 * 1024 * 1024,
+  partConcurrency: 3,
+  requestConcurrency: 6,
+  deadlineMillis: 15 * 60 * 1000,
+  maxAttempts: 1000,
+}).pipe(Layer.provideMerge(S3Storage.layer(config.s3)), Layer.provideMerge(StorageNode.layer));
 
-    const uploaded = yield* transfers.upload({
-      key: "reports/example.txt",
-      source: UploadSource.bytes(new TextEncoder().encode("hello")),
-      headers: { contentType: "text/plain" },
-      condition: { _tag: "CreateOnly" },
-    });
-    yield* transfers.download({
-      ref: uploaded.metadata.ref,
-      expectedChecksum: uploaded.checksum,
-      target: { write: (bytes) => Effect.sync(() => console.log(bytes.length)) },
-    });
-  }),
-);
+const program = Effect.gen(function* () {
+  const source = yield* UploadSource.file(config.uploadPath);
+  return yield* Transfers.upload({
+    key: "uploads/video.bin",
+    source,
+    condition: { _tag: "CreateOnly" },
+  });
+});
+
+await Effect.runPromise(program.pipe(Effect.provide(AppLive)));
 ```
 
-`Transfers.layer(endpoint, policy)` exposes the same service for static
-`Transfers.upload/download/copy/move/uploadMany/downloadMany` calls. Share one
-service instance to share its byte and request limits. Provider credentials and
-owned clients retain the lifetime of their supplying layer/scope.
+`config` is application configuration. Install the selected runtime's platform peer
+and S3's official client peer. See [runtime setup](runtimes.md).
+`Transfers.make(policy?)` captures the same dependencies and returns a standalone
+service. Use `Transfers.layer(policy?)` for session composition: it exposes Transfers
+and its private managed-runtime companion. Reuse one managed layer value to share
+admission with sessions; independent managed layers have independent limits.
+Provider credentials and owned clients retain their supplying layer/scope lifetime.
+
+Policy contains limits, retry/deadline, cleanup and observer settings. To override
+hashing, supply `Layer.succeed(TransferHash, implementation)` to the managed layer;
+do not put an implementation in policy. Custom adapter authors provide Storage and
+TransferDriver with the same Storage object. The driver declares actual limits,
+protocols, reconciliation and optional durable handle codec. Core-only adapters
+remain valid without a driver; cross-store copy still receives an explicit source
+endpoint rather than merging two providers under the same Storage tag.
 
 ## Sources and planning
 
@@ -58,8 +59,8 @@ owned clients retain the lifetime of their supplying layer/scope.
 - `UploadSource.replayable(() => body, length?)` opens an equivalent representation
   on demand. The caller owns that equivalence guarantee. The engine currently
   retries retained request bytes, rather than automatically restarting sources.
-- `yield* UploadSource.file(path, sha256)` requires Effect FileSystem at construction
-  and captures it. It checks size/device/inode/mtime and a full incremental content
+- `yield* UploadSource.file(path)` requires Effect FileSystem and TransferHash at
+  construction and captures them. It checks size/device/inode/mtime and a full incremental content
   fingerprint before each opening and at EOF. Same-size edits with unchanged
   timestamps fail. Preparation performs a bounded-memory full read; each opening
   fingerprints again. Reads use scoped 64 KiB handles without stream prefetch.
@@ -132,8 +133,7 @@ reconciliation instead of racing an abort against a possibly committed object.
 
 `transfers.diagnostics` retains at most 128 observer/cleanup/unknown-outcome records
 and a dropped count. Explicit inspection may include the destination ref and a
-redacted upload ID for cleanup. Nothing automatically logs these records. Required
-cleanup ledgers, audit effects and restart checkpoints belong to phase 5.
+redacted upload ID for cleanup. Nothing automatically logs these records. Required delivery and restart checkpoints use the separate [sessions API](sessions.md).
 
 ## Download identity and integrity
 
@@ -197,8 +197,10 @@ metrics report operations, attempts, retries, reserved bytes and cleanup debt. K
 bodies, URLs and arbitrary request IDs are never metric labels or span attributes.
 
 Run `pnpm ci:check`, `pnpm test:extended` and manually `pnpm test:s3:local`.
-Hosted AWS, deployed Workers, other providers/runtimes, persistent recovery and long
-soak remain separate qualification work.
+Hosted AWS, deployed Workers, additional provider/runtime combinations and long
+soak remain separate qualification work. [Runtime evidence](evidence/pre-phase-6.md)
+qualifies helper behavior independently of provider transports.
 
 Durable state and required delivery now have a separate [sessions API](sessions.md).
-The in-process Transfers methods retain their existing behavior and dependencies.
+The in-process methods keep their workflow behavior; construction captures runtime
+and provider services.

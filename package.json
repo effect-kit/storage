@@ -43,7 +43,8 @@
     "test:tooling": "node --test scripts/catalog/catalog.test.ts scripts/artifacts/archive-policy.test.ts",
     "catalog:check": "node scripts/catalog/check.ts",
     "test:s3:local": "pnpm build && node scripts/s3/local.ts",
-    "test:s3:aws": "pnpm --filter @effect-kit/storage exec vitest run --config vitest.s3.config.ts"
+    "test:s3:aws": "pnpm --filter @effect-kit/storage exec vitest run --config vitest.s3.config.ts",
+    "test:runtimes": "pnpm build && node scripts/runtime/check.ts"
   },
   "dependencies": {
     "effect": "catalog:"
@@ -60,6 +61,7 @@
     "lefthook": "catalog:",
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
+    "playwright": "catalog:",
     "publint": "catalog:",
     "tsdown": "catalog:",
     "turbo": "catalog:",

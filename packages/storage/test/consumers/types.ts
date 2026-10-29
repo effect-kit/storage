@@ -8,7 +8,6 @@ import type { SessionsService } from "@effect-kit/storage/sessions";
 import { Faults, MemoryStorage } from "@effect-kit/storage/testing";
 import { Transfers, UploadSource } from "@effect-kit/storage/transfers";
 import type { TransferReceipt } from "@effect-kit/storage/transfers";
-import { sha256 } from "@effect-kit/storage/transfers/node";
 
 const key: ObjectKey = Schema.decodeUnknownSync(ObjectKey)("a//b");
 const size: ObjectSize = Schema.decodeUnknownSync(ObjectSize)(42);
@@ -53,7 +52,7 @@ const sinkPreserved: Effect.Effect<
   StorageError | SourceError,
   Transfers | Source
 > = downloaded;
-void [managedPreserved, managedMissingEnvironment, managedMissingError, sinkPreserved, sha256];
+void [managedPreserved, managedMissingEnvironment, managedMissingError, sinkPreserved];
 const memory = MemoryStorage.make().pipe(Effect.flatMap((storage) => storage.put({ key, body })));
 const memoryPreserved: Effect.Effect<ObjectMetadata, StorageError | SourceError, Source> = memory;
 const faults = Faults.make(adapter, [{ operation: "put" }]).pipe(

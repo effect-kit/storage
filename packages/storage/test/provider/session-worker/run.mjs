@@ -1,16 +1,15 @@
 import { appendFile, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
-import { Effect, Redacted, Stream } from "effect";
+import { Context, Effect, Layer, Redacted, Stream } from "effect";
 import { KeyValueStore } from "effect/persistence";
 
-import { StorageError } from "../../../dist/index.js";
+import { Storage, StorageError } from "../../../dist/index.js";
+import { atomicFileStore, aes256Gcm, fileDownloadTarget } from "../../../dist/node.js";
+import { layer as platformLayer } from "../../../dist/node.js";
 import { S3Storage } from "../../../dist/s3.js";
-import { s3SessionHandles, s3TransferEndpoint } from "../../../dist/s3/transfers.js";
 import { UploadSessions, UploadSessionStore } from "../../../dist/sessions.js";
-import { atomicFileStore, aes256Gcm, fileDownloadTarget } from "../../../dist/sessions/node.js";
-import { UploadSource } from "../../../dist/transfers.js";
-import { sha256 } from "../../../dist/transfers/node.js";
+import { TransferDriver, Transfers, UploadSource } from "../../../dist/transfers.js";
 
 const [directory, key, boundary, mode = "upload"] = process.argv.slice(2);
 const secret = process.env.STORAGE_SESSION_TEST_KEY;
@@ -39,16 +38,19 @@ const source = UploadSource.replayable(
 await Effect.runPromise(
   Effect.scoped(
     Effect.gen(function* () {
-      const storage = yield* S3Storage.make({
-        bucket: process.env.STORAGE_S3_TEST_BUCKET,
-        region: process.env.STORAGE_S3_TEST_REGION,
-        endpoint: process.env.STORAGE_S3_TEST_ENDPOINT,
-        forcePathStyle: true,
-      });
-      const endpoint = s3TransferEndpoint(storage);
+      const provider = yield* Layer.build(
+        S3Storage.layer({
+          bucket: process.env.STORAGE_S3_TEST_BUCKET,
+          region: process.env.STORAGE_S3_TEST_REGION,
+          endpoint: process.env.STORAGE_S3_TEST_ENDPOINT,
+          forcePathStyle: true,
+        }),
+      );
+      const storage = Context.get(provider, S3Storage);
+      const endpoint = Context.get(provider, TransferDriver);
       const mpu = endpoint.multipart;
       let downloadWrites = 0;
-      const target = fileDownloadTarget({
+      const target = yield* fileDownloadTarget({
         id: "download",
         path: join(directory, "downloaded.bin"),
       });
@@ -92,47 +94,53 @@ await Effect.runPromise(
             ),
         }),
       );
-      const sessions = yield* UploadSessions.make(
-        {
-          ...endpoint,
-          storage: { ...storage, get: (request) => guard("verify", storage.get(request)) },
-          multipart: {
-            ...mpu,
-            initiate: (request) => guard("initiate", mpu.initiate(request)),
-            uploadPart: (request) =>
-              mode === "abort"
-                ? Effect.fail(
-                    new StorageError({
-                      operation: "test",
-                      provider: "test",
-                      reason: { _tag: "InvalidInput", field: "stop" },
-                      mutationOutcome: "not-started",
-                    }),
-                  )
-                : guard(
-                    "part",
-                    mpu
-                      .uploadPart(request)
-                      .pipe(
-                        Effect.tap(() =>
-                          Effect.promise(() =>
-                            appendFile(join(directory, "parts.log"), `${request.partNumber}\n`),
-                          ),
+      const driver = {
+        ...endpoint,
+        storage: { ...storage, get: (request) => guard("verify", storage.get(request)) },
+        multipart: {
+          ...mpu,
+          initiate: (request) => guard("initiate", mpu.initiate(request)),
+          uploadPart: (request) =>
+            mode === "abort"
+              ? Effect.fail(
+                  new StorageError({
+                    operation: "test",
+                    provider: "test",
+                    reason: { _tag: "InvalidInput", field: "stop" },
+                    mutationOutcome: "not-started",
+                  }),
+                )
+              : guard(
+                  "part",
+                  mpu
+                    .uploadPart(request)
+                    .pipe(
+                      Effect.tap(() =>
+                        Effect.promise(() =>
+                          appendFile(join(directory, "parts.log"), `${request.partNumber}\n`),
                         ),
                       ),
-                  ),
-            complete: (request) => guard("complete", mpu.complete(request)),
-            abort: (handle) => guard("abort", mpu.abort(handle)),
-          },
+                    ),
+                ),
+          complete: (request) => guard("complete", mpu.complete(request)),
+          abort: (handle) => guard("abort", mpu.abort(handle)),
         },
-        {
-          digest: sha256,
+      };
+      const managed = yield* Layer.build(
+        Transfers.layer({
           partBytes: 5 * 1024 * 1024,
           partConcurrency: 1,
           maxBytes: 16 * 1024 * 1024,
-        },
-        { configurationId: "local-restart", handles: s3SessionHandles },
-      ).pipe(Effect.provideService(UploadSessionStore, store));
+        }),
+      ).pipe(
+        Effect.provide(
+          provider.pipe(Context.add(Storage, driver.storage), Context.add(TransferDriver, driver)),
+        ),
+      );
+      const sessions = yield* UploadSessions.make({ configurationId: "local-restart" }).pipe(
+        Effect.provide(managed),
+        Effect.provideService(UploadSessionStore, store),
+      );
       if (mode === "download") {
         const existing = yield* sessions.status("download").pipe(Effect.result);
         if (existing._tag === "Failure") {
@@ -192,5 +200,5 @@ await Effect.runPromise(
         writeFile(join(directory, "result.json"), JSON.stringify(status)),
       );
     }),
-  ),
+  ).pipe(Effect.provide(platformLayer)),
 );

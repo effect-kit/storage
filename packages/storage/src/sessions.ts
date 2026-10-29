@@ -12,9 +12,8 @@ import { UploadSessionStore, sessionError } from "./sessions/store.js";
 import { abortUpload, fingerprint, reconcileUpload, runUpload } from "./sessions/upload.js";
 import type { SessionOptions } from "./sessions/upload.js";
 import { pinnedRequest } from "./transfers/download.js";
-import type { TransferEndpoint, TransferPolicy } from "./transfers/models.js";
-import { planUpload, resolvePolicy } from "./transfers/planner.js";
-import { makeRuntime } from "./transfers/runtime.js";
+import { ManagedTransferRuntime } from "./transfers/managed-runtime.js";
+import { planUpload } from "./transfers/planner.js";
 import type { UploadSource } from "./transfers/sources.js";
 import { validateUpload } from "./transfers/upload.js";
 
@@ -33,7 +32,7 @@ export {
 } from "./sessions/checkpoint.js";
 export type { SessionStatus } from "./sessions/checkpoint.js";
 export type { RestartableDownloadTarget } from "./sessions/download.js";
-export type { SessionOptions, SessionHandleCodec } from "./sessions/upload.js";
+export type { SessionOptions } from "./sessions/upload.js";
 
 export interface CreateUpload<E = never, R = never> {
   readonly id?: string;
@@ -94,17 +93,13 @@ export interface SessionsService {
 export class UploadSessions extends Context.Service<UploadSessions, SessionsService>()(
   "@effect-kit/storage/UploadSessions",
 ) {
-  static readonly make = Effect.fnUntraced(function* (
-    endpoint: TransferEndpoint,
-    policy: TransferPolicy,
-    options: SessionOptions,
-  ) {
+  static readonly make = Effect.fnUntraced(function* (options: SessionOptions) {
     const store = yield* UploadSessionStore;
-    const resolved = yield* resolvePolicy(policy, endpoint);
+    const runtime = yield* ManagedTransferRuntime;
+    const { endpoint, input: policy, policy: resolved } = runtime;
     const ttl = options.expiresInMillis ?? 24 * 60 * 60 * 1000;
     if (!options.configurationId || !Number.isSafeInteger(ttl) || ttl < 1)
       return yield* sessionError("InvalidSessionPolicy");
-    const runtime = makeRuntime(endpoint, policy, resolved);
     const environment = { runtime, store, options };
     const load = Effect.fnUntraced(function* (id: string, allowExpired = false) {
       const checkpoint = yield* store.read(id);
@@ -175,6 +170,8 @@ export class UploadSessions extends Context.Service<UploadSessions, SessionsServ
               yield* Schema.decodeUnknownEffect(SessionId)(request.id).pipe(
                 Effect.mapError(() => sessionError("InvalidSessionId")),
               );
+            if (!endpoint.multipart || !endpoint.handles)
+              return yield* sessionError("DurableUploadUnsupported");
             const headers = yield* validateUpload(runtime, request);
             const { key, source, id: suppliedId } = request;
             const condition = request.condition ? { ...request.condition } : undefined;
@@ -195,11 +192,11 @@ export class UploadSessions extends Context.Service<UploadSessions, SessionsServ
               preparation,
               runtime.lease(plan.workspaceBytes, fingerprint(environment, source, plan.partBytes)),
             );
-            const id = suppliedId ?? globalThis.crypto.randomUUID();
+            const id = suppliedId ?? (yield* runtime.newId());
             const checkpoint: UploadCheckpoint = {
               ...(yield* base(id)),
               kind: "upload",
-              operationId: globalThis.crypto.randomUUID(),
+              operationId: yield* runtime.newId(),
               state: "created",
               key,
               headers,
@@ -383,7 +380,7 @@ export class UploadSessions extends Context.Service<UploadSessions, SessionsServ
               const session = yield* load(id);
               if (session.kind === "batch") return yield* sessionError("NestedBatch");
             }
-            const id = globalThis.crypto.randomUUID();
+            const id = yield* runtime.newId();
             yield* store.write(
               {
                 ...(yield* base(id)),
@@ -451,7 +448,7 @@ export class UploadSessions extends Context.Service<UploadSessions, SessionsServ
     return Effect.flatMap(UploadSessions, (sessions) => sessions.abort(id));
   }
 
-  static layer(endpoint: TransferEndpoint, policy: TransferPolicy, options: SessionOptions) {
-    return Layer.effect(UploadSessions, UploadSessions.make(endpoint, policy, options));
+  static layer(options: SessionOptions) {
+    return Layer.effect(UploadSessions, UploadSessions.make(options));
   }
 }

@@ -5,7 +5,7 @@ Date: 2026-10-28. Decision: accepted; exclusive Effect KVS implementation revise
 ## Persistence
 
 Keep core independent of persistence. Updated 2026-10-30 by owner request: reuse
-Effect 4.0.6 persistence APIs and make PostgreSQL/distributed coordination optional.
+Effect persistence APIs (now pinned to 4.1.0) and make PostgreSQL/distributed coordination optional.
 KeyValueStore.toSchemaStore provides typed mutable values; Persistence stores
 Persistable request Exits and TTLs. Neither public interface supplies session CAS
 or worker leases. Never substitute KVS read-then-write for distributed fencing.
@@ -13,8 +13,10 @@ or worker leases. Never substitute KVS read-then-write for distributed fencing.
 Phase 5 uses versioned protected checkpoints over application-provided KeyValueStore,
 with explicit application-exclusive ownership across processes and in-process
 serialization. A narrow ownership extension can wrap an application's stronger
-coordinator; its guarantees are not invented by the base adapter. A Node filesystem
-backing adds atomic replacement/fsync for sequential process restart. Applications
+coordinator; its guarantees are not invented by the base adapter. The shared runtime filesystem
+backing adds atomic replacement/fsync; fresh-process restart is qualified on Node.
+[ADR 008](008-workflow-runtime-layers.md) records canonical runtime composition and
+the Bun/Deno helper evidence boundary. Applications
 must authorize access and prevent concurrent independent processes for the same
 namespace. PostgreSQL is an optional future integration rather than a phase gate.
 

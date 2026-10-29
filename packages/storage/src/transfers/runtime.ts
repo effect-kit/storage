@@ -1,11 +1,12 @@
 import { Cause, Clock, Effect, Exit, Metric, Random, Semaphore } from "effect";
+import type { SecureRandom } from "effect/crypto";
 
 import { StorageError, storageError } from "../errors.js";
 import { makeBudget } from "./budget.js";
 import type {
   TransferDiagnostic,
   TransferEndpoint,
-  TransferPolicy,
+  TransferConfiguration,
   TransferProgress,
 } from "./models.js";
 import type { ResolvedPolicy } from "./planner.js";
@@ -35,8 +36,9 @@ export interface Operation {
 
 export function makeRuntime(
   endpoint: TransferEndpoint,
-  input: TransferPolicy,
+  input: TransferConfiguration,
   policy: ResolvedPolicy,
+  random: SecureRandom.SecureRandom["Service"],
 ) {
   const budget = makeBudget(policy.memoryBudgetBytes);
   const requests = Semaphore.makeUnsafe(policy.requestConcurrency);
@@ -57,7 +59,7 @@ export function makeRuntime(
     operation: TransferProgress["operation"],
     totalBytes?: number,
   ): Effect.fn.Return<Operation> {
-    const id = globalThis.crypto.randomUUID();
+    const id = yield* random.uuidV4();
     const startedAt = yield* Clock.currentTimeMillis;
     const progress = {
       operation,
@@ -178,6 +180,7 @@ export function makeRuntime(
 
   return {
     endpoint,
+    newId: () => random.uuidV4(),
     input,
     policy,
     begin,

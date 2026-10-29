@@ -7,11 +7,15 @@ import { assert, it } from "@effect/vitest";
 import { Effect, Redacted, Result } from "effect";
 import { KeyValueStore } from "effect/persistence";
 
-import { UploadSessions, UploadSessionStore } from "../../src/sessions.js";
-import { aes256Gcm, atomicFileStore, fileDownloadTarget } from "../../src/sessions/node.js";
+import {
+  layer as platformLayer,
+  aes256Gcm,
+  atomicFileStore,
+  fileDownloadTarget,
+} from "../../src/node.js";
+import { UploadSessionStore } from "../../src/sessions.js";
 import { UploadSource } from "../../src/transfers.js";
-import { policy } from "../transfers/fixture.js";
-import { handles, setup } from "./fixture.js";
+import { setup, makeSessions } from "./fixture.js";
 
 it.live("file backing rejects enumeration and prefix removal without losing checkpoints", () =>
   Effect.scoped(
@@ -31,7 +35,7 @@ it.live("file backing rejects enumeration and prefix removal without losing chec
       assert.isTrue(Result.isFailure(removal));
       assert.strictEqual(yield* backing.get("test:session"), "protected-checkpoint");
     }),
-  ),
+  ).pipe(Effect.provide(platformLayer)),
 );
 
 it.live("real disk stores survive reconstruction and download publication is idempotent", () =>
@@ -52,13 +56,12 @@ it.live("real disk stores survive reconstruction and download publication is ide
         ownership: "exclusive",
         protection: test.protection,
       }).pipe(Effect.provideService(KeyValueStore.KeyValueStore, secondKvs));
-      const second = yield* UploadSessions.make(test.endpoint, policy, {
+      const second = yield* makeSessions(test.endpoint, secondStore, {
         configurationId: "test-config",
-        handles,
-      }).pipe(Effect.provideService(UploadSessionStore, secondStore));
+      });
       const metadata = yield* second.resume(id, source);
       const path = join(directory, "destination");
-      const target = fileDownloadTarget({ id: "download", path });
+      const target = yield* fileDownloadTarget({ id: "download", path });
       yield* second.createDownload({ id: "download", ref: metadata.ref });
       yield* second.resumeDownload("download", target);
       assert.deepEqual(
@@ -74,7 +77,7 @@ it.live("real disk stores survive reconstruction and download publication is ide
         ),
       );
     }),
-  ),
+  ).pipe(Effect.provide(platformLayer)),
 );
 
 it.effect("AES-GCM authenticates namespace/session identity and rejects changed keys", () =>

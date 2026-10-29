@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 
-import type { TransferDigest } from "./models.js";
+import type { TransferDigest } from "../transfers/models.js";
 
 /** Node's maintained streaming implementation; no whole-object WebCrypto buffering. */
 export const sha256: TransferDigest = {

@@ -3,10 +3,8 @@ import { Effect, Result, Stream } from "effect";
 import { KeyValueStore } from "effect/persistence";
 
 import { storageError } from "../../src/errors.js";
-import { UploadSessions, UploadSessionStore } from "../../src/sessions.js";
 import { UploadSource } from "../../src/transfers.js";
-import { policy } from "../transfers/fixture.js";
-import { setup, handles } from "./fixture.js";
+import { setup, makeSessions } from "./fixture.js";
 
 it.effect("persists protected checkpoints and resumes acknowledged parts with a new service", () =>
   Effect.gen(function* () {
@@ -86,10 +84,9 @@ it.effect(
         ),
       );
       assert.strictEqual(test.counts().initiates, 0);
-      const foreign = yield* UploadSessions.make(test.endpoint, policy, {
+      const foreign = yield* makeSessions(test.endpoint, test.store, {
         configurationId: "different",
-        handles,
-      }).pipe(Effect.provideService(UploadSessionStore, test.store));
+      });
       assert.isTrue(Result.isFailure(yield* foreign.status(id).pipe(Effect.result)));
       yield* sessions.resume(id, UploadSource.bytes(new Uint8Array([1])));
       const delivered: string[] = [];

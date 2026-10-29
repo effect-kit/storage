@@ -3,8 +3,10 @@
 Status: implemented for in-process numbered multipart and portable streaming paths.
 
 The Effect-only transfers entry point coordinates narrow provider hooks. Official
-SDKs execute one attempt; the engine owns retry/deadline accounting. Node crypto is
-isolated in `/transfers/node`; S3 hook construction stays in `/s3/transfers`. Core
+SDKs execute one attempt; the engine owns retry/deadline accounting. Runtime crypto is
+isolated in canonical `/node`, `/bun`, `/deno`, `/browser` modules; S3 layers provide
+the driver automatically. [ADR 008](008-workflow-runtime-layers.md) records the
+construction redesign and shared session admission. Core
 imports remain free of provider clients and Node crypto.
 
 Reserve whole workspaces through FIFO admission before source reads. Keep request

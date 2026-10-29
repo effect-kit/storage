@@ -9,7 +9,8 @@ Published-package installation instructions will accompany the first release.
 
 ## Use storage
 
-Requires the workspace's Node 24.22+ baseline and Effect 4.1 or newer within the supported peer range.
+Requires Effect 4.1 within the declared peer range. Workspace tooling uses Node
+24.22+. Runtime helpers have separately measured [support boundaries](../../docs/runtimes.md).
 
 ```ts
 import { Effect } from "effect";
@@ -71,8 +72,10 @@ backpressure; unknown-length streams stage within an explicit per-operation limi
 
 ## Managed transfers
 
-Use `Transfers` and `UploadSource` from `@effect-kit/storage/transfers`, Node `sha256`
-from `/transfers/node`, and `s3TransferEndpoint(storage)` from `/s3/transfers`.
+Use `Transfers.layer(policy?)` from `/transfers`, provide your provider layer and
+the selected `/node`, `/bun`, `/deno` or `/browser` runtime layer. S3 supplies its
+transfer driver automatically; policy contains execution choices.
+`yield* UploadSource.file(path)` captures filesystem/hash services.
 The engine owns shared memory/request budgets, retained-part retries, pinned download
 continuation, verified native/streamed copy, explicit move outcomes and lazy batches.
 See [the transfer API and resource policy](../../docs/transfers.md) and
@@ -81,11 +84,14 @@ persistent restart and required events use the optional sessions entry point.
 
 ## Durable sessions
 
-`/sessions` adds protected checkpoints over an application-provided Effect KeyValueStore;
-`/sessions/node` adds AES-GCM, an atomic filesystem backing and restartable file targets.
+`/sessions` adds protected checkpoints over an application-provided Effect KeyValueStore.
+Runtime `/node`, `/bun` and `/deno` add AES-GCM, an atomic filesystem backing and
+restartable file targets. Compose `UploadSessions.layer(options)` with the managed
+layer and `StorageNode.sessionStore(options)` (or your Effect KVS/protection).
 PostgreSQL is not required. Base sessions require exclusive application ownership across
 processes; no generic distributed CAS/lease guarantee is claimed. See
-[session APIs and limits](../../docs/sessions.md), [restart evidence](../../docs/evidence/phase-5.md)
+[session APIs and limits](../../docs/sessions.md), [restart evidence](../../docs/evidence/phase-5.md),
+[current runtime evidence](../../docs/evidence/pre-phase-6.md),
 and the repository example in `examples/durable-upload.mjs`.
 
 ## License

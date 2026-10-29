@@ -1,6 +1,11 @@
 import type { Effect, Result, Stream } from "effect";
 
-import type { MultipartHandle, MultipartUploads, UploadedPart } from "../contracts/multipart.js";
+import type {
+  MultipartHandle,
+  MultipartHandleCodec,
+  MultipartUploads,
+  UploadedPart,
+} from "../contracts/multipart.js";
 import type { StorageError } from "../errors.js";
 import type { Checksum, ObjectHeaders, ObjectMetadata, ObjectRef } from "../object.js";
 import type { WriteCondition } from "../requests.js";
@@ -25,6 +30,7 @@ export interface TransferEndpoint {
   readonly maximumSingleUploadBytes: number;
   readonly transportOverheadBytes: number;
   readonly multipart?: MultipartUploads | undefined;
+  readonly handles?: MultipartHandleCodec | undefined;
   readonly nativeCopy?:
     | {
         readonly maximumBytes: number;
@@ -70,7 +76,6 @@ export interface TransferProgress {
 }
 
 export interface TransferPolicy {
-  readonly digest: TransferDigest;
   readonly memoryBudgetBytes?: number;
   readonly partBytes?: number;
   readonly partConcurrency?: number;
@@ -86,6 +91,8 @@ export interface TransferPolicy {
   readonly observerTimeoutMillis?: number;
   readonly observer?: (progress: TransferProgress) => Effect.Effect<void, unknown>;
 }
+
+export type TransferConfiguration = TransferPolicy & { readonly digest: TransferDigest };
 
 export interface UploadRequest<E = never, R = never> {
   readonly key: string;

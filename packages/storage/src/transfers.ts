@@ -4,31 +4,47 @@ import { storageError } from "./errors.js";
 import type { Checksum, ObjectRef } from "./object.js";
 import { copyOrMove } from "./transfers/copy.js";
 import { download } from "./transfers/download.js";
+import { ManagedTransferRuntime, makeManagedRuntime } from "./transfers/managed-runtime.js";
 import type {
   CopyRequest,
   DownloadRequest,
-  TransferEndpoint,
   TransferPolicy,
   TransfersService,
   UploadRequest,
 } from "./transfers/models.js";
-import { resolvePolicy } from "./transfers/planner.js";
-import { makeRuntime } from "./transfers/runtime.js";
+import type { TransferRuntime } from "./transfers/runtime.js";
 import { upload } from "./transfers/upload.js";
 
+export { TransferDriver, TransferHash } from "./transfers/dependencies.js";
+export type { MultipartHandleCodec } from "./contracts/multipart.js";
+
 export * as UploadSource from "./transfers/sources.js";
-export type * from "./transfers/models.js";
+export type {
+  TransferDigest,
+  TransferEndpoint,
+  CopyIntent,
+  TransferProgress,
+  TransferPolicy,
+  UploadRequest,
+  DownloadTarget,
+  DownloadRequest,
+  CopyRequest,
+  TransferReceipt,
+  MoveReceipt,
+  TransferDiagnostic,
+  TransfersService,
+} from "./transfers/models.js";
 export type { UploadSource as UploadSourceType } from "./transfers/sources.js";
 
 export class Transfers extends Context.Service<Transfers, TransfersService>()(
   "@effect-kit/storage/Transfers",
 ) {
-  static readonly make = Effect.fnUntraced(function* (
-    endpoint: TransferEndpoint,
-    input: TransferPolicy,
-  ) {
-    const policy = yield* resolvePolicy(input, endpoint);
-    const runtime = makeRuntime(endpoint, input, policy);
+  static readonly make = Effect.fnUntraced(function* (policy: TransferPolicy = {}) {
+    return Transfers.fromRuntime(yield* makeManagedRuntime(policy));
+  });
+
+  private static fromRuntime(runtime: TransferRuntime) {
+    const { endpoint, policy } = runtime;
     const many = <A, B, E, R, EX, RX>(
       requests: Stream.Stream<A, EX, RX>,
       run: (request: A) => Effect.Effect<B, E, R>,
@@ -60,10 +76,16 @@ export class Transfers extends Context.Service<Transfers, TransfersService>()(
       diagnostics: runtime.diagnostics,
       resources: runtime.resources,
     });
-  });
+  }
 
-  static layer(endpoint: TransferEndpoint, policy: TransferPolicy) {
-    return Layer.effect(Transfers, Transfers.make(endpoint, policy));
+  static layer(policy: TransferPolicy = {}) {
+    return Layer.effectContext(
+      Effect.map(makeManagedRuntime(policy), (runtime) =>
+        Context.make(Transfers, Transfers.fromRuntime(runtime)).pipe(
+          Context.add(ManagedTransferRuntime, runtime),
+        ),
+      ),
+    );
   }
 
   static upload<E, R>(request: UploadRequest<E, R>) {

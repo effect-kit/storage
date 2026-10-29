@@ -3,11 +3,11 @@ import { crc32 } from "node:zlib";
 import { assert, it } from "@effect/vitest";
 import { Effect } from "effect";
 
-import { s3TransferEndpoint } from "../../src/s3/transfers.js";
+import { makeS3TransferDriver } from "../../src/s3/transfer-driver.js";
 import { mapS3Error } from "../../src/s3/transport.js";
-import { Transfers, UploadSource } from "../../src/transfers.js";
-import { sha256 } from "../../src/transfers/node.js";
+import { UploadSource } from "../../src/transfers.js";
 import { drain, httpFixture, xml } from "../s3/http-fixture.js";
+import { makeTransfers } from "./fixture.js";
 
 it.live(
   "official SDK multipart retries share one budget and reconcile a lost completion response",
@@ -69,8 +69,7 @@ it.live(
             response.writeHead(204).end();
           } else response.writeHead(500).end();
         });
-        const transfers = yield* Transfers.make(s3TransferEndpoint(fixture.storage), {
-          digest: sha256,
+        const transfers = yield* makeTransfers(makeS3TransferDriver(fixture.storage), {
           partBytes: 5 * 1024 * 1024,
           partConcurrency: 2,
           memoryBudgetBytes: 24 * 1024 * 1024,

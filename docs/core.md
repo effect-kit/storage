@@ -1,7 +1,7 @@
 # Portable storage
 
-The core API and memory reference are implemented. Hosted adapters and managed
-transfer/session workflows follow in later phases. Core imports depend only on Effect.
+The core API and memory reference are implemented. S3, managed transfers and
+durable sessions use separate entry points. Core imports depend only on Effect.
 
 ## Service and requests
 
@@ -104,7 +104,7 @@ end to the complete size. NotModified has no body.
 
 Collection byte limits bound retained payload, not all runtime overhead. Concatenation
 can temporarily retain another payload-sized allocation; SDK/source buffers and
-caller-retained objects are additional memory. Managed transfer budgets are phase 4.
+caller-retained objects are additional memory. See [managed transfers](transfers.md) for execution admission budgets.
 
 ## Failures and outcomes
 

@@ -11,8 +11,9 @@ persistence; HTTP/client bindings depend on public contracts. No global provider
 registry, detached runtime or application framework is required.
 
 Core exports the portable service/contracts. Implemented subpaths are testing, s3,
-s3/signing and s3/post. Future boundaries include r2/r2-workers, gcs, azure,
-filesystem, named S3 profiles, supabase, vercel, transfers, uploads, http and client.
+s3/signing, s3/post, transfers, sessions and the four canonical runtime modules
+([ADR 008](008-workflow-runtime-layers.md)). Future boundaries include r2/r2-workers,
+gcs, azure, filesystem, named S3 profiles, supabase, vercel, uploads, http and client.
 Administrative authority is separate.
 Optional peers are declared only when the owning implementation exists.
 
@@ -47,4 +48,4 @@ The [S3 implementation](../../docs/s3.md) pins official SDK 3.1159.0, preserves
 WHEN_SUPPORTED data-plane checksums and uses one transport attempt. Unknown-length
 single-request sources stage under an explicit adapter limit; managed streaming
 strategies and total byte/retry budgets remain phase 4. Node built-ins are external
-only in the isolated S3 graph; SDK-free packed core/Bundler checks remain required.
+in the isolated S3/Node/Bun graphs; SDK-free packed core/Bundler checks remain required.

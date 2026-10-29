@@ -7,12 +7,20 @@ const Manifest = Schema.Struct({
   main: Schema.Literal("./dist/index.js"),
   types: Schema.Literal("./dist/index.d.ts"),
   peerDependencies: Schema.Struct({
+    "@effect/platform-node": Schema.NonEmptyString,
+    "@effect/platform-bun": Schema.NonEmptyString,
+    "@effect/platform-deno": Schema.NonEmptyString,
+    "@effect/platform-browser": Schema.NonEmptyString,
     effect: Schema.NonEmptyString,
     "@aws-sdk/client-s3": Schema.NonEmptyString,
     "@aws-sdk/s3-request-presigner": Schema.NonEmptyString,
     "@aws-sdk/s3-presigned-post": Schema.NonEmptyString,
   }),
   peerDependenciesMeta: Schema.Struct({
+    "@effect/platform-browser": Schema.Struct({ optional: Schema.Literal(true) }),
+    "@effect/platform-deno": Schema.Struct({ optional: Schema.Literal(true) }),
+    "@effect/platform-bun": Schema.Struct({ optional: Schema.Literal(true) }),
+    "@effect/platform-node": Schema.Struct({ optional: Schema.Literal(true) }),
     "@aws-sdk/client-s3": Schema.Struct({ optional: Schema.Literal(true) }),
     "@aws-sdk/s3-request-presigner": Schema.Struct({ optional: Schema.Literal(true) }),
     "@aws-sdk/s3-presigned-post": Schema.Struct({ optional: Schema.Literal(true) }),
@@ -25,6 +33,22 @@ const Manifest = Schema.Struct({
     "./testing": Schema.Struct({
       types: Schema.Literal("./dist/testing.d.ts"),
       import: Schema.Literal("./dist/testing.js"),
+    }),
+    "./node": Schema.Struct({
+      types: Schema.Literal("./dist/node.d.ts"),
+      import: Schema.Literal("./dist/node.js"),
+    }),
+    "./bun": Schema.Struct({
+      types: Schema.Literal("./dist/bun.d.ts"),
+      import: Schema.Literal("./dist/bun.js"),
+    }),
+    "./deno": Schema.Struct({
+      types: Schema.Literal("./dist/deno.d.ts"),
+      import: Schema.Literal("./dist/deno.js"),
+    }),
+    "./browser": Schema.Struct({
+      types: Schema.Literal("./dist/browser.d.ts"),
+      import: Schema.Literal("./dist/browser.js"),
     }),
     "./package.json": Schema.Literal("./package.json"),
     "./s3": Schema.Struct({
@@ -39,21 +63,9 @@ const Manifest = Schema.Struct({
       types: Schema.Literal("./dist/transfers.d.ts"),
       import: Schema.Literal("./dist/transfers.js"),
     }),
-    "./transfers/node": Schema.Struct({
-      types: Schema.Literal("./dist/transfers/node.d.ts"),
-      import: Schema.Literal("./dist/transfers/node.js"),
-    }),
-    "./s3/transfers": Schema.Struct({
-      types: Schema.Literal("./dist/s3/transfers.d.ts"),
-      import: Schema.Literal("./dist/s3/transfers.js"),
-    }),
     "./sessions": Schema.Struct({
       types: Schema.Literal("./dist/sessions.d.ts"),
       import: Schema.Literal("./dist/sessions.js"),
-    }),
-    "./sessions/node": Schema.Struct({
-      types: Schema.Literal("./dist/sessions/node.d.ts"),
-      import: Schema.Literal("./dist/sessions/node.js"),
     }),
     "./s3/post": Schema.Struct({
       types: Schema.Literal("./dist/s3/post.d.ts"),
@@ -64,6 +76,10 @@ const Manifest = Schema.Struct({
 
 export function checkArchive(manifestInput: unknown, entries: readonly string[]): void {
   Schema.decodeUnknownSync(Manifest)(manifestInput);
+  for (const old of ["./transfers/node", "./sessions/node", "./s3/transfers"]) {
+    if (Object.hasOwn((manifestInput as { exports: object }).exports, old))
+      throw new Error(`Removed export remains: ${old}`);
+  }
   if (JSON.stringify(manifestInput).includes("workspace-source")) {
     throw new Error("Archive contains development export conditions");
   }
@@ -84,6 +100,14 @@ export function checkArchive(manifestInput: unknown, entries: readonly string[])
     "LICENSE",
     "dist/index.js",
     "dist/index.d.ts",
+    "dist/node.js",
+    "dist/node.d.ts",
+    "dist/bun.js",
+    "dist/bun.d.ts",
+    "dist/deno.js",
+    "dist/deno.d.ts",
+    "dist/browser.js",
+    "dist/browser.d.ts",
     "dist/testing.js",
     "dist/testing.d.ts",
     "dist/s3.js",
@@ -94,15 +118,9 @@ export function checkArchive(manifestInput: unknown, entries: readonly string[])
     "dist/s3/post.d.ts",
     "dist/sessions.js",
     "dist/sessions.d.ts",
-    "dist/sessions/node.js",
-    "dist/sessions/node.d.ts",
 
     "dist/transfers.js",
     "dist/transfers.d.ts",
-    "dist/transfers/node.js",
-    "dist/transfers/node.d.ts",
-    "dist/s3/transfers.js",
-    "dist/s3/transfers.d.ts",
   ]) {
     if (!entries.includes(`package/${required}`))
       throw new Error(`Missing packed file: ${required}`);

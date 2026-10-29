@@ -16,8 +16,10 @@ import { multipart } from "./s3/multipart.js";
 import { validateRef } from "./s3/object-mapping.js";
 import { primitives, putObject } from "./s3/primitives.js";
 import type { S3PutOptions } from "./s3/primitives.js";
+import { makeS3TransferDriver } from "./s3/transfer-driver.js";
 import { Storage } from "./storage.js";
 import type { StorageService } from "./storage.js";
+import { TransferDriver } from "./transfers/dependencies.js";
 
 export type { S3Config, S3Encryption } from "./s3/config.js";
 export type { S3CopyRequest } from "./s3/native-models.js";
@@ -65,6 +67,7 @@ const services = (service: S3StorageService) =>
   Context.make(Storage, service).pipe(
     Context.add(S3Storage, service),
     Context.add(StorageCopy, { copy: service.copyObject }),
+    Context.add(TransferDriver, makeS3TransferDriver(service)),
   );
 
 export class S3Storage extends Context.Service<S3Storage, S3StorageService>()(

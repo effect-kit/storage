@@ -2,15 +2,15 @@ import { assert, it } from "@effect/vitest";
 import { Effect, Result, Stream } from "effect";
 
 import { storageError } from "../../src/errors.js";
-import { Transfers, UploadSource } from "../../src/transfers.js";
-import { fixture, policy } from "./fixture.js";
+import { UploadSource } from "../../src/transfers.js";
+import { fixture, policy, makeTransfers } from "./fixture.js";
 
 it.effect(
   "uploads immutable bytes, zero bytes and unknown-length multipart with bounded reservations",
   () =>
     Effect.gen(function* () {
       const test = yield* fixture();
-      const transfers = yield* Transfers.make(test.endpoint, policy);
+      const transfers = yield* makeTransfers(test.endpoint, policy);
       const input = new Uint8Array([1, 2]);
       const source = UploadSource.bytes(input);
       input[0] = 99;
@@ -51,7 +51,7 @@ it.effect("retains and retries parts without reopening a one-shot source", () =>
   Effect.gen(function* () {
     const test = yield* fixture();
     let calls = 0;
-    const transfers = yield* Transfers.make(
+    const transfers = yield* makeTransfers(
       {
         ...test.endpoint,
         multipart: {
@@ -87,7 +87,7 @@ it.effect("keeps source failure and cleanup debt and never completes a partial o
   Effect.gen(function* () {
     const test = yield* fixture();
     const failure = { _tag: "SourceFailure" } as const;
-    const transfers = yield* Transfers.make(
+    const transfers = yield* makeTransfers(
       {
         ...test.endpoint,
         multipart: {
@@ -116,7 +116,7 @@ it.effect("keeps source failure and cleanup debt and never completes a partial o
 it.effect("reconciles a lost completion receipt and isolates a failing observer after commit", () =>
   Effect.gen(function* () {
     const test = yield* fixture();
-    const transfers = yield* Transfers.make(
+    const transfers = yield* makeTransfers(
       {
         ...test.endpoint,
         multipart: {
@@ -153,7 +153,7 @@ it.effect(
   () =>
     Effect.gen(function* () {
       const test = yield* fixture();
-      const transfers = yield* Transfers.make(test.endpoint, policy);
+      const transfers = yield* makeTransfers(test.endpoint, policy);
       const backing = new Uint8Array(1024);
       for (const request of [
         { source: UploadSource.stream(Stream.succeed(backing.subarray(0, 1)), 1) },
@@ -180,7 +180,7 @@ it.effect(
 it.effect("bounds observer diagnostics while keeping every committed batch outcome", () =>
   Effect.gen(function* () {
     const test = yield* fixture();
-    const transfers = yield* Transfers.make(test.endpoint, {
+    const transfers = yield* makeTransfers(test.endpoint, {
       ...policy,
       observer: () => Effect.fail("observer failure"),
     });
@@ -203,7 +203,7 @@ it.effect("rejects mismatched or oversized part identities before completion", (
   Effect.gen(function* () {
     for (const wrong of [{ partNumber: 2 }, { size: 1 }, { etag: "x".repeat(257) }]) {
       const test = yield* fixture();
-      const transfers = yield* Transfers.make(
+      const transfers = yield* makeTransfers(
         {
           ...test.endpoint,
           multipart: {

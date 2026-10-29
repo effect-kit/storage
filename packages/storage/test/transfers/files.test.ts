@@ -1,9 +1,9 @@
 import { assert, it } from "@effect/vitest";
 import { ByteSize, Effect, FileSystem, Option, Path, Result, Stream } from "effect";
 
-import { Transfers, UploadSource } from "../../src/transfers.js";
-import { sha256 } from "../../src/transfers/node.js";
-import { fixture, policy } from "./fixture.js";
+import { sha256 } from "../../src/node.js";
+import { TransferHash, Transfers, UploadSource } from "../../src/transfers.js";
+import { fixture, policy, makeTransfers } from "./fixture.js";
 
 function files() {
   const contents = new Map<string, Uint8Array>([["source", new Uint8Array([1, 2, 3])]]);
@@ -89,7 +89,8 @@ function files() {
 it.effect("file sources reject same-size edits with unchanged identity before replay", () =>
   Effect.gen(function* () {
     const test = files();
-    const source = yield* UploadSource.file("source", sha256).pipe(
+    const source = yield* UploadSource.file("source").pipe(
+      Effect.provideService(TransferHash, sha256),
       Effect.provideService(FileSystem.FileSystem, test.fs),
     );
     assert.deepEqual(yield* Stream.runCollect(source.open()), [new Uint8Array([1, 2, 3])]);
@@ -105,7 +106,7 @@ it.effect("file downloads publish only verified bytes after closing the staging 
     const test = files();
     const provider = yield* fixture();
     yield* provider.endpoint.storage.put({ key: "object", body: new Uint8Array([7, 8]) });
-    const transfers = yield* Transfers.make(provider.endpoint, policy);
+    const transfers = yield* makeTransfers(provider.endpoint, policy);
     const provide = <A, E>(
       effect: Effect.Effect<A, E, Transfers | FileSystem.FileSystem | Path.Path>,
     ) =>

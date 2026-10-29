@@ -1,7 +1,7 @@
 # Storage architecture
 
 Status: portable API, memory/conformance S3 and in-process managed transfers delivered;
-hosted AWS acceptance remains pending.
+durable sessions and runtime helper layers delivered. Hosted AWS acceptance remains pending.
 These decisions guide native adapters and transfer workflows in subsequent phases.
 
 | Decision                                                                        | Responsibility                                              |
@@ -32,3 +32,8 @@ Phase 5 adds [Effect-backed durable sessions](../docs/sessions.md) and
 [separate-process recovery evidence](../docs/evidence/phase-5.md). ADR 005 now records
 the owner-approved exclusive-ownership base; PostgreSQL/distributed leases are optional
 backend work rather than required infrastructure.
+
+[008 — Workflow and runtime layers](decisions/008-workflow-runtime-layers.md) records
+provider-owned drivers, policy-only constructors, shared managed/session admission
+and the canonical four runtime paths. [Current evidence](../docs/evidence/pre-phase-6.md)
+separates actual helper runtimes from provider/OS/release qualification.

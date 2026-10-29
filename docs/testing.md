@@ -127,3 +127,11 @@ with ConformanceFailure. No skip certifies unsupported-native or real cloud beha
 
 Use native provider tests for wire errors, credentials, hosted concurrency, checksums,
 remote cleanup and cancellation. The memory suite cannot qualify those semantics.
+
+## Managed composition
+
+`MemoryStorage.layer()` also supplies a primitive-only TransferDriver. Provide a
+runtime layer to `Transfers.layer(policy?)` for managed single uploads/downloads.
+Memory does not invent multipart or a native handle codec; durable multipart upload
+creation fails before opening its source. Durable download state can use an
+application target and protected Effect memory KVS, without restart durability.

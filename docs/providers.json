@@ -16,7 +16,9 @@
         "docs/transfers.md",
         "docs/evidence/phase-4.md",
         "docs/sessions.md",
-        "docs/evidence/phase-5.md"
+        "docs/evidence/phase-5.md",
+        "docs/runtimes.md",
+        "docs/evidence/pre-phase-6.md"
       ],
       "notes": [
         "Official AWS SDK 3.1159.0; general-purpose bucket adapter and isolated signing/POST peers.",
@@ -25,7 +27,8 @@
         "One SDK attempt; separate capability services and explicit owned/borrowed clients.",
         "Named compatible providers, special bucket types and non-Node runtimes remain unqualified.",
         "Managed transfer hooks supply multipart/native-copy/reconciliation to the Effect-only engine. Local 320 MiB resource and verified copy/move evidence is separate from hosted AWS acceptance.",
-        "Exclusive-owner durable multipart sessions reuse Effect KVS. Separate-process local restart evidence includes native checksum-policy preservation; distributed coordination and hosted AWS remain unqualified."
+        "Exclusive-owner durable multipart sessions reuse Effect KVS. Separate-process local restart evidence includes native checksum-policy preservation; distributed coordination and hosted AWS remain unqualified.",
+        "Layers provide the transfer driver and durable handle codec from the same client. Four runtime helper smoke results do not add non-Node S3 transport qualification."
       ],
       "operations": [
         {
@@ -87,7 +90,7 @@
           ],
           "implementations": [
             "packages/storage/src/s3/primitives.ts",
-            "packages/storage/src/s3/transfers.ts"
+            "packages/storage/src/s3/transfer-driver.ts"
           ],
           "tests": [
             "packages/storage/test/s3/primitives.test.ts",
@@ -318,7 +321,7 @@
           ],
           "implementations": [
             "packages/storage/src/s3/copy.ts",
-            "packages/storage/src/s3/transfers.ts"
+            "packages/storage/src/s3/transfer-driver.ts"
           ],
           "tests": [
             "packages/storage/test/s3/native.test.ts",
@@ -367,7 +370,7 @@
           ],
           "implementations": [
             "packages/storage/src/s3/multipart.ts",
-            "packages/storage/src/s3/transfers.ts"
+            "packages/storage/src/s3/transfer-driver.ts"
           ],
           "tests": [
             "packages/storage/test/s3/native.test.ts",
@@ -412,6 +415,19 @@
               "testId": "packages/storage/test/provider/sessions.acceptance.ts",
               "limitations": [
                 "Exclusive sequential processes and protected atomic file checkpoints. Hosted AWS/distributed ownership are not qualified."
+              ]
+            },
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/pre-phase-6.md",
+              "sdkVersion": "@aws-sdk/client-s3@3.1159.0 / effect@4.1.0",
+              "apiVersion": "2006-03-01",
+              "runtime": "node-24.22.0",
+              "configuration": "local-rustfs-versioned",
+              "testId": "packages/storage/test/provider/sessions.acceptance.ts",
+              "limitations": [
+                "New layer API, shared runtime and process-restart regression only; hosted AWS and other runtimes remain unqualified."
               ]
             }
           ],

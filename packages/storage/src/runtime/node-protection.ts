@@ -2,8 +2,8 @@ import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto";
 
 import { Effect, Redacted, Schema } from "effect";
 
-import type { CheckpointProtection } from "../store.js";
-import { sessionError } from "../store.js";
+import type { CheckpointProtection } from "../sessions/store.js";
+import { sessionError } from "../sessions/store.js";
 
 const Ciphertext = Schema.Struct({
   v: Schema.Literal(1),

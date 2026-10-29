@@ -59,25 +59,30 @@
       "types": "./dist/transfers.d.ts",
       "default": "./dist/transfers.js"
     },
-    "./transfers/node": {
-      "workspace-source": "./src/transfers/node.ts",
-      "types": "./dist/transfers/node.d.ts",
-      "default": "./dist/transfers/node.js"
-    },
-    "./s3/transfers": {
-      "workspace-source": "./src/s3/transfers.ts",
-      "types": "./dist/s3/transfers.d.ts",
-      "default": "./dist/s3/transfers.js"
-    },
     "./sessions": {
       "workspace-source": "./src/sessions.ts",
       "types": "./dist/sessions.d.ts",
       "default": "./dist/sessions.js"
     },
-    "./sessions/node": {
-      "workspace-source": "./src/sessions/node.ts",
-      "types": "./dist/sessions/node.d.ts",
-      "default": "./dist/sessions/node.js"
+    "./node": {
+      "workspace-source": "./src/node.ts",
+      "types": "./dist/node.d.ts",
+      "default": "./dist/node.js"
+    },
+    "./bun": {
+      "workspace-source": "./src/bun.ts",
+      "types": "./dist/bun.d.ts",
+      "default": "./dist/bun.js"
+    },
+    "./deno": {
+      "workspace-source": "./src/deno.ts",
+      "types": "./dist/deno.d.ts",
+      "default": "./dist/deno.js"
+    },
+    "./browser": {
+      "workspace-source": "./src/browser.ts",
+      "types": "./dist/browser.d.ts",
+      "default": "./dist/browser.js"
     }
   },
   "publishConfig": {
@@ -107,21 +112,25 @@
         "types": "./dist/transfers.d.ts",
         "import": "./dist/transfers.js"
       },
-      "./transfers/node": {
-        "types": "./dist/transfers/node.d.ts",
-        "import": "./dist/transfers/node.js"
-      },
-      "./s3/transfers": {
-        "types": "./dist/s3/transfers.d.ts",
-        "import": "./dist/s3/transfers.js"
-      },
       "./sessions": {
         "types": "./dist/sessions.d.ts",
         "import": "./dist/sessions.js"
       },
-      "./sessions/node": {
-        "types": "./dist/sessions/node.d.ts",
-        "import": "./dist/sessions/node.js"
+      "./node": {
+        "types": "./dist/node.d.ts",
+        "import": "./dist/node.js"
+      },
+      "./bun": {
+        "types": "./dist/bun.d.ts",
+        "import": "./dist/bun.js"
+      },
+      "./deno": {
+        "types": "./dist/deno.d.ts",
+        "import": "./dist/deno.js"
+      },
+      "./browser": {
+        "types": "./dist/browser.d.ts",
+        "import": "./dist/browser.js"
       }
     },
     "access": "public",
@@ -138,13 +147,21 @@
     "check:package": "publint --strict && attw --pack --profile esm-only",
     "lint": "oxlint --deny-warnings src test *.config.ts"
   },
+  "dependencies": {
+    "@noble/hashes": "catalog:"
+  },
   "devDependencies": {
     "@aws-sdk/client-s3": "catalog:",
     "@aws-sdk/s3-presigned-post": "catalog:",
     "@aws-sdk/s3-request-presigner": "catalog:",
+    "@effect/platform-browser": "catalog:",
+    "@effect/platform-bun": "catalog:",
+    "@effect/platform-deno": "catalog:",
+    "@effect/platform-node": "catalog:",
     "@effect/vitest": "catalog:",
     "effect": "catalog:",
     "klarity": "catalog:",
+    "redis": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
@@ -153,6 +170,10 @@
     "@aws-sdk/client-s3": "^3.1159.0",
     "@aws-sdk/s3-presigned-post": "^3.1159.0",
     "@aws-sdk/s3-request-presigner": "^3.1159.0",
+    "@effect/platform-browser": "^4.1.0",
+    "@effect/platform-bun": "^4.1.0",
+    "@effect/platform-deno": "^4.1.0",
+    "@effect/platform-node": "^4.1.0",
     "effect": "^4.1.0"
   },
   "peerDependenciesMeta": {
@@ -163,6 +184,18 @@
       "optional": true
     },
     "@aws-sdk/s3-presigned-post": {
+      "optional": true
+    },
+    "@effect/platform-node": {
+      "optional": true
+    },
+    "@effect/platform-bun": {
+      "optional": true
+    },
+    "@effect/platform-deno": {
+      "optional": true
+    },
+    "@effect/platform-browser": {
       "optional": true
     }
   },

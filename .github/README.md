@@ -248,3 +248,17 @@ The same local command builds subprocess fixtures and exercises durable upload/d
 recovery across fresh Node processes. `.artifacts/session-restart.json` records the
 crash matrix. No SQL service is required. Distributed coordination and hosted AWS
 remain outside that local evidence.
+
+## Runtime helper matrix
+
+`workflows/runtimes.yml` is manual. It runs `pnpm test:runtimes <runtime>` separately
+for Node, Bun 1.4.4, Deno 2.9.6 and headless Chromium. Each job installs an exact
+local archive in an isolated app with only its selected platform peer. Both
+NodeNext and Bundler declarations are checked without Node ambient types. Browser
+bundling rejects Node/server SDK imports; the actual browser executes the fixture.
+Reports are written to `.artifacts/runtime/<runtime>.json`.
+
+This workflow has not been dispatched as part of local development. Local Darwin
+runtime results do not establish its Ubuntu/remote success. Chromium installation
+and alternate engines stay outside automatic PR CI. See [runtime commands and
+limits](../docs/runtimes.md); real provider acceptance remains in its own lanes.

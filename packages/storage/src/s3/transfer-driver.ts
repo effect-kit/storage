@@ -1,8 +1,8 @@
 import { Effect, Redacted, Schema } from "effect";
 
 import type { MultipartHandle } from "../contracts/multipart.js";
+import { storageError } from "../errors.js";
 import type { S3StorageService } from "../s3.js";
-import { sessionError } from "../sessions/store.js";
 import type { TransferEndpoint } from "../transfers/models.js";
 import { operationMetadataKey } from "../transfers/upload.js";
 import { Upload } from "./native-models.js";
@@ -11,13 +11,14 @@ import { nativeLimits } from "./native-models.js";
 const connections = new WeakMap<TransferEndpoint, S3StorageService>();
 
 /** SDK attempts are already fixed to one by S3Storage; Transfers owns all retry policy. */
-export function s3TransferEndpoint(storage: S3StorageService): TransferEndpoint {
+export function makeS3TransferDriver(storage: S3StorageService): TransferEndpoint {
   const endpoint: TransferEndpoint = {
     storage,
     maximumObjectBytes: nativeLimits.maximumPartBytes * nativeLimits.maximumParts,
     maximumSingleUploadBytes: nativeLimits.maximumSinglePutBytes,
     transportOverheadBytes: 1024 * 1024,
     multipart: storage.multipart,
+    handles: s3SessionHandles,
     reconcile: ({ key, operationId, size }) =>
       storage.head({ key }).pipe(
         Effect.map((metadata) =>
@@ -71,14 +72,14 @@ export function s3TransferEndpoint(storage: S3StorageService): TransferEndpoint 
 }
 
 /** Native checksum policy survives restart alongside the opaque upload identity. */
-export const s3SessionHandles = {
+const s3SessionHandles = {
   encode: (handle: MultipartHandle) =>
     Schema.encodeEffect(Schema.fromJsonString(Schema.toCodecJson(Upload)))(handle).pipe(
       Effect.map(Redacted.make),
-      Effect.mapError(() => sessionError("InvalidS3Handle")),
+      Effect.mapError(() => storageError("handleCodec", "s3", { _tag: "InvalidSession" })),
     ),
   decode: (encoded: Redacted.Redacted<string>) =>
     Schema.decodeUnknownEffect(Schema.fromJsonString(Schema.toCodecJson(Upload)))(
       Redacted.value(encoded),
-    ).pipe(Effect.mapError(() => sessionError("InvalidS3Handle"))),
+    ).pipe(Effect.mapError(() => storageError("handleCodec", "s3", { _tag: "InvalidSession" }))),
 };

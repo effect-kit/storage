@@ -1,0 +1,29 @@
+import { Effect, Layer } from "effect";
+import * as Runtime from "@effect-kit/storage/RUNTIME";
+import { UploadSessions, UploadSessionStore } from "@effect-kit/storage/sessions";
+import { MemoryStorage } from "@effect-kit/storage/testing";
+import { Transfers, UploadSource } from "@effect-kit/storage/transfers";
+import { KeyValueStore } from "effect/persistence";
+
+const Managed = Transfers.layer({ maxBytes: 1024 }).pipe(
+  Layer.provideMerge(MemoryStorage.layer()),
+);
+const Store = UploadSessionStore.layer({
+  namespace: "types",
+  ownership: "exclusive",
+  protection: {
+    seal: () => Effect.die("type fixture"),
+    open: () => Effect.die("type fixture"),
+  },
+}).pipe(Layer.provide(KeyValueStore.layerMemory));
+const App = UploadSessions.layer({ configurationId: "types" }).pipe(
+  Layer.provide(Store),
+  Layer.provideMerge(Managed),
+  Layer.provideMerge(Runtime.layer),
+);
+const program = Effect.gen(function* () {
+  yield* UploadSessions;
+  return yield* Transfers.upload({ key: "types", source: UploadSource.bytes(new Uint8Array()) });
+}).pipe(Effect.provide(App));
+// The whole public composition closes its environment without Node or provider SDK types.
+Effect.runPromise(program);

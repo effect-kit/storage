@@ -1,4 +1,4 @@
-import { Effect, Layer, Random, Ref, Result, Schema, Stream } from "effect";
+import { Context, Effect, Layer, Random, Ref, Result, Schema, Stream } from "effect";
 import type { Scope } from "effect";
 
 import { storageError } from "../errors.js";
@@ -6,6 +6,7 @@ import type { StorageError } from "../errors.js";
 import { resolveRange } from "../ranges.js";
 import type { DeleteRequest, GetRequest, GetResult, HeadRequest } from "../requests.js";
 import { Storage } from "../storage.js";
+import { TransferDriver } from "../transfers/dependencies.js";
 import { listMemory } from "./memory-list.js";
 import {
   MemoryOptions,
@@ -175,4 +176,16 @@ export const make = Effect.fnUntraced(function* (options: MemoryOptions = {}) {
   });
 });
 
-export const layer = (options: MemoryOptions = {}) => Layer.effect(Storage, make(options));
+export const layer = (options: MemoryOptions = {}) =>
+  Layer.effectContext(
+    Effect.map(make(options), (storage) =>
+      Context.make(Storage, storage).pipe(
+        Context.add(TransferDriver, {
+          storage,
+          maximumObjectBytes: options.maxObjectBytes ?? 16 * 1024 * 1024,
+          maximumSingleUploadBytes: options.maxObjectBytes ?? 16 * 1024 * 1024,
+          transportOverheadBytes: 0,
+        }),
+      ),
+    ),
+  );

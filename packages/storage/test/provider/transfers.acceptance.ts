@@ -3,9 +3,10 @@ import { writeFile } from "node:fs/promises";
 import { assert, it } from "@effect/vitest";
 import { Effect, Stream } from "effect";
 
-import { s3TransferEndpoint } from "../../src/s3/transfers.js";
-import { Transfers, UploadSource } from "../../src/transfers.js";
-import { sha256 } from "../../src/transfers/node.js";
+import { sha256 } from "../../src/node.js";
+import { makeS3TransferDriver } from "../../src/s3/transfer-driver.js";
+import { UploadSource } from "../../src/transfers.js";
+import { makeTransfers } from "../transfers/fixture.js";
 import { environment, s3Fixture } from "./s3-fixture.js";
 
 const MiB = 1024 * 1024;
@@ -17,11 +18,10 @@ it.live.skipIf(!local)(
     Effect.scoped(
       Effect.gen(function* () {
         const { storage, prefix } = yield* s3Fixture();
-        const endpoint = s3TransferEndpoint(storage);
+        const endpoint = makeS3TransferDriver(storage);
         const nativeCopy = endpoint.nativeCopy;
         if (!nativeCopy) return yield* Effect.die("S3 copy hook missing");
-        const transfers = yield* Transfers.make(endpoint, {
-          digest: sha256,
+        const transfers = yield* makeTransfers(endpoint, {
           partBytes: 5 * MiB,
           partConcurrency: 2,
           memoryBudgetBytes: 32 * MiB,
@@ -44,10 +44,9 @@ it.live.skipIf(!local)(
         assert.strictEqual(copied.strategy, "native-copy");
         assert.strictEqual(copied.progress.bytesVerified, 6 * MiB + 3);
 
-        const multipartCopy = yield* Transfers.make(
+        const multipartCopy = yield* makeTransfers(
           { ...endpoint, nativeCopy: { ...nativeCopy, maximumBytes: MiB } },
           {
-            digest: sha256,
             partBytes: 5 * MiB,
             partConcurrency: 2,
             memoryBudgetBytes: 32 * MiB,
@@ -99,8 +98,7 @@ it.live.skipIf(!local)(
           (timer) => Effect.sync(() => clearInterval(timer)),
         );
         let chunks = 0;
-        const transfers = yield* Transfers.make(s3TransferEndpoint(storage), {
-          digest: sha256,
+        const transfers = yield* makeTransfers(makeS3TransferDriver(storage), {
           partBytes: 5 * MiB,
           partConcurrency: 2,
           requestConcurrency: 3,

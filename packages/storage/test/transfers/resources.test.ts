@@ -3,15 +3,15 @@ import { Cause, Effect, Exit, Fiber, Result, Stream } from "effect";
 import { TestClock } from "effect/testing";
 
 import { storageError } from "../../src/errors.js";
-import { Transfers, UploadSource } from "../../src/transfers.js";
-import { fixture, policy } from "./fixture.js";
+import { UploadSource } from "../../src/transfers.js";
+import { fixture, policy, makeTransfers } from "./fixture.js";
 
 it.effect("joins interrupted part workers before abort and releases the shared workspace", () =>
   Effect.gen(function* () {
     const test = yield* fixture();
     let active = 0;
     let activeAtAbort = -1;
-    const transfers = yield* Transfers.make(
+    const transfers = yield* makeTransfers(
       {
         ...test.endpoint,
         multipart: {
@@ -50,7 +50,7 @@ it.effect("joins interrupted part workers before abort and releases the shared w
 it.effect("bounds a stuck abort separately from the total transfer deadline", () =>
   Effect.gen(function* () {
     const test = yield* fixture();
-    const transfers = yield* Transfers.make(
+    const transfers = yield* makeTransfers(
       {
         ...test.endpoint,
         multipart: { ...test.multipart, uploadPart: () => Effect.never, abort: () => Effect.never },
@@ -72,7 +72,7 @@ it.effect("enforces one attempt budget across concurrent workers and honors Retr
   Effect.gen(function* () {
     const test = yield* fixture();
     let calls = 0;
-    const transfers = yield* Transfers.make(
+    const transfers = yield* makeTransfers(
       {
         ...test.endpoint,
         multipart: {
@@ -111,7 +111,7 @@ it.effect("enforces one attempt budget across concurrent workers and honors Retr
 it.effect("shares admission and request limits across uneven uploads without starvation", () =>
   Effect.gen(function* () {
     const test = yield* fixture();
-    const transfers = yield* Transfers.make(
+    const transfers = yield* makeTransfers(
       {
         ...test.endpoint,
         multipart: {
@@ -153,7 +153,7 @@ it.effect("shares admission and request limits across uneven uploads without sta
 it.effect("leaves ambiguous completion for reconciliation rather than aborting or restarting", () =>
   Effect.gen(function* () {
     const test = yield* fixture();
-    const transfers = yield* Transfers.make(
+    const transfers = yield* makeTransfers(
       {
         ...test.endpoint,
         reconcile: () => Effect.succeed(undefined),
@@ -178,7 +178,7 @@ it.effect("leaves ambiguous completion for reconciliation rather than aborting o
 it.effect("a hanging final observer cannot turn a confirmed commit into a deadline error", () =>
   Effect.gen(function* () {
     const test = yield* fixture();
-    const transfers = yield* Transfers.make(test.endpoint, {
+    const transfers = yield* makeTransfers(test.endpoint, {
       ...policy,
       deadlineMillis: 10,
       observerTimeoutMillis: 20,

@@ -9,6 +9,15 @@ export interface MultipartHandle {
   readonly uploadId: Redacted.Redacted<string>;
 }
 
+export interface MultipartHandleCodec {
+  readonly encode: (
+    handle: MultipartHandle,
+  ) => Effect.Effect<Redacted.Redacted<string>, StorageError>;
+  readonly decode: (
+    encoded: Redacted.Redacted<string>,
+  ) => Effect.Effect<MultipartHandle, StorageError>;
+}
+
 export interface UploadedPart {
   readonly partNumber: number;
   readonly etag: string;

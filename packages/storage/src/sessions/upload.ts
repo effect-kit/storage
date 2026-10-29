@@ -1,7 +1,5 @@
 import { Effect } from "effect";
-import type { Redacted } from "effect";
 
-import type { MultipartHandle } from "../contracts/multipart.js";
 import { StorageError } from "../errors.js";
 import { download } from "../transfers/download.js";
 import { partReceipt } from "../transfers/part-receipts.js";
@@ -14,17 +12,8 @@ import type { UploadCheckpoint } from "./checkpoint.js";
 import type { UploadSessionStore } from "./store.js";
 import { sessionError } from "./store.js";
 
-export interface SessionHandleCodec {
-  readonly encode: (
-    handle: MultipartHandle,
-  ) => Effect.Effect<Redacted.Redacted<string>, StorageError>;
-  readonly decode: (
-    encoded: Redacted.Redacted<string>,
-  ) => Effect.Effect<MultipartHandle, StorageError>;
-}
 export interface SessionOptions {
   readonly configurationId: string;
-  readonly handles: SessionHandleCodec;
   readonly expiresInMillis?: number;
 }
 export interface UploadEnvironment {
@@ -64,11 +53,13 @@ export const runUpload = Effect.fnUntraced(function* <E, R>(
   original: UploadCheckpoint,
   source: UploadSource<E, R>,
 ) {
-  const { runtime, store, options } = environment;
+  const { runtime, store } = environment;
   if (original.state === "completed") {
     if (!original.metadata) return yield* sessionError("MissingCompletionReceipt");
     return original.metadata;
   }
+  const codec = runtime.endpoint.handles;
+  if (!codec) return yield* sessionError("DurableUploadUnsupported");
   const multipart = runtime.endpoint.multipart;
   if (!multipart) return yield* sessionError("MultipartRequired");
   let checkpoint = original;
@@ -139,12 +130,12 @@ export const runUpload = Effect.fnUntraced(function* <E, R>(
           );
           yield* save({
             ...checkpoint,
-            handle: yield* options.handles.encode(handle),
+            handle: yield* codec.encode(handle),
             state: "uploading",
           });
         }
         if (!checkpoint.handle) return yield* sessionError("MissingHandle");
-        const handle = yield* options.handles.decode(checkpoint.handle);
+        const handle = yield* codec.decode(checkpoint.handle);
         if (
           handle.ref.storeId !== runtime.endpoint.storage.storeId ||
           handle.ref.key !== checkpoint.key
@@ -323,7 +314,7 @@ export const abortUpload = Effect.fnUntraced(function* (
   environment: UploadEnvironment,
   original: UploadCheckpoint,
 ) {
-  const { runtime, store, options } = environment;
+  const { runtime, store } = environment;
   if (original.state === "aborted") return;
   if (
     ["completed", "verifying", "completing", "completion-unknown", "initiating"].includes(
@@ -334,9 +325,11 @@ export const abortUpload = Effect.fnUntraced(function* (
   let checkpoint = yield* store.write({ ...original, state: "aborting" }, original.revision);
   if (checkpoint.kind !== "upload") return yield* sessionError("InvalidCheckpoint");
   if (checkpoint.handle) {
+    const codec = runtime.endpoint.handles;
+    if (!codec) return yield* sessionError("DurableUploadUnsupported");
     const multipart = runtime.endpoint.multipart;
     if (!multipart) return yield* sessionError("MultipartRequired");
-    const handle = yield* options.handles.decode(checkpoint.handle);
+    const handle = yield* codec.decode(checkpoint.handle);
     if (
       handle.ref.storeId !== runtime.endpoint.storage.storeId ||
       handle.ref.key !== checkpoint.key

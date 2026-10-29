@@ -141,7 +141,7 @@ try {
           "S3-only import without signing peers",
           "explicit S3/signing/POST peers and packed public contracts",
           "SDK-free managed transfer runtime and source/sink E/R declarations",
-          "isolated Node streaming digest and S3 transfer hooks",
+          "isolated core transfer construction and provider-supplied S3 driver",
           "SDK-free protected session runtime and source/event/batch E/R contracts",
         ],
       },

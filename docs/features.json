@@ -597,17 +597,23 @@
       "target": "Bounded concurrency and bytes, transfer thresholds, progress, cancellation, retry safety",
       "completionPhase": 4,
       "status": "implemented",
-      "specifications": ["docs/transfers.md"],
+      "specifications": [
+        "docs/transfers.md",
+        "docs/runtimes.md",
+        "architecture/decisions/008-workflow-runtime-layers.md"
+      ],
       "implementations": [
         "packages/storage/src/transfers.ts",
         "packages/storage/src/transfers/upload.ts",
         "packages/storage/src/transfers/planner.ts",
         "packages/storage/src/transfers/budget.ts",
-        "packages/storage/src/transfers/runtime.ts"
+        "packages/storage/src/transfers/runtime.ts",
+        "packages/storage/src/transfers/managed-runtime.ts"
       ],
       "tests": [
         "packages/storage/test/transfers/resources.test.ts",
-        "packages/storage/test/transfers/s3.test.ts"
+        "packages/storage/test/transfers/s3.test.ts",
+        "packages/storage/test/transfers/composition.test.ts"
       ],
       "examples": ["docs/transfers.md"],
       "evidence": [
@@ -622,6 +628,71 @@
           "testId": "packages/storage/test/transfers/resources.test.ts",
           "limitations": [
             "In-process transfer behavior; persistent recovery/batch checkpoints remain phase 5. Hosted AWS qualification remains pending at owner request."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/pre-phase-6.md",
+          "sdkVersion": "effect@4.1.0",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "shared-managed-session-runtime",
+          "testId": "packages/storage/test/transfers/composition.test.ts",
+          "limitations": [
+            "Local exclusive-owner composition and regression evidence; distributed coordination and hosted provider qualification remain separate."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/pre-phase-6.md",
+          "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "isolated-packed-runtime-helpers-memory-driver",
+          "testId": "packages/storage/test/runtime/program.mjs",
+          "limitations": [
+            "Helper smoke only; no provider transport qualification. Browser uses memory KVS/target; Bun/Deno reconstruct file backing in the same process."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/pre-phase-6.md",
+          "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
+          "apiVersion": null,
+          "runtime": "bun-1.4.4",
+          "configuration": "isolated-packed-runtime-helpers-memory-driver",
+          "testId": "packages/storage/test/runtime/program.mjs",
+          "limitations": [
+            "Helper smoke only; no provider transport qualification. Browser uses memory KVS/target; Bun/Deno reconstruct file backing in the same process."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/pre-phase-6.md",
+          "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
+          "apiVersion": null,
+          "runtime": "deno-2.9.6",
+          "configuration": "isolated-packed-runtime-helpers-memory-driver",
+          "testId": "packages/storage/test/runtime/program.mjs",
+          "limitations": [
+            "Helper smoke only; no provider transport qualification. Browser uses memory KVS/target; Bun/Deno reconstruct file backing in the same process."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/pre-phase-6.md",
+          "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
+          "apiVersion": null,
+          "runtime": "chromium-156.0.8078.4",
+          "configuration": "isolated-packed-runtime-helpers-memory-driver",
+          "testId": "packages/storage/test/runtime/program.mjs",
+          "limitations": [
+            "Helper smoke only; no provider transport qualification. Browser uses memory KVS/target; Bun/Deno reconstruct file backing in the same process."
           ]
         }
       ],
@@ -698,18 +769,22 @@
       "status": "in-progress",
       "specifications": [
         "docs/sessions.md",
-        "architecture/decisions/005-persistence-and-fixtures.md"
+        "architecture/decisions/005-persistence-and-fixtures.md",
+        "docs/runtimes.md",
+        "architecture/decisions/008-workflow-runtime-layers.md"
       ],
       "implementations": [
         "packages/storage/src/sessions.ts",
         "packages/storage/src/sessions/store.ts",
         "packages/storage/src/sessions/upload.ts",
-        "packages/storage/src/sessions/download.ts"
+        "packages/storage/src/sessions/download.ts",
+        "packages/storage/src/transfers/managed-runtime.ts"
       ],
       "tests": [
         "packages/storage/test/sessions/sessions.test.ts",
         "packages/storage/test/sessions/store.test.ts",
-        "packages/storage/test/provider/sessions.acceptance.ts"
+        "packages/storage/test/provider/sessions.acceptance.ts",
+        "packages/storage/test/transfers/composition.test.ts"
       ],
       "examples": ["packages/storage/examples/durable-upload.mjs"],
       "evidence": [
@@ -726,6 +801,71 @@
             "Owner-approved exclusive ownership base; generic KVS is not distributed CAS/leases. Optional distributed extension remains unqualified.",
             "Real local process termination/fsync/rename and native S3 protocol only; hosted AWS, other OS/runtime/provider guarantees remain pending."
           ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/pre-phase-6.md",
+          "sdkVersion": "effect@4.1.0",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "shared-managed-session-runtime",
+          "testId": "packages/storage/test/transfers/composition.test.ts",
+          "limitations": [
+            "Local exclusive-owner composition and regression evidence; distributed coordination and hosted provider qualification remain separate."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/pre-phase-6.md",
+          "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "isolated-packed-runtime-helpers-memory-driver",
+          "testId": "packages/storage/test/runtime/program.mjs",
+          "limitations": [
+            "Helper smoke only; no provider transport qualification. Browser uses memory KVS/target; Bun/Deno reconstruct file backing in the same process."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/pre-phase-6.md",
+          "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
+          "apiVersion": null,
+          "runtime": "bun-1.4.4",
+          "configuration": "isolated-packed-runtime-helpers-memory-driver",
+          "testId": "packages/storage/test/runtime/program.mjs",
+          "limitations": [
+            "Helper smoke only; no provider transport qualification. Browser uses memory KVS/target; Bun/Deno reconstruct file backing in the same process."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/pre-phase-6.md",
+          "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
+          "apiVersion": null,
+          "runtime": "deno-2.9.6",
+          "configuration": "isolated-packed-runtime-helpers-memory-driver",
+          "testId": "packages/storage/test/runtime/program.mjs",
+          "limitations": [
+            "Helper smoke only; no provider transport qualification. Browser uses memory KVS/target; Bun/Deno reconstruct file backing in the same process."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/pre-phase-6.md",
+          "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
+          "apiVersion": null,
+          "runtime": "chromium-156.0.8078.4",
+          "configuration": "isolated-packed-runtime-helpers-memory-driver",
+          "testId": "packages/storage/test/runtime/program.mjs",
+          "limitations": [
+            "Helper smoke only; no provider transport qualification. Browser uses memory KVS/target; Bun/Deno reconstruct file backing in the same process."
+          ]
         }
       ],
       "deferral": null
@@ -739,7 +879,9 @@
       "specifications": [
         "docs/transfers.md",
         "docs/sessions.md",
-        "architecture/decisions/005-persistence-and-fixtures.md"
+        "architecture/decisions/005-persistence-and-fixtures.md",
+        "docs/runtimes.md",
+        "architecture/decisions/008-workflow-runtime-layers.md"
       ],
       "implementations": [
         "packages/storage/src/transfers.ts",
@@ -747,13 +889,15 @@
         "packages/storage/src/sessions.ts",
         "packages/storage/src/sessions/store.ts",
         "packages/storage/src/sessions/upload.ts",
-        "packages/storage/src/sessions/download.ts"
+        "packages/storage/src/sessions/download.ts",
+        "packages/storage/src/transfers/managed-runtime.ts"
       ],
       "tests": [
         "packages/storage/test/transfers/download-copy.test.ts",
         "packages/storage/test/sessions/sessions.test.ts",
         "packages/storage/test/sessions/store.test.ts",
-        "packages/storage/test/provider/sessions.acceptance.ts"
+        "packages/storage/test/provider/sessions.acceptance.ts",
+        "packages/storage/test/transfers/composition.test.ts"
       ],
       "examples": ["docs/transfers.md", "packages/storage/examples/durable-upload.mjs"],
       "evidence": [
@@ -782,6 +926,71 @@
           "limitations": [
             "Owner-approved exclusive ownership base; generic KVS is not distributed CAS/leases. Optional distributed extension remains unqualified.",
             "Real local process termination/fsync/rename and native S3 protocol only; hosted AWS, other OS/runtime/provider guarantees remain pending."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/pre-phase-6.md",
+          "sdkVersion": "effect@4.1.0",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "shared-managed-session-runtime",
+          "testId": "packages/storage/test/transfers/composition.test.ts",
+          "limitations": [
+            "Local exclusive-owner composition and regression evidence; distributed coordination and hosted provider qualification remain separate."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/pre-phase-6.md",
+          "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "isolated-packed-runtime-helpers-memory-driver",
+          "testId": "packages/storage/test/runtime/program.mjs",
+          "limitations": [
+            "Helper smoke only; no provider transport qualification. Browser uses memory KVS/target; Bun/Deno reconstruct file backing in the same process."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/pre-phase-6.md",
+          "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
+          "apiVersion": null,
+          "runtime": "bun-1.4.4",
+          "configuration": "isolated-packed-runtime-helpers-memory-driver",
+          "testId": "packages/storage/test/runtime/program.mjs",
+          "limitations": [
+            "Helper smoke only; no provider transport qualification. Browser uses memory KVS/target; Bun/Deno reconstruct file backing in the same process."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/pre-phase-6.md",
+          "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
+          "apiVersion": null,
+          "runtime": "deno-2.9.6",
+          "configuration": "isolated-packed-runtime-helpers-memory-driver",
+          "testId": "packages/storage/test/runtime/program.mjs",
+          "limitations": [
+            "Helper smoke only; no provider transport qualification. Browser uses memory KVS/target; Bun/Deno reconstruct file backing in the same process."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/pre-phase-6.md",
+          "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
+          "apiVersion": null,
+          "runtime": "chromium-156.0.8078.4",
+          "configuration": "isolated-packed-runtime-helpers-memory-driver",
+          "testId": "packages/storage/test/runtime/program.mjs",
+          "limitations": [
+            "Helper smoke only; no provider transport qualification. Browser uses memory KVS/target; Bun/Deno reconstruct file backing in the same process."
           ]
         }
       ],
@@ -850,19 +1059,28 @@
       "target": "Algorithm/type distinctions, streaming digests, native validation, mismatch behavior",
       "completionPhase": 4,
       "status": "implemented",
-      "specifications": ["docs/s3.md", "docs/transfers.md"],
+      "specifications": [
+        "docs/s3.md",
+        "docs/transfers.md",
+        "docs/runtimes.md",
+        "architecture/decisions/008-workflow-runtime-layers.md"
+      ],
       "implementations": [
         "packages/storage/src/s3/object-mapping.ts",
         "packages/storage/src/s3/native-models.ts",
         "packages/storage/src/transfers.ts",
         "packages/storage/src/transfers/reader.ts",
-        "packages/storage/src/transfers/node.ts"
+        "packages/storage/src/runtime/node-hash.ts",
+        "packages/storage/src/transfers/managed-runtime.ts",
+        "packages/storage/src/runtime/portable-hash.ts"
       ],
       "tests": [
         "packages/storage/test/s3/primitives.test.ts",
         "packages/storage/test/s3/native.test.ts",
         "packages/storage/test/transfers/upload.test.ts",
-        "packages/storage/test/transfers/download-copy.test.ts"
+        "packages/storage/test/transfers/download-copy.test.ts",
+        "packages/storage/test/transfers/composition.test.ts",
+        "packages/storage/test/runtime/crypto.test.ts"
       ],
       "examples": ["packages/storage/README.md", "docs/transfers.md"],
       "evidence": [
@@ -890,6 +1108,71 @@
           "testId": "packages/storage/test/transfers/upload.test.ts",
           "limitations": [
             "In-process transfer behavior; persistent recovery/batch checkpoints remain phase 5. Hosted AWS qualification remains pending at owner request."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/pre-phase-6.md",
+          "sdkVersion": "effect@4.1.0",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "shared-managed-session-runtime",
+          "testId": "packages/storage/test/transfers/composition.test.ts",
+          "limitations": [
+            "Local exclusive-owner composition and regression evidence; distributed coordination and hosted provider qualification remain separate."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/pre-phase-6.md",
+          "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "isolated-packed-runtime-helpers-memory-driver",
+          "testId": "packages/storage/test/runtime/program.mjs",
+          "limitations": [
+            "Helper smoke only; no provider transport qualification. Browser uses memory KVS/target; Bun/Deno reconstruct file backing in the same process."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/pre-phase-6.md",
+          "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
+          "apiVersion": null,
+          "runtime": "bun-1.4.4",
+          "configuration": "isolated-packed-runtime-helpers-memory-driver",
+          "testId": "packages/storage/test/runtime/program.mjs",
+          "limitations": [
+            "Helper smoke only; no provider transport qualification. Browser uses memory KVS/target; Bun/Deno reconstruct file backing in the same process."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/pre-phase-6.md",
+          "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
+          "apiVersion": null,
+          "runtime": "deno-2.9.6",
+          "configuration": "isolated-packed-runtime-helpers-memory-driver",
+          "testId": "packages/storage/test/runtime/program.mjs",
+          "limitations": [
+            "Helper smoke only; no provider transport qualification. Browser uses memory KVS/target; Bun/Deno reconstruct file backing in the same process."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/pre-phase-6.md",
+          "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
+          "apiVersion": null,
+          "runtime": "chromium-156.0.8078.4",
+          "configuration": "isolated-packed-runtime-helpers-memory-driver",
+          "testId": "packages/storage/test/runtime/program.mjs",
+          "limitations": [
+            "Helper smoke only; no provider transport qualification. Browser uses memory KVS/target; Bun/Deno reconstruct file backing in the same process."
           ]
         }
       ],
@@ -1253,11 +1536,28 @@
       "target": "Prefix/read-only/policy decorators; opt-in cache, compression, encryption and mirror workflows",
       "completionPhase": 12,
       "status": "planned",
-      "specifications": [],
+      "specifications": [
+        "docs/runtimes.md",
+        "architecture/decisions/008-workflow-runtime-layers.md"
+      ],
       "implementations": [],
-      "tests": [],
+      "tests": ["packages/storage/test/transfers/composition.test.ts"],
       "examples": [],
-      "evidence": [],
+      "evidence": [
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/pre-phase-6.md",
+          "sdkVersion": "effect@4.1.0",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "shared-managed-session-runtime",
+          "testId": "packages/storage/test/transfers/composition.test.ts",
+          "limitations": [
+            "Local exclusive-owner composition and regression evidence; distributed coordination and hosted provider qualification remain separate."
+          ]
+        }
+      ],
       "deferral": null
     },
     {

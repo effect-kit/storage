@@ -3,8 +3,10 @@
 `@effect-kit/storage/sessions` stores protected, schema-versioned checkpoints using
 Effect 4.1's `KeyValueStore.toSchemaStore`. Applications supply the KeyValueStore
 layer. There is no PostgreSQL, Redis, ORM or hosted coordinator requirement.
-`/sessions/node` adds Node AES-GCM protection, atomic filesystem persistence and a
-restartable file download target. No new package dependency is needed.
+The canonical `/node`, `/bun` and `/deno` modules compose runtime crypto, atomic
+filesystem persistence and restartable file targets. `/browser` supplies portable
+hashing/protection; applications supply its backing store and target. See
+[runtime setup and support limits](runtimes.md).
 
 ## Ownership and backing guarantees
 
@@ -39,30 +41,58 @@ for recovery. Other application-supplied KeyValueStores may support enumeration.
 ## Configure a session service
 
 ```ts
-import { Effect } from "effect";
-import { KeyValueStore } from "effect/persistence";
+import { Effect, Layer } from "effect";
 
-import { s3SessionHandles, s3TransferEndpoint } from "@effect-kit/storage/s3/transfers";
-import { UploadSessions, UploadSessionStore } from "@effect-kit/storage/sessions";
-import { atomicFileStore, aes256Gcm } from "@effect-kit/storage/sessions/node";
-import { sha256 } from "@effect-kit/storage/transfers/node";
+import * as StorageNode from "@effect-kit/storage/node";
+import { S3Storage } from "@effect-kit/storage/s3";
+import { UploadSessions } from "@effect-kit/storage/sessions";
+import { Transfers, UploadSource } from "@effect-kit/storage/transfers";
 
-// storage: a scoped S3Storage service; secretKey: a stable Redacted<Uint8Array> of 32 bytes.
-const configure = Effect.gen(function* () {
-  const backing = yield* atomicFileStore("./private-checkpoints");
-  const store = yield* UploadSessionStore.make({
-    namespace: "tenant-a",
-    ownership: "exclusive",
-    protection: aes256Gcm(secretKey),
-  }).pipe(Effect.provideService(KeyValueStore.KeyValueStore, backing));
+const ManagedLive = Transfers.layer({
+  maxBytes: 1024 * 1024 * 1024,
+  memoryBudgetBytes: 64 * 1024 * 1024,
+}).pipe(Layer.provideMerge(S3Storage.layer(config.s3)));
 
-  return yield* UploadSessions.make(
-    s3TransferEndpoint(storage),
-    { digest: sha256, maxBytes: 1024 * 1024 * 1024 },
-    { configurationId: "tenant-a-bucket-policy-v1", handles: s3SessionHandles },
-  ).pipe(Effect.provideService(UploadSessionStore, store));
+const StoreLive = StorageNode.sessionStore({
+  directory: config.checkpointDirectory,
+  namespace: config.sessionNamespace,
+  key: config.checkpointKey,
+  ownership: "exclusive",
 });
+
+const AppLive = UploadSessions.layer({
+  configurationId: config.storageConfigurationId,
+  expiresInMillis: 24 * 60 * 60 * 1000,
+}).pipe(
+  Layer.provide(StoreLive),
+  Layer.provideMerge(ManagedLive),
+  Layer.provideMerge(StorageNode.layer),
+);
+
+const resume = Effect.gen(function* () {
+  const sessions = yield* UploadSessions;
+  const source = yield* UploadSource.file(config.uploadPath);
+  return yield* sessions.resume(config.uploadSessionId, source);
+});
+
+await Effect.runPromise(resume.pipe(Effect.provide(AppLive)));
 ```
+
+`config` is application configuration, including a stable Redacted 32-byte key.
+Create the session once with `sessions.create({ id, key, source })`, then resume
+with the same identity/source after restart. The [runnable example](../packages/storage/examples/durable-upload.mjs)
+shows complete environment-based setup.
+
+The managed layer supplies a private companion so ordinary and durable workflows
+share one admission budget, request semaphore, hash implementation and policy.
+`UploadSessions.make(options)` captures that companion plus UploadSessionStore;
+use a context built from `Transfers.layer`, rather than a standalone Transfers.make
+result. The provider owns native handle encoding. Unsupported durable upload
+protocols/codecs fail before opening the source or starting an upload.
+
+For existing persistence, use `UploadSessionStore.layer({ namespace, ownership,
+protection })` with your Effect KeyValueStore layer. File conveniences construct
+that same service. They do not install a scheduler or distributed coordinator.
 
 The key must survive restart through application secret configuration. Generating a
 new key on every startup makes old records unreadable. The protection interface
@@ -105,7 +135,7 @@ stores per-part source digests. Recovery skips a saved part only when provider
 identity/size and current source bytes agree. Lost uncheckpointed parts can be
 re-uploaded to the same numbered handle with stable bytes. Source scanning still
 reads old prefixes; avoiding network re-upload does not eliminate local/source IO.
-Native S3 checksum policy is encoded through `s3SessionHandles` and survives restart.
+The S3 driver encodes native checksum policy with the upload handle for restart.
 
 Intent is saved before initiation, part calls and completion; acknowledgments are
 saved after provider responses. Upload attempt intents, including verification,
@@ -114,7 +144,7 @@ still consume an intent. Per-invocation deadlines and shared byte/request admiss
 also apply. Reconciliation/abort have separately bounded control requests so an
 exhausted transfer budget does not prevent inspection/cleanup. Raising a depleted
 budget is an explicit application policy decision. Storage/protection callbacks must
-be bounded and honor their contract. Checkpoint commits and mutating Node target IO
+be bounded and honor their contract. Checkpoint commits and mutating file-target IO
 are joined before ownership is released; cancellation can wait for an issued local
 filesystem operation to finish.
 
@@ -132,7 +162,7 @@ an already committed/verifying result and explicit cleanup.
 
 `createDownload({ id, ref, expectedChecksum? })` captures a sized, pinned source.
 `resumeDownload(id, target)` requires the same owned restartable target; Node's
-`fileDownloadTarget({ id, path })` binds its identity to canonical destination and
+`yield* StorageNode.fileDownloadTarget({ id, path })` captures runtime services and binds its identity to canonical destination and
 private partial paths. Use a unique id per session. Generic targets promise a stable
 identity, exact prefix reads, positional writes, sync, and idempotent publication.
 An optional discard method supports `abortDownload(id, target)`.
@@ -141,11 +171,11 @@ Each chunk is synced before its offset/prefix digest is checkpointed. On restart
 uncheckpointed tail bytes are discarded and the saved prefix is rehashed. Ranges
 pin the same native version or strong validator; changed source, prefix or target
 fails. Full expected checksums are compared when supplied/available. Digest snapshot
-support is required (the Node SHA-256 implementation provides it); internal hash
+support is required (all four runtime helpers provide it); internal hash
 state is never serialized. A crash at the last byte before EOF validation causes
 a safe full re-read rather than treating a byte count as proof of completion.
 
-Verified state is committed before publication. Node publication hashes the partial,
+Verified state is committed before publication. The shared file target hashes the partial,
 renames it and syncs the directory. If the response/checkpoint is lost after rename,
 it recognizes an existing final file only by exact size/digest. Existing destinations
 are replaced by successful publication; authorize paths and exclusive partial access
@@ -179,7 +209,8 @@ bypass and does not remove unobserved uploads or arbitrary quarantine objects.
 
 Run `pnpm ci:check` and `pnpm test:extended` for offline/type/packed checks.
 `pnpm test:s3:local` builds the package and runs owned RustFS plus separate-process
-restart tests. No AWS account is needed. See [phase 5 evidence](evidence/phase-5.md).
+restart tests. No AWS account is needed. See [phase 5 evidence](evidence/phase-5.md) and the current
+[API/runtime regression evidence](evidence/pre-phase-6.md).
 
 The repository example is `packages/storage/examples/durable-upload.mjs`. After
 `pnpm build`, configure S3/optional local endpoint, a private checkpoint directory,
