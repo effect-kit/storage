@@ -228,3 +228,12 @@ workflow file on its default branch; see [GitHub's manual workflow guide](https:
 Configure required status checks after the first real CI run, using the job names GitHub
 actually reports. A Changesets PR created with `GITHUB_TOKEN` may need a manual CI dispatch
 on its branch because token-created PRs do not trigger ordinary PR workflows.
+
+## S3 protocol acceptance
+
+`workflows/s3-local.yml` is a manual lane running `pnpm test:s3:local`. It creates
+and removes its own pinned RustFS container with generated disposable credentials.
+It needs Docker and no AWS account. The automatic CI and artifact lanes remain
+independent of services. The [S3 guide](../docs/s3.md) documents a separate explicit
+`test:s3:aws` lane for an authorized existing versioned bucket/prefix. Real AWS
+acceptance is pending at the owner's request; local evidence cannot certify it.

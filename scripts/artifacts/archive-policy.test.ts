@@ -9,11 +9,24 @@ const manifest = {
   type: "module",
   main: "./dist/index.js",
   types: "./dist/index.d.ts",
-  peerDependencies: { effect: "^4.0.6" },
+  peerDependencies: {
+    effect: "^4.0.6",
+    "@aws-sdk/client-s3": "^3.1159.0",
+    "@aws-sdk/s3-request-presigner": "^3.1159.0",
+    "@aws-sdk/s3-presigned-post": "^3.1159.0",
+  },
+  peerDependenciesMeta: {
+    "@aws-sdk/client-s3": { optional: true },
+    "@aws-sdk/s3-request-presigner": { optional: true },
+    "@aws-sdk/s3-presigned-post": { optional: true },
+  },
   exports: {
     ".": { types: "./dist/index.d.ts", import: "./dist/index.js" },
     "./testing": { types: "./dist/testing.d.ts", import: "./dist/testing.js" },
     "./package.json": "./package.json",
+    "./s3": { types: "./dist/s3.d.ts", import: "./dist/s3.js" },
+    "./s3/signing": { types: "./dist/s3/signing.d.ts", import: "./dist/s3/signing.js" },
+    "./s3/post": { types: "./dist/s3/post.d.ts", import: "./dist/s3/post.js" },
   },
 };
 const entries = [
@@ -24,6 +37,12 @@ const entries = [
   "package/dist/index.d.ts",
   "package/dist/testing.js",
   "package/dist/testing.d.ts",
+  "package/dist/s3.js",
+  "package/dist/s3.d.ts",
+  "package/dist/s3/signing.js",
+  "package/dist/s3/signing.d.ts",
+  "package/dist/s3/post.js",
+  "package/dist/s3/post.d.ts",
 ];
 
 test("research, source files, secrets and traversal cannot enter the archive", () => {
@@ -46,6 +65,12 @@ test("missing runtime/declarations/license and development exports fail", () => 
     "dist/index.d.ts",
     "dist/testing.js",
     "dist/testing.d.ts",
+    "dist/s3.js",
+    "dist/s3.d.ts",
+    "dist/s3/signing.js",
+    "dist/s3/signing.d.ts",
+    "dist/s3/post.js",
+    "dist/s3/post.d.ts",
   ]) {
     assert.throws(() =>
       checkArchive(

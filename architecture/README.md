@@ -1,6 +1,7 @@
 # Storage architecture
 
-Status: phase 2 portable API, memory reference and public conformance implemented.
+Status: portable API, memory/conformance and phase 3 S3 implementation delivered;
+hosted AWS acceptance remains pending.
 These decisions guide native adapters and transfer workflows in subsequent phases.
 
 | Decision                                                                        | Responsibility                                              |
@@ -20,3 +21,6 @@ records core/memory behavior, types and packed custom-adapter checks.
 
 Create modules/exports when their behavior exists. No production code, CI check or
 required documentation input may depend on ignored research.
+
+[Phase 3 evidence](../docs/evidence/phase-3.md) separates the implemented S3 adapter,
+controlled HTTP results, owned RustFS acceptance and the open AWS hosted gate.

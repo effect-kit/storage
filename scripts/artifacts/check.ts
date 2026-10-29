@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
 import { checkArchive } from "./archive-policy.ts";
+import { checkS3Consumer } from "./s3-consumer.ts";
 
 const root = process.cwd();
 const output = resolve(".artifacts/packages");
@@ -121,6 +122,7 @@ try {
     temporary,
   );
   run(process.execPath, ["consumer.mjs"], temporary);
+  await checkS3Consumer(temporary);
   await writeFile(
     resolve(".artifacts/artifact-check.json"),
     `${JSON.stringify(
@@ -136,13 +138,15 @@ try {
           "Bundler/browser declarations",
           "memory/fault/conformance imports",
           "public custom adapter and optional capability",
+          "S3-only import without signing peers",
+          "explicit S3/signing/POST peers and packed public contracts",
         ],
       },
       null,
       2,
     )}\n`,
   );
-  console.log("Packed Storage imports and declarations pass without optional provider peers.");
+  console.log("Packed core/testing pass without SDK peers; S3 consumers pass with explicit peers.");
 } catch (error) {
   if (error !== null && typeof error === "object" && "stderr" in error) {
     process.stderr.write(String(error.stderr));

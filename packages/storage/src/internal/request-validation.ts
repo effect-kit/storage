@@ -9,6 +9,7 @@ export function decodeRequest<S extends Schema.Constraint>(
   input: unknown,
   operation: string,
   provider: string,
+  mutation: boolean = operation === "put" || operation === "delete",
 ) {
   return Schema.decodeUnknownEffect(schema, { onExcessProperty: "error" })(input).pipe(
     Effect.mapError(() =>
@@ -16,7 +17,7 @@ export function decodeRequest<S extends Schema.Constraint>(
         operation,
         provider,
         { _tag: "InvalidInput", field: "request" },
-        operation === "put" || operation === "delete" ? "not-started" : "not-applicable",
+        mutation ? "not-started" : "not-applicable",
       ),
     ),
   );

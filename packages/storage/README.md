@@ -2,8 +2,9 @@
 
 Object storage services and workflows for Effect.
 
-Development status: the portable API and memory reference are implemented. Hosted
-adapters, managed transfers and durable upload sessions follow in later phases.
+Development status: the portable API, memory reference and official-SDK S3 adapter
+are implemented. S3 has local protocol evidence; hosted AWS acceptance is pending.
+Managed transfers and durable sessions follow in later phases.
 Published-package installation instructions will accompany the first release.
 
 ## Use storage
@@ -46,7 +47,7 @@ filesystem confinement nor authorization.
 ## Package boundaries and evidence
 
 Core and `/testing` depend only on Effect. Provider SDKs, database integrations,
-HTTP helpers and browser clients will use separate entry points alongside their
+HTTP helpers and browser clients use separate entry points alongside their
 implementations and tests. Core does not load provider clients.
 
 See the [portable API](../../docs/core.md), [testing tools](../../docs/testing.md),
@@ -56,6 +57,17 @@ Memory is process-local, with configurable quotas and current references rather
 than retained history. It cannot qualify cloud races, checksums, durability or
 native cancellation. Its five primitives have Node 24.22.0 runtime evidence;
 no hosted provider support is currently qualified.
+
+## AWS S3
+
+Import S3Storage from `@effect-kit/storage/s3` and provide
+`S3Storage.layer({ bucket, region })` to the same portable program. Install the
+optional official `@aws-sdk/client-s3` peer. Signing and POST policies use
+`/s3/signing` and `/s3/post`, with their respective official optional peers.
+
+See [S3 setup, ownership and limits](../../docs/s3.md). Known-length streams use
+backpressure; unknown-length streams stage within an explicit per-operation limit.
+`pnpm test:s3:local` runs owned RustFS protocol acceptance without an AWS account.
 
 ## License
 

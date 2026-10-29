@@ -10,9 +10,10 @@ transport; transfers depend on narrow capabilities; sessions depend on optional
 persistence; HTTP/client bindings depend on public contracts. No global provider
 registry, detached runtime or application framework is required.
 
-The current root exports only ObjectKey/ObjectSize. Future boundaries are s3,
-r2/r2-workers, gcs, azure, filesystem, named S3 profiles, supabase, vercel, testing,
-transfers, uploads, http and client. Administrative authority is separate.
+Core exports the portable service/contracts. Implemented subpaths are testing, s3,
+s3/signing and s3/post. Future boundaries include r2/r2-workers, gcs, azure,
+filesystem, named S3 profiles, supabase, vercel, transfers, uploads, http and client.
+Administrative authority is separate.
 Optional peers are declared only when the owning implementation exists.
 
 Use AWS SDK v3 low-level commands for AWS and the selected S3 profiles, including
@@ -41,3 +42,9 @@ SDKs stay out of core/browser imports; constructors expose explicit client owner
 Keep the existing pinned toolchain. Introduce CLI/React packages only for actual
 independent dependency/runtime needs. A raw-client escape hatch carries native
 ownership and does not count as an implemented portable capability.
+
+The [S3 implementation](../../docs/s3.md) pins official SDK 3.1159.0, preserves
+WHEN_SUPPORTED data-plane checksums and uses one transport attempt. Unknown-length
+single-request sources stage under an explicit adapter limit; managed streaming
+strategies and total byte/retry budgets remain phase 4. Node built-ins are external
+only in the isolated S3 graph; SDK-free packed core/Bundler checks remain required.

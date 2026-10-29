@@ -39,7 +39,10 @@ test("missing and duplicate feature IDs cannot hide scope", () => {
 test("missing providers and core operations are rejected", () => {
   const catalog = providers();
   catalog.providers.pop();
-  firstFixture(catalog.providers).operations.pop();
+  const provider = firstFixture(catalog.providers);
+  provider.operations = provider.operations.filter(
+    (operation) => operation.operation !== "listPage",
+  );
 
   const issues = check(features(), catalog);
   assert.ok(issues.some((issue) => issue.includes("hetzner")));

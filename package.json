@@ -41,13 +41,16 @@
     "release:smoke": "echo \"Not implemented: verify the published release\"",
     "prepare": "lefthook install",
     "test:tooling": "node --test scripts/catalog/catalog.test.ts scripts/artifacts/archive-policy.test.ts",
-    "catalog:check": "node scripts/catalog/check.ts"
+    "catalog:check": "node scripts/catalog/check.ts",
+    "test:s3:local": "node scripts/s3/local.ts",
+    "test:s3:aws": "pnpm --filter @effect-kit/storage exec vitest run --config vitest.s3.config.ts"
   },
   "dependencies": {
     "effect": "catalog:"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "catalog:",
+    "@aws-sdk/client-s3": "catalog:",
     "@changesets/cli": "catalog:",
     "@commitlint/cli": "catalog:",
     "@commitlint/config-conventional": "catalog:",

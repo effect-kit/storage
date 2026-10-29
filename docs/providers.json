@@ -1,82 +1,435 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-28",
+  "updatedAt": "2026-10-29",
   "providers": [
     {
       "id": "aws-s3",
       "name": "AWS S3",
       "transport": "@aws-sdk/client-s3",
       "implementationPhase": 3,
-      "implementation": "planned",
-      "runtimes": ["node"],
-      "sources": ["https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html"],
+      "implementation": "implemented",
+      "runtimes": ["node-24.22.0"],
+      "sources": [
+        "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html",
+        "docs/s3.md",
+        "docs/evidence/phase-3.md"
+      ],
       "notes": [
-        "General-purpose buckets first; advanced bucket types need separate qualification."
+        "Official AWS SDK 3.1159.0; general-purpose bucket adapter and isolated signing/POST peers.",
+        "Controlled HTTP and versioned RustFS fixture executed; hosted AWS acceptance remains pending by owner request.",
+        "Known-length streaming; unknown-length sources stage within a configurable per-operation byte limit.",
+        "One SDK attempt; separate capability services and explicit owned/borrowed clients.",
+        "Named compatible providers, special bucket types and non-Node runtimes remain unqualified."
       ],
       "operations": [
         {
           "featureId": "OBJ-01",
           "operation": "put",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "general-purpose-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "General-purpose bucket scope; hosted AWS acceptance pending.",
+            "Stream, authority, checksum and configuration limits documented in docs/s3.md."
+          ],
+          "implementations": ["packages/storage/src/s3/primitives.ts"],
+          "tests": [
+            "packages/storage/test/s3/primitives.test.ts",
+            "packages/storage/test/provider/s3.acceptance.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-29",
+              "source": "docs/evidence/phase-3.md",
+              "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+              "apiVersion": "2006-03-01",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-http",
+              "testId": "packages/storage/test/s3/primitives.test.ts",
+              "limitations": [
+                "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+              ]
+            },
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-29",
+              "source": "docs/evidence/phase-3.md",
+              "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+              "apiVersion": "2006-03-01",
+              "runtime": "node-24.22.0",
+              "configuration": "local-rustfs-versioned",
+              "testId": "packages/storage/test/provider/s3.acceptance.ts",
+              "limitations": [
+                "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+              ]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-02",
           "operation": "get",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "general-purpose-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "General-purpose bucket scope; hosted AWS acceptance pending.",
+            "Stream, authority, checksum and configuration limits documented in docs/s3.md."
+          ],
+          "implementations": ["packages/storage/src/s3/primitives.ts"],
+          "tests": [
+            "packages/storage/test/s3/primitives.test.ts",
+            "packages/storage/test/provider/s3.acceptance.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-29",
+              "source": "docs/evidence/phase-3.md",
+              "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+              "apiVersion": "2006-03-01",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-http",
+              "testId": "packages/storage/test/s3/primitives.test.ts",
+              "limitations": [
+                "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+              ]
+            },
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-29",
+              "source": "docs/evidence/phase-3.md",
+              "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+              "apiVersion": "2006-03-01",
+              "runtime": "node-24.22.0",
+              "configuration": "local-rustfs-versioned",
+              "testId": "packages/storage/test/provider/s3.acceptance.ts",
+              "limitations": [
+                "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+              ]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-03",
           "operation": "head",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "general-purpose-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "General-purpose bucket scope; hosted AWS acceptance pending.",
+            "Stream, authority, checksum and configuration limits documented in docs/s3.md."
+          ],
+          "implementations": ["packages/storage/src/s3/primitives.ts"],
+          "tests": [
+            "packages/storage/test/s3/primitives.test.ts",
+            "packages/storage/test/provider/s3.acceptance.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-29",
+              "source": "docs/evidence/phase-3.md",
+              "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+              "apiVersion": "2006-03-01",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-http",
+              "testId": "packages/storage/test/s3/primitives.test.ts",
+              "limitations": [
+                "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+              ]
+            },
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-29",
+              "source": "docs/evidence/phase-3.md",
+              "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+              "apiVersion": "2006-03-01",
+              "runtime": "node-24.22.0",
+              "configuration": "local-rustfs-versioned",
+              "testId": "packages/storage/test/provider/s3.acceptance.ts",
+              "limitations": [
+                "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+              ]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-04",
           "operation": "delete",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "general-purpose-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "General-purpose bucket scope; hosted AWS acceptance pending.",
+            "Stream, authority, checksum and configuration limits documented in docs/s3.md."
+          ],
+          "implementations": ["packages/storage/src/s3/primitives.ts"],
+          "tests": [
+            "packages/storage/test/s3/primitives.test.ts",
+            "packages/storage/test/provider/s3.acceptance.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-29",
+              "source": "docs/evidence/phase-3.md",
+              "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+              "apiVersion": "2006-03-01",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-http",
+              "testId": "packages/storage/test/s3/primitives.test.ts",
+              "limitations": [
+                "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+              ]
+            },
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-29",
+              "source": "docs/evidence/phase-3.md",
+              "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+              "apiVersion": "2006-03-01",
+              "runtime": "node-24.22.0",
+              "configuration": "local-rustfs-versioned",
+              "testId": "packages/storage/test/provider/s3.acceptance.ts",
+              "limitations": [
+                "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+              ]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-05",
           "operation": "listPage",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "general-purpose-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "General-purpose bucket scope; hosted AWS acceptance pending.",
+            "Stream, authority, checksum and configuration limits documented in docs/s3.md."
+          ],
+          "implementations": ["packages/storage/src/s3/listing.ts"],
+          "tests": [
+            "packages/storage/test/s3/primitives.test.ts",
+            "packages/storage/test/provider/s3.acceptance.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-29",
+              "source": "docs/evidence/phase-3.md",
+              "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+              "apiVersion": "2006-03-01",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-http",
+              "testId": "packages/storage/test/s3/primitives.test.ts",
+              "limitations": [
+                "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+              ]
+            },
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-29",
+              "source": "docs/evidence/phase-3.md",
+              "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+              "apiVersion": "2006-03-01",
+              "runtime": "node-24.22.0",
+              "configuration": "local-rustfs-versioned",
+              "testId": "packages/storage/test/provider/s3.acceptance.ts",
+              "limitations": [
+                "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "OBJ-04",
+          "operation": "deleteObjects",
+          "configuration": "general-purpose-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Unconditional 1\u20131000 distinct targets; per-key Result and unknown receipts.",
+            "Hosted AWS qualification pending."
+          ],
+          "implementations": ["packages/storage/src/s3/bulk-delete.ts"],
+          "tests": ["packages/storage/test/s3/native.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-29",
+              "source": "docs/evidence/phase-3.md",
+              "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+              "apiVersion": "2006-03-01",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-http",
+              "testId": "packages/storage/test/s3/native.test.ts",
+              "limitations": [
+                "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "OBJ-06",
+          "operation": "copyObject",
+          "configuration": "general-purpose-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Source/destination conditions; explicit source namespace; no cross-endpoint native copy.",
+            "Hosted AWS qualification pending."
+          ],
+          "implementations": ["packages/storage/src/s3/copy.ts"],
+          "tests": ["packages/storage/test/s3/native.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-29",
+              "source": "docs/evidence/phase-3.md",
+              "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+              "apiVersion": "2006-03-01",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-http",
+              "testId": "packages/storage/test/s3/native.test.ts",
+              "limitations": [
+                "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "XFR-02",
+          "operation": "multipart",
+          "configuration": "general-purpose-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Low-level lifecycle/inventory; no managed scheduling, durable recovery or automatic complete replay.",
+            "Hosted AWS qualification pending."
+          ],
+          "implementations": ["packages/storage/src/s3/multipart.ts"],
+          "tests": ["packages/storage/test/s3/native.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-29",
+              "source": "docs/evidence/phase-3.md",
+              "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+              "apiVersion": "2006-03-01",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-http",
+              "testId": "packages/storage/test/s3/native.test.ts",
+              "limitations": [
+                "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "SIG-01",
+          "operation": "sign",
+          "configuration": "general-purpose-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "GET/HEAD/PUT/DELETE/part grants; required headers and credential-capped expiry.",
+            "Hosted AWS qualification pending."
+          ],
+          "implementations": ["packages/storage/src/s3/signing.ts"],
+          "tests": ["packages/storage/test/s3/signing.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-29",
+              "source": "docs/evidence/phase-3.md",
+              "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+              "apiVersion": "2006-03-01",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-http",
+              "testId": "packages/storage/test/s3/signing.test.ts",
+              "limitations": [
+                "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "SIG-02",
+          "operation": "post",
+          "configuration": "general-purpose-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Exact key/byte range/field policy; configured encryption/expected-owner/requester-pays explicitly unsupported.",
+            "Hosted AWS qualification pending."
+          ],
+          "implementations": ["packages/storage/src/s3/post.ts"],
+          "tests": ["packages/storage/test/s3/signing.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-29",
+              "source": "docs/evidence/phase-3.md",
+              "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+              "apiVersion": "2006-03-01",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-http",
+              "testId": "packages/storage/test/s3/signing.test.ts",
+              "limitations": [
+                "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "SIG-03",
+          "operation": "publicUrl",
+          "configuration": "general-purpose-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Explicit public base; no visibility changes; versioned/dot-segment refs rejected.",
+            "Hosted AWS qualification pending."
+          ],
+          "implementations": ["packages/storage/src/s3.ts"],
+          "tests": ["packages/storage/test/s3/signing.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-29",
+              "source": "docs/evidence/phase-3.md",
+              "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+              "apiVersion": "2006-03-01",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-http",
+              "testId": "packages/storage/test/s3/signing.test.ts",
+              "limitations": [
+                "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+              ]
+            }
+          ],
           "deferral": null
         }
       ]

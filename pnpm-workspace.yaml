@@ -2,6 +2,9 @@ packages:
   - packages/*
 
 catalog:
+  "@aws-sdk/client-s3": 3.1159.0
+  "@aws-sdk/s3-request-presigner": 3.1159.0
+  "@aws-sdk/s3-presigned-post": 3.1159.0
   effect: 4.0.6
   "@effect/vitest": 4.0.6
   typescript: 7.0.2
@@ -26,3 +29,22 @@ autoInstallPeers: false
 allowBuilds:
   esbuild: true
   lefthook: true
+minimumReleaseAgeExclude:
+  - "@aws-sdk/checksums@3.1001.7"
+  - "@aws-sdk/client-s3@3.1159.0"
+  - "@aws-sdk/core@3.978.7"
+  - "@aws-sdk/credential-provider-env@3.972.78"
+  - "@aws-sdk/credential-provider-http@3.972.80"
+  - "@aws-sdk/credential-provider-ini@3.973.23"
+  - "@aws-sdk/credential-provider-login@3.972.85"
+  - "@aws-sdk/credential-provider-node@3.972.90"
+  - "@aws-sdk/credential-provider-process@3.972.78"
+  - "@aws-sdk/credential-provider-sso@3.973.22"
+  - "@aws-sdk/credential-provider-web-identity@3.972.84"
+  - "@aws-sdk/middleware-sdk-s3@3.972.83"
+  - "@aws-sdk/nested-clients@3.997.52"
+  - "@aws-sdk/s3-presigned-post@3.1159.0"
+  - "@aws-sdk/s3-request-presigner@3.1159.0"
+  - "@aws-sdk/signature-v4-multi-region@3.996.50"
+  - "@aws-sdk/token-providers@3.1159.0"
+  - "@aws-sdk/xml-builder@3.972.42"

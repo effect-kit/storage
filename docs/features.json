@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-28",
+  "updatedAt": "2026-10-29",
   "features": [
     {
       "id": "OBJ-01",
@@ -8,14 +8,18 @@
       "target": "Bytes, byte streams, known/unknown lengths, empty objects, metadata, overwrite behavior",
       "completionPhase": 4,
       "status": "in-progress",
-      "specifications": ["docs/core.md", "docs/testing.md"],
+      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md"],
       "implementations": [
         "packages/storage/src/requests.ts",
-        "packages/storage/src/testing/memory-upload.ts"
+        "packages/storage/src/testing/memory-upload.ts",
+        "packages/storage/src/s3/primitives.ts",
+        "packages/storage/src/s3/upload-body.ts"
       ],
       "tests": [
         "packages/storage/test/memory.test.ts",
-        "packages/storage/test/conformance.test.ts"
+        "packages/storage/test/conformance.test.ts",
+        "packages/storage/test/s3/primitives.test.ts",
+        "packages/storage/test/s3/resources.test.ts"
       ],
       "examples": ["packages/storage/README.md"],
       "evidence": [
@@ -31,6 +35,19 @@
           "limitations": [
             "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
           ]
+        },
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-3.md",
+          "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+          "apiVersion": "2006-03-01",
+          "runtime": "node-24.22.0",
+          "configuration": "controlled-http",
+          "testId": "packages/storage/test/s3/primitives.test.ts",
+          "limitations": [
+            "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+          ]
         }
       ],
       "deferral": null
@@ -41,12 +58,18 @@
       "target": "Scoped byte streams, bounded collection helpers, metadata, cancellation, response disposal",
       "completionPhase": 4,
       "status": "in-progress",
-      "specifications": ["docs/core.md", "docs/testing.md"],
+      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md"],
       "implementations": [
         "packages/storage/src/storage.ts",
-        "packages/storage/src/testing/memory.ts"
+        "packages/storage/src/testing/memory.ts",
+        "packages/storage/src/s3/primitives.ts"
       ],
-      "tests": ["packages/storage/test/storage.test.ts", "packages/storage/test/memory.test.ts"],
+      "tests": [
+        "packages/storage/test/storage.test.ts",
+        "packages/storage/test/memory.test.ts",
+        "packages/storage/test/s3/primitives.test.ts",
+        "packages/storage/test/s3/resources.test.ts"
+      ],
       "examples": ["packages/storage/README.md"],
       "evidence": [
         {
@@ -61,6 +84,19 @@
           "limitations": [
             "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
           ]
+        },
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-3.md",
+          "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+          "apiVersion": "2006-03-01",
+          "runtime": "node-24.22.0",
+          "configuration": "controlled-http",
+          "testId": "packages/storage/test/s3/primitives.test.ts",
+          "limitations": [
+            "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+          ]
         }
       ],
       "deferral": null
@@ -71,15 +107,18 @@
       "target": "Head, existence helper, MIME/cache/disposition fields, custom metadata, explicit update semantics",
       "completionPhase": 10,
       "status": "in-progress",
-      "specifications": ["docs/core.md", "docs/testing.md"],
+      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md"],
       "implementations": [
         "packages/storage/src/object.ts",
         "packages/storage/src/storage.ts",
-        "packages/storage/src/testing/memory.ts"
+        "packages/storage/src/testing/memory.ts",
+        "packages/storage/src/s3/object-mapping.ts",
+        "packages/storage/src/s3/primitives.ts"
       ],
       "tests": [
         "packages/storage/test/models.test.ts",
-        "packages/storage/test/conformance.test.ts"
+        "packages/storage/test/conformance.test.ts",
+        "packages/storage/test/s3/primitives.test.ts"
       ],
       "examples": ["packages/storage/README.md"],
       "evidence": [
@@ -94,6 +133,19 @@
           "testId": "packages/storage/test/conformance.test.ts",
           "limitations": [
             "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
+          ]
+        },
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-3.md",
+          "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+          "apiVersion": "2006-03-01",
+          "runtime": "node-24.22.0",
+          "configuration": "controlled-http",
+          "testId": "packages/storage/test/s3/primitives.test.ts",
+          "limitations": [
+            "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
           ]
         }
       ],
@@ -105,14 +157,17 @@
       "target": "Idempotent missing-delete contract, conditional/version-specific deletion, per-key bulk results",
       "completionPhase": 4,
       "status": "in-progress",
-      "specifications": ["docs/core.md", "docs/testing.md"],
+      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md"],
       "implementations": [
         "packages/storage/src/storage.ts",
-        "packages/storage/src/testing/memory.ts"
+        "packages/storage/src/testing/memory.ts",
+        "packages/storage/src/s3/primitives.ts",
+        "packages/storage/src/s3/bulk-delete.ts"
       ],
       "tests": [
         "packages/storage/test/faults.test.ts",
-        "packages/storage/test/conformance.test.ts"
+        "packages/storage/test/conformance.test.ts",
+        "packages/storage/test/s3/native.test.ts"
       ],
       "examples": ["packages/storage/README.md"],
       "evidence": [
@@ -127,6 +182,19 @@
           "testId": "packages/storage/test/conformance.test.ts",
           "limitations": [
             "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
+          ]
+        },
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-3.md",
+          "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+          "apiVersion": "2006-03-01",
+          "runtime": "node-24.22.0",
+          "configuration": "controlled-http",
+          "testId": "packages/storage/test/s3/native.test.ts",
+          "limitations": [
+            "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
           ]
         }
       ],
@@ -138,14 +206,16 @@
       "target": "Prefix, delimiter/common prefixes, pages and lazy streams, limits, opaque cursors, cancellation",
       "completionPhase": 2,
       "status": "implemented",
-      "specifications": ["docs/core.md", "docs/testing.md"],
+      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md"],
       "implementations": [
         "packages/storage/src/storage.ts",
-        "packages/storage/src/testing/memory-list.ts"
+        "packages/storage/src/testing/memory-list.ts",
+        "packages/storage/src/s3/listing.ts"
       ],
       "tests": [
         "packages/storage/test/storage.test.ts",
-        "packages/storage/test/conformance.test.ts"
+        "packages/storage/test/conformance.test.ts",
+        "packages/storage/test/s3/primitives.test.ts"
       ],
       "examples": ["packages/storage/README.md"],
       "evidence": [
@@ -161,6 +231,19 @@
           "limitations": [
             "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
           ]
+        },
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-3.md",
+          "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+          "apiVersion": "2006-03-01",
+          "runtime": "node-24.22.0",
+          "configuration": "controlled-http",
+          "testId": "packages/storage/test/s3/primitives.test.ts",
+          "limitations": [
+            "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+          ]
         }
       ],
       "deferral": null
@@ -170,12 +253,26 @@
       "title": "Copy/move",
       "target": "Native copy when valid, streamed cross-store copy, conditional source, explicit non-atomic move",
       "completionPhase": 4,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "in-progress",
+      "specifications": ["docs/s3.md"],
+      "implementations": ["packages/storage/src/s3/copy.ts"],
+      "tests": ["packages/storage/test/s3/native.test.ts"],
+      "examples": ["packages/storage/README.md"],
+      "evidence": [
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-3.md",
+          "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+          "apiVersion": "2006-03-01",
+          "runtime": "node-24.22.0",
+          "configuration": "controlled-http",
+          "testId": "packages/storage/test/s3/native.test.ts",
+          "limitations": [
+            "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+          ]
+        }
+      ],
       "deferral": null
     },
     {
@@ -183,14 +280,22 @@
       "title": "Conditions",
       "target": "Create-only, match-current, not-modified reads, source/destination conditions where supported",
       "completionPhase": 3,
-      "status": "in-progress",
-      "specifications": ["docs/core.md", "docs/testing.md"],
+      "status": "implemented",
+      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md"],
       "implementations": [
         "packages/storage/src/requests.ts",
         "packages/storage/src/testing/memory-upload.ts",
-        "packages/storage/src/testing/memory.ts"
+        "packages/storage/src/testing/memory.ts",
+        "packages/storage/src/s3/primitives.ts",
+        "packages/storage/src/s3/copy.ts",
+        "packages/storage/src/s3/multipart.ts"
       ],
-      "tests": ["packages/storage/test/memory.test.ts", "packages/storage/test/models.test.ts"],
+      "tests": [
+        "packages/storage/test/memory.test.ts",
+        "packages/storage/test/models.test.ts",
+        "packages/storage/test/s3/primitives.test.ts",
+        "packages/storage/test/s3/native.test.ts"
+      ],
       "examples": ["packages/storage/README.md"],
       "evidence": [
         {
@@ -205,6 +310,19 @@
           "limitations": [
             "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
           ]
+        },
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-3.md",
+          "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+          "apiVersion": "2006-03-01",
+          "runtime": "node-24.22.0",
+          "configuration": "controlled-http",
+          "testId": "packages/storage/test/s3/primitives.test.ts",
+          "limitations": [
+            "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+          ]
         }
       ],
       "deferral": null
@@ -215,14 +333,16 @@
       "target": "Single/suffix/open-ended byte ranges, response bounds, unsatisfiable ranges, safe resume",
       "completionPhase": 4,
       "status": "in-progress",
-      "specifications": ["docs/core.md", "docs/testing.md"],
+      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md"],
       "implementations": [
         "packages/storage/src/ranges.ts",
-        "packages/storage/src/testing/memory.ts"
+        "packages/storage/src/testing/memory.ts",
+        "packages/storage/src/s3/primitives.ts"
       ],
       "tests": [
         "packages/storage/test/models.test.ts",
-        "packages/storage/test/conformance.test.ts"
+        "packages/storage/test/conformance.test.ts",
+        "packages/storage/test/s3/primitives.test.ts"
       ],
       "examples": ["packages/storage/README.md"],
       "evidence": [
@@ -238,6 +358,19 @@
           "limitations": [
             "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
           ]
+        },
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-3.md",
+          "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+          "apiVersion": "2006-03-01",
+          "runtime": "node-24.22.0",
+          "configuration": "controlled-http",
+          "testId": "packages/storage/test/s3/primitives.test.ts",
+          "limitations": [
+            "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+          ]
         }
       ],
       "deferral": null
@@ -248,15 +381,17 @@
       "target": "Opaque ETags, native version IDs/generations, object references, canonical key handling",
       "completionPhase": 2,
       "status": "implemented",
-      "specifications": ["docs/core.md", "docs/testing.md"],
+      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md"],
       "implementations": [
         "packages/storage/src/object.ts",
-        "packages/storage/src/testing/memory-state.ts"
+        "packages/storage/src/testing/memory-state.ts",
+        "packages/storage/src/s3/object-mapping.ts"
       ],
       "tests": [
         "packages/storage/test/object.test.ts",
         "packages/storage/test/models.test.ts",
-        "packages/storage/test/memory.test.ts"
+        "packages/storage/test/memory.test.ts",
+        "packages/storage/test/s3/primitives.test.ts"
       ],
       "examples": ["packages/storage/README.md"],
       "evidence": [
@@ -272,6 +407,19 @@
           "limitations": [
             "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
           ]
+        },
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-3.md",
+          "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+          "apiVersion": "2006-03-01",
+          "runtime": "node-24.22.0",
+          "configuration": "controlled-http",
+          "testId": "packages/storage/test/s3/primitives.test.ts",
+          "limitations": [
+            "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+          ]
         }
       ],
       "deferral": null
@@ -281,12 +429,26 @@
       "title": "Signed requests",
       "target": "GET/HEAD/PUT where supported, required headers, expiry and credential lifetime",
       "completionPhase": 3,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "implemented",
+      "specifications": ["docs/s3.md"],
+      "implementations": ["packages/storage/src/s3/signing.ts"],
+      "tests": ["packages/storage/test/s3/signing.test.ts"],
+      "examples": ["packages/storage/README.md"],
+      "evidence": [
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-3.md",
+          "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+          "apiVersion": "2006-03-01",
+          "runtime": "node-24.22.0",
+          "configuration": "controlled-http",
+          "testId": "packages/storage/test/s3/signing.test.ts",
+          "limitations": [
+            "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+          ]
+        }
+      ],
       "deferral": null
     },
     {
@@ -294,12 +456,26 @@
       "title": "Browser grants",
       "target": "POST policy forms/provider upload tokens where available, explicit constraints and enforcement",
       "completionPhase": 11,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "in-progress",
+      "specifications": ["docs/s3.md"],
+      "implementations": ["packages/storage/src/s3/post.ts"],
+      "tests": ["packages/storage/test/s3/signing.test.ts"],
+      "examples": ["packages/storage/README.md"],
+      "evidence": [
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-3.md",
+          "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+          "apiVersion": "2006-03-01",
+          "runtime": "node-24.22.0",
+          "configuration": "controlled-http",
+          "testId": "packages/storage/test/s3/signing.test.ts",
+          "limitations": [
+            "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+          ]
+        }
+      ],
       "deferral": null
     },
     {
@@ -307,12 +483,26 @@
       "title": "Public delivery",
       "target": "Explicit public URL resolver/custom domains; no implied change to object visibility",
       "completionPhase": 11,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "in-progress",
+      "specifications": ["docs/s3.md"],
+      "implementations": ["packages/storage/src/s3.ts"],
+      "tests": ["packages/storage/test/s3/signing.test.ts"],
+      "examples": ["packages/storage/README.md"],
+      "evidence": [
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-3.md",
+          "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+          "apiVersion": "2006-03-01",
+          "runtime": "node-24.22.0",
+          "configuration": "controlled-http",
+          "testId": "packages/storage/test/s3/signing.test.ts",
+          "limitations": [
+            "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+          ]
+        }
+      ],
       "deferral": null
     },
     {
@@ -333,12 +523,29 @@
       "title": "Multipart",
       "target": "Initiate, parts, list, complete, abort, signing parts, native constraints, orphan cleanup",
       "completionPhase": 4,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "in-progress",
+      "specifications": ["docs/s3.md"],
+      "implementations": [
+        "packages/storage/src/s3/multipart.ts",
+        "packages/storage/src/s3/copy.ts"
+      ],
+      "tests": ["packages/storage/test/s3/native.test.ts"],
+      "examples": ["packages/storage/README.md"],
+      "evidence": [
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-3.md",
+          "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+          "apiVersion": "2006-03-01",
+          "runtime": "node-24.22.0",
+          "configuration": "controlled-http",
+          "testId": "packages/storage/test/s3/native.test.ts",
+          "limitations": [
+            "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+          ]
+        }
+      ],
       "deferral": null
     },
     {
@@ -398,12 +605,32 @@
       "title": "Checksums",
       "target": "Algorithm/type distinctions, streaming digests, native validation, mismatch behavior",
       "completionPhase": 4,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "in-progress",
+      "specifications": ["docs/s3.md"],
+      "implementations": [
+        "packages/storage/src/s3/object-mapping.ts",
+        "packages/storage/src/s3/native-models.ts"
+      ],
+      "tests": [
+        "packages/storage/test/s3/primitives.test.ts",
+        "packages/storage/test/s3/native.test.ts"
+      ],
+      "examples": ["packages/storage/README.md"],
+      "evidence": [
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-3.md",
+          "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+          "apiVersion": "2006-03-01",
+          "runtime": "node-24.22.0",
+          "configuration": "controlled-http",
+          "testId": "packages/storage/test/s3/primitives.test.ts",
+          "limitations": [
+            "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+          ]
+        }
+      ],
       "deferral": null
     },
     {
@@ -412,13 +639,20 @@
       "target": "Byte limits, metadata rules, declared/sniffed MIME distinction, source length verification",
       "completionPhase": 4,
       "status": "in-progress",
-      "specifications": ["docs/core.md", "docs/testing.md"],
+      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md"],
       "implementations": [
         "packages/storage/src/object.ts",
         "packages/storage/src/requests.ts",
-        "packages/storage/src/testing/memory-upload.ts"
+        "packages/storage/src/testing/memory-upload.ts",
+        "packages/storage/src/s3/validation.ts",
+        "packages/storage/src/s3/upload-body.ts"
       ],
-      "tests": ["packages/storage/test/models.test.ts", "packages/storage/test/memory.test.ts"],
+      "tests": [
+        "packages/storage/test/models.test.ts",
+        "packages/storage/test/memory.test.ts",
+        "packages/storage/test/s3/primitives.test.ts",
+        "packages/storage/test/s3/resources.test.ts"
+      ],
       "examples": ["packages/storage/README.md"],
       "evidence": [
         {
@@ -432,6 +666,19 @@
           "testId": "packages/storage/test/memory.test.ts",
           "limitations": [
             "Portable and memory reference semantics only; native adapters and hosted qualification remain pending."
+          ]
+        },
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-3.md",
+          "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+          "apiVersion": "2006-03-01",
+          "runtime": "node-24.22.0",
+          "configuration": "controlled-http",
+          "testId": "packages/storage/test/s3/primitives.test.ts",
+          "limitations": [
+            "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
           ]
         }
       ],
@@ -455,12 +702,33 @@
       "title": "Credentials",
       "target": "Static and refreshed credentials, roles/workload identities, secret redaction, scoped clients",
       "completionPhase": 3,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "in-progress",
+      "specifications": ["docs/s3.md"],
+      "implementations": [
+        "packages/storage/src/s3.ts",
+        "packages/storage/src/s3/config.ts",
+        "packages/storage/src/s3/signing-credentials.ts"
+      ],
+      "tests": [
+        "packages/storage/test/s3/resources.test.ts",
+        "packages/storage/test/s3/signing.test.ts"
+      ],
+      "examples": ["packages/storage/README.md"],
+      "evidence": [
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-3.md",
+          "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+          "apiVersion": "2006-03-01",
+          "runtime": "node-24.22.0",
+          "configuration": "controlled-http",
+          "testId": "packages/storage/test/s3/resources.test.ts",
+          "limitations": [
+            "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+          ]
+        }
+      ],
       "deferral": null
     },
     {
@@ -468,12 +736,26 @@
       "title": "Encryption",
       "target": "Native server-side encryption/KMS options; optional versioned client-encryption integration",
       "completionPhase": 12,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "in-progress",
+      "specifications": ["docs/s3.md"],
+      "implementations": ["packages/storage/src/s3/config.ts", "packages/storage/src/s3/copy.ts"],
+      "tests": ["packages/storage/test/s3/signing.test.ts"],
+      "examples": ["packages/storage/README.md"],
+      "evidence": [
+        {
+          "kind": "local-protocol",
+          "date": "2026-10-29",
+          "source": "docs/evidence/phase-3.md",
+          "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
+          "apiVersion": "2006-03-01",
+          "runtime": "node-24.22.0",
+          "configuration": "controlled-http",
+          "testId": "packages/storage/test/s3/signing.test.ts",
+          "limitations": [
+            "Real AWS acceptance pending at owner request; local HTTP/RustFS evidence is not hosted qualification."
+          ]
+        }
+      ],
       "deferral": null
     },
     {

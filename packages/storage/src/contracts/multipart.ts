@@ -12,8 +12,8 @@ export interface MultipartHandle {
 export interface UploadedPart {
   readonly partNumber: number;
   readonly etag: string;
-  readonly size?: number;
-  readonly checksums?: ReadonlyArray<Checksum>;
+  readonly size?: number | undefined;
+  readonly checksums?: ReadonlyArray<Checksum> | undefined;
 }
 
 /** S3-style numbered parts; block/offset protocols have separate contracts. */

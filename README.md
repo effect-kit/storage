@@ -5,7 +5,9 @@ Effect-native object storage for applications, workers and upload backends.
 The package is under development. The portable Storage service provides uploads,
 scoped downloads, metadata, deletion and pagination. The `/testing` entry point
 provides memory storage, fault scripts and a public adapter conformance suite.
-Hosted adapters and managed transfers follow in later phases.
+The official-SDK S3 adapter adds native copy, multipart and signing. It has local
+protocol evidence; hosted AWS acceptance is pending. Managed transfers follow in
+later phases.
 
 ## Package
 
@@ -41,7 +43,8 @@ pnpm test:extended
 
 The artifact lane installs exact local tarballs with Effect and TypeScript from the
 local pnpm store in offline mode. A frozen workspace install seeds the required store;
-it never installs provider peers. Consumers run outside the workspace with NodeNext
+core/testing consumers install no provider peers. A separate S3 consumer installs
+its explicit client/signing peers. Consumers run outside the workspace with NodeNext
 and Bundler declaration checks.
 
 Default CI is offline and deterministic after dependency installation. Hosted provider,
@@ -54,8 +57,8 @@ Local investigations stay in ignored `research/` and are never required by CI.
 - [Feature catalog](docs/features.json): 47 stable feature IDs and delivery ownership.
 - [Provider catalog](docs/providers.json): 16 distinct targets, configuration-specific operations and evidence.
 - [Catalog conventions](docs/catalogs.md)
-- [Portable API](docs/core.md) and [memory/testing tools](docs/testing.md)
-- [Phase 1 evidence](docs/evidence/phase-1.md) and [phase 2 evidence](docs/evidence/phase-2.md)
+- [Portable API](docs/core.md), [memory/testing tools](docs/testing.md), and [S3 adapter](docs/s3.md)
+- [Phase 1 evidence](docs/evidence/phase-1.md), [phase 2 evidence](docs/evidence/phase-2.md), and [phase 3 evidence](docs/evidence/phase-3.md)
 
 A documented native capability, local fixture result and real-provider acceptance are
 different evidence. Unknown support is never treated as a pass.

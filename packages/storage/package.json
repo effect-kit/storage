@@ -38,6 +38,21 @@
       "workspace-source": "./src/testing.ts",
       "types": "./dist/testing.d.ts",
       "default": "./dist/testing.js"
+    },
+    "./s3": {
+      "workspace-source": "./src/s3.ts",
+      "types": "./dist/s3.d.ts",
+      "default": "./dist/s3.js"
+    },
+    "./s3/signing": {
+      "workspace-source": "./src/s3/signing.ts",
+      "types": "./dist/s3/signing.d.ts",
+      "default": "./dist/s3/signing.js"
+    },
+    "./s3/post": {
+      "workspace-source": "./src/s3/post.ts",
+      "types": "./dist/s3/post.d.ts",
+      "default": "./dist/s3/post.js"
     }
   },
   "publishConfig": {
@@ -50,6 +65,18 @@
       "./testing": {
         "types": "./dist/testing.d.ts",
         "import": "./dist/testing.js"
+      },
+      "./s3": {
+        "types": "./dist/s3.d.ts",
+        "import": "./dist/s3.js"
+      },
+      "./s3/signing": {
+        "types": "./dist/s3/signing.d.ts",
+        "import": "./dist/s3/signing.js"
+      },
+      "./s3/post": {
+        "types": "./dist/s3/post.d.ts",
+        "import": "./dist/s3/post.js"
       }
     },
     "access": "public",
@@ -67,6 +94,9 @@
     "lint": "oxlint --deny-warnings src test *.config.ts"
   },
   "devDependencies": {
+    "@aws-sdk/client-s3": "catalog:",
+    "@aws-sdk/s3-presigned-post": "catalog:",
+    "@aws-sdk/s3-request-presigner": "catalog:",
     "@effect/vitest": "catalog:",
     "effect": "catalog:",
     "klarity": "catalog:",
@@ -75,7 +105,21 @@
     "vitest": "catalog:"
   },
   "peerDependencies": {
+    "@aws-sdk/client-s3": "^3.1159.0",
+    "@aws-sdk/s3-presigned-post": "^3.1159.0",
+    "@aws-sdk/s3-request-presigner": "^3.1159.0",
     "effect": "^4.0.6"
+  },
+  "peerDependenciesMeta": {
+    "@aws-sdk/client-s3": {
+      "optional": true
+    },
+    "@aws-sdk/s3-request-presigner": {
+      "optional": true
+    },
+    "@aws-sdk/s3-presigned-post": {
+      "optional": true
+    }
   },
   "engines": {
     "node": ">=24.22.0"

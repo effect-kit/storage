@@ -6,7 +6,17 @@ const Manifest = Schema.Struct({
   type: Schema.Literal("module"),
   main: Schema.Literal("./dist/index.js"),
   types: Schema.Literal("./dist/index.d.ts"),
-  peerDependencies: Schema.Struct({ effect: Schema.NonEmptyString }),
+  peerDependencies: Schema.Struct({
+    effect: Schema.NonEmptyString,
+    "@aws-sdk/client-s3": Schema.NonEmptyString,
+    "@aws-sdk/s3-request-presigner": Schema.NonEmptyString,
+    "@aws-sdk/s3-presigned-post": Schema.NonEmptyString,
+  }),
+  peerDependenciesMeta: Schema.Struct({
+    "@aws-sdk/client-s3": Schema.Struct({ optional: Schema.Literal(true) }),
+    "@aws-sdk/s3-request-presigner": Schema.Struct({ optional: Schema.Literal(true) }),
+    "@aws-sdk/s3-presigned-post": Schema.Struct({ optional: Schema.Literal(true) }),
+  }),
   exports: Schema.Struct({
     ".": Schema.Struct({
       types: Schema.Literal("./dist/index.d.ts"),
@@ -17,6 +27,18 @@ const Manifest = Schema.Struct({
       import: Schema.Literal("./dist/testing.js"),
     }),
     "./package.json": Schema.Literal("./package.json"),
+    "./s3": Schema.Struct({
+      types: Schema.Literal("./dist/s3.d.ts"),
+      import: Schema.Literal("./dist/s3.js"),
+    }),
+    "./s3/signing": Schema.Struct({
+      types: Schema.Literal("./dist/s3/signing.d.ts"),
+      import: Schema.Literal("./dist/s3/signing.js"),
+    }),
+    "./s3/post": Schema.Struct({
+      types: Schema.Literal("./dist/s3/post.d.ts"),
+      import: Schema.Literal("./dist/s3/post.js"),
+    }),
   }),
 });
 
@@ -44,6 +66,12 @@ export function checkArchive(manifestInput: unknown, entries: readonly string[])
     "dist/index.d.ts",
     "dist/testing.js",
     "dist/testing.d.ts",
+    "dist/s3.js",
+    "dist/s3.d.ts",
+    "dist/s3/signing.js",
+    "dist/s3/signing.d.ts",
+    "dist/s3/post.js",
+    "dist/s3/post.d.ts",
   ]) {
     if (!entries.includes(`package/${required}`))
       throw new Error(`Missing packed file: ${required}`);

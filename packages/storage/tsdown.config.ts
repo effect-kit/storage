@@ -1,8 +1,9 @@
 import defineConfig from "klarity/tsdown/library";
 
 export default defineConfig({
-  entry: ["src/index.ts", "src/testing.ts"],
+  entry: ["src/index.ts", "src/testing.ts", "src/s3.ts", "src/s3/signing.ts", "src/s3/post.ts"],
   unbundle: true,
+  deps: { neverBundle: [/^node:/u] },
   exports: false,
   dts: { sourcemap: false },
 });
