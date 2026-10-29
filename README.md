@@ -9,6 +9,7 @@ The official-SDK S3 adapter adds native copy, multipart and signing. It has loca
 protocol evidence; hosted AWS acceptance is pending. Managed transfers add bounded
 uploads, pinned downloads, verified copy/move and lazy batches. Durable sessions reuse Effect persistence with explicit exclusive ownership.
 Runtime layers for Node, Bun, Deno and browsers supply hashing and platform services.
+The filesystem provider adds atomic object envelopes on an application-owned directory.
 
 ## Package
 
@@ -60,6 +61,7 @@ Local investigations stay in ignored `research/` and are never required by CI.
 - [Provider catalog](docs/providers.json): 16 distinct targets, configuration-specific operations and evidence.
 - [Catalog conventions](docs/catalogs.md)
 - [Portable API](docs/core.md), [memory/testing tools](docs/testing.md), [S3 adapter](docs/s3.md), and [managed transfers](docs/transfers.md), and [durable sessions](docs/sessions.md)
+- [Filesystem provider](docs/filesystem.md) and [filesystem evidence](docs/evidence/phase-6-filesystem.md)
 - [Runtime setup](docs/runtimes.md) and [current runtime evidence](docs/evidence/pre-phase-6.md)
 - [Effect 4.1 baseline upgrade evidence](docs/evidence/effect-4-1.md)
 - [Phase 5 persistence/restart evidence](docs/evidence/phase-5.md)

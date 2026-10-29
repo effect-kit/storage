@@ -83,6 +83,11 @@
       "workspace-source": "./src/browser.ts",
       "types": "./dist/browser.d.ts",
       "default": "./dist/browser.js"
+    },
+    "./filesystem": {
+      "workspace-source": "./src/filesystem.ts",
+      "types": "./dist/filesystem.d.ts",
+      "default": "./dist/filesystem.js"
     }
   },
   "publishConfig": {
@@ -131,6 +136,10 @@
       "./browser": {
         "types": "./dist/browser.d.ts",
         "import": "./dist/browser.js"
+      },
+      "./filesystem": {
+        "types": "./dist/filesystem.d.ts",
+        "import": "./dist/filesystem.js"
       }
     },
     "access": "public",

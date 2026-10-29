@@ -919,74 +919,337 @@
       "name": "Filesystem",
       "transport": "Effect FileSystem",
       "implementationPhase": 6,
-      "implementation": "planned",
-      "runtimes": ["node"],
-      "sources": ["https://effect.website/docs/v4/platform/file-system"],
-      "notes": ["Trusted root; hostile local writers are outside the selected threat model."],
+      "implementation": "implemented",
+      "runtimes": ["node-24.22.0", "bun-1.4.4"],
+      "sources": [
+        "https://effect.website/docs/v4/platform/file-system",
+        "docs/filesystem.md",
+        "docs/evidence/phase-6-filesystem.md"
+      ],
+      "notes": [
+        "Trusted root; hostile local writers are outside the selected threat model.",
+        "Single-file envelopes, no-replace hard-link create-only and immutable descriptor reads; listing has documented O(directory) cost.",
+        "Match-current mutations/version history/native multipart unavailable; only Darwin arm64 Node/Bun exercised."
+      ],
       "operations": [
         {
           "featureId": "OBJ-01",
           "operation": "put",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "darwin-arm64-private-local-filesystem",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "verified",
+          "constraints": [
+            "Trusted private root. Match-current writes/delete unsupported; listing scans directory arrays."
+          ],
+          "implementations": ["packages/storage/src/filesystem.ts"],
+          "tests": [
+            "packages/storage/test/filesystem/storage.test.ts",
+            "scripts/filesystem/check.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "runtime",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-6-filesystem.md",
+              "sdkVersion": "effect@4.1.0",
+              "apiVersion": null,
+              "runtime": "node-24.22.0",
+              "configuration": "darwin-arm64-private-local-filesystem",
+              "testId": "scripts/filesystem/check.ts",
+              "limitations": [
+                "Local file and process-kill evidence; no other OS, physical power-cut or hostile local writer claim."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "OBJ-01",
+          "operation": "put",
+          "configuration": "darwin-arm64-private-local-filesystem",
+          "runtime": "bun-1.4.4",
+          "support": "native",
+          "status": "verified",
+          "constraints": [
+            "Trusted private root. Match-current writes/delete unsupported; listing scans directory arrays."
+          ],
+          "implementations": ["packages/storage/src/filesystem.ts"],
+          "tests": [
+            "packages/storage/test/filesystem/storage.test.ts",
+            "scripts/filesystem/check.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "runtime",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-6-filesystem.md",
+              "sdkVersion": "effect@4.1.0",
+              "apiVersion": null,
+              "runtime": "bun-1.4.4",
+              "configuration": "darwin-arm64-private-local-filesystem",
+              "testId": "scripts/filesystem/check.ts",
+              "limitations": [
+                "Local file and process-kill evidence; no other OS, physical power-cut or hostile local writer claim."
+              ]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-02",
           "operation": "get",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "darwin-arm64-private-local-filesystem",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "verified",
+          "constraints": [
+            "Trusted private root. Match-current writes/delete unsupported; listing scans directory arrays."
+          ],
+          "implementations": ["packages/storage/src/filesystem.ts"],
+          "tests": [
+            "packages/storage/test/filesystem/storage.test.ts",
+            "scripts/filesystem/check.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "runtime",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-6-filesystem.md",
+              "sdkVersion": "effect@4.1.0",
+              "apiVersion": null,
+              "runtime": "node-24.22.0",
+              "configuration": "darwin-arm64-private-local-filesystem",
+              "testId": "scripts/filesystem/check.ts",
+              "limitations": [
+                "Local file and process-kill evidence; no other OS, physical power-cut or hostile local writer claim."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "OBJ-02",
+          "operation": "get",
+          "configuration": "darwin-arm64-private-local-filesystem",
+          "runtime": "bun-1.4.4",
+          "support": "native",
+          "status": "verified",
+          "constraints": [
+            "Trusted private root. Match-current writes/delete unsupported; listing scans directory arrays."
+          ],
+          "implementations": ["packages/storage/src/filesystem.ts"],
+          "tests": [
+            "packages/storage/test/filesystem/storage.test.ts",
+            "scripts/filesystem/check.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "runtime",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-6-filesystem.md",
+              "sdkVersion": "effect@4.1.0",
+              "apiVersion": null,
+              "runtime": "bun-1.4.4",
+              "configuration": "darwin-arm64-private-local-filesystem",
+              "testId": "scripts/filesystem/check.ts",
+              "limitations": [
+                "Local file and process-kill evidence; no other OS, physical power-cut or hostile local writer claim."
+              ]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-03",
           "operation": "head",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "darwin-arm64-private-local-filesystem",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "verified",
+          "constraints": [
+            "Trusted private root. Match-current writes/delete unsupported; listing scans directory arrays."
+          ],
+          "implementations": ["packages/storage/src/filesystem.ts"],
+          "tests": [
+            "packages/storage/test/filesystem/storage.test.ts",
+            "scripts/filesystem/check.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "runtime",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-6-filesystem.md",
+              "sdkVersion": "effect@4.1.0",
+              "apiVersion": null,
+              "runtime": "node-24.22.0",
+              "configuration": "darwin-arm64-private-local-filesystem",
+              "testId": "scripts/filesystem/check.ts",
+              "limitations": [
+                "Local file and process-kill evidence; no other OS, physical power-cut or hostile local writer claim."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "OBJ-03",
+          "operation": "head",
+          "configuration": "darwin-arm64-private-local-filesystem",
+          "runtime": "bun-1.4.4",
+          "support": "native",
+          "status": "verified",
+          "constraints": [
+            "Trusted private root. Match-current writes/delete unsupported; listing scans directory arrays."
+          ],
+          "implementations": ["packages/storage/src/filesystem.ts"],
+          "tests": [
+            "packages/storage/test/filesystem/storage.test.ts",
+            "scripts/filesystem/check.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "runtime",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-6-filesystem.md",
+              "sdkVersion": "effect@4.1.0",
+              "apiVersion": null,
+              "runtime": "bun-1.4.4",
+              "configuration": "darwin-arm64-private-local-filesystem",
+              "testId": "scripts/filesystem/check.ts",
+              "limitations": [
+                "Local file and process-kill evidence; no other OS, physical power-cut or hostile local writer claim."
+              ]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-04",
           "operation": "delete",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "darwin-arm64-private-local-filesystem",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "verified",
+          "constraints": [
+            "Trusted private root. Match-current writes/delete unsupported; listing scans directory arrays."
+          ],
+          "implementations": ["packages/storage/src/filesystem.ts"],
+          "tests": [
+            "packages/storage/test/filesystem/storage.test.ts",
+            "scripts/filesystem/check.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "runtime",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-6-filesystem.md",
+              "sdkVersion": "effect@4.1.0",
+              "apiVersion": null,
+              "runtime": "node-24.22.0",
+              "configuration": "darwin-arm64-private-local-filesystem",
+              "testId": "scripts/filesystem/check.ts",
+              "limitations": [
+                "Local file and process-kill evidence; no other OS, physical power-cut or hostile local writer claim."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "OBJ-04",
+          "operation": "delete",
+          "configuration": "darwin-arm64-private-local-filesystem",
+          "runtime": "bun-1.4.4",
+          "support": "native",
+          "status": "verified",
+          "constraints": [
+            "Trusted private root. Match-current writes/delete unsupported; listing scans directory arrays."
+          ],
+          "implementations": ["packages/storage/src/filesystem.ts"],
+          "tests": [
+            "packages/storage/test/filesystem/storage.test.ts",
+            "scripts/filesystem/check.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "runtime",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-6-filesystem.md",
+              "sdkVersion": "effect@4.1.0",
+              "apiVersion": null,
+              "runtime": "bun-1.4.4",
+              "configuration": "darwin-arm64-private-local-filesystem",
+              "testId": "scripts/filesystem/check.ts",
+              "limitations": [
+                "Local file and process-kill evidence; no other OS, physical power-cut or hostile local writer claim."
+              ]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-05",
           "operation": "listPage",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "darwin-arm64-private-local-filesystem",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "verified",
+          "constraints": [
+            "Trusted private root. Match-current writes/delete unsupported; listing scans directory arrays."
+          ],
+          "implementations": ["packages/storage/src/filesystem.ts"],
+          "tests": [
+            "packages/storage/test/filesystem/storage.test.ts",
+            "scripts/filesystem/check.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "runtime",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-6-filesystem.md",
+              "sdkVersion": "effect@4.1.0",
+              "apiVersion": null,
+              "runtime": "node-24.22.0",
+              "configuration": "darwin-arm64-private-local-filesystem",
+              "testId": "scripts/filesystem/check.ts",
+              "limitations": [
+                "Local file and process-kill evidence; no other OS, physical power-cut or hostile local writer claim."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "OBJ-05",
+          "operation": "listPage",
+          "configuration": "darwin-arm64-private-local-filesystem",
+          "runtime": "bun-1.4.4",
+          "support": "native",
+          "status": "verified",
+          "constraints": [
+            "Trusted private root. Match-current writes/delete unsupported; listing scans directory arrays."
+          ],
+          "implementations": ["packages/storage/src/filesystem.ts"],
+          "tests": [
+            "packages/storage/test/filesystem/storage.test.ts",
+            "scripts/filesystem/check.ts"
+          ],
+          "evidence": [
+            {
+              "kind": "runtime",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-6-filesystem.md",
+              "sdkVersion": "effect@4.1.0",
+              "apiVersion": null,
+              "runtime": "bun-1.4.4",
+              "configuration": "darwin-arm64-private-local-filesystem",
+              "testId": "scripts/filesystem/check.ts",
+              "limitations": [
+                "Local file and process-kill evidence; no other OS, physical power-cut or hostile local writer claim."
+              ]
+            }
+          ],
           "deferral": null
         }
       ]

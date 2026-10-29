@@ -1,8 +1,8 @@
 import * as BunCrypto from "@effect/platform-bun/BunCrypto";
-import * as BunFileSystem from "@effect/platform-bun/BunFileSystem";
 import * as BunPath from "@effect/platform-bun/BunPath";
 import { Effect, Layer } from "effect";
 
+import * as BunFileSystem from "./runtime/bun-filesystem.js";
 import { sha256 } from "./runtime/node-hash.js";
 import { aes256Gcm } from "./runtime/node-protection.js";
 import { fileSessionStore } from "./runtime/session-store.js";

@@ -13,6 +13,7 @@ export default defineConfig({
     "src/bun.ts",
     "src/deno.ts",
     "src/browser.ts",
+    "src/filesystem.ts",
   ],
   unbundle: true,
   deps: { neverBundle: [/^node:/u] },

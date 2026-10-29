@@ -94,6 +94,14 @@ processes; no generic distributed CAS/lease guarantee is claimed. See
 [current runtime evidence](../../docs/evidence/pre-phase-6.md),
 and the repository example in `examples/durable-upload.mjs`.
 
+## Filesystem storage
+
+`/filesystem` exports FilesystemStorage.make/layer({ root, storeId }). Supply a
+Node/Bun runtime layer; the provider supplies Storage and a primitive transfer driver.
+Streamed envelopes publish bytes/metadata together, with atomic create-only and
+scoped reads. See [layout, trust and limits](../../docs/filesystem.md) and
+[local Node/Bun crash evidence](../../docs/evidence/phase-6-filesystem.md).
+
 ## License
 
 Apache-2.0, Effect Kit Contributors.

@@ -37,3 +37,7 @@ backend work rather than required infrastructure.
 provider-owned drivers, policy-only constructors, shared managed/session admission
 and the canonical four runtime paths. [Current evidence](../docs/evidence/pre-phase-6.md)
 separates actual helper runtimes from provider/OS/release qualification.
+
+[009 — Filesystem envelopes](decisions/009-filesystem-envelope.md) records atomic
+single-generation publication, opaque key mapping, explicit staging ownership and
+the qualified Bun positional IO adaptation.

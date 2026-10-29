@@ -1339,12 +1339,44 @@
       "title": "Local safety",
       "target": "Path confinement, symlink policy, atomic publication, temp-file cleanup, permission behavior",
       "completionPhase": 6,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "implemented",
+      "specifications": ["docs/filesystem.md", "architecture/decisions/009-filesystem-envelope.md"],
+      "implementations": [
+        "packages/storage/src/filesystem.ts",
+        "packages/storage/src/filesystem/layout.ts",
+        "packages/storage/src/filesystem/operations.ts",
+        "packages/storage/src/filesystem/envelope.ts"
+      ],
+      "tests": ["packages/storage/test/filesystem/storage.test.ts", "scripts/filesystem/check.ts"],
+      "examples": ["packages/storage/examples/filesystem.mjs"],
+      "evidence": [
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/phase-6-filesystem.md",
+          "sdkVersion": "effect@4.1.0",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "darwin-arm64-private-local-filesystem",
+          "testId": "scripts/filesystem/check.ts",
+          "limitations": [
+            "Trusted root/exclusive staging reclamation. No hostile ancestor replacement, power-cut, Linux/Windows or network-filesystem qualification."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/phase-6-filesystem.md",
+          "sdkVersion": "effect@4.1.0",
+          "apiVersion": null,
+          "runtime": "bun-1.4.4",
+          "configuration": "darwin-arm64-private-local-filesystem",
+          "testId": "scripts/filesystem/check.ts",
+          "limitations": [
+            "Trusted root/exclusive staging reclamation. No hostile ancestor replacement, power-cut, Linux/Windows or network-filesystem qualification."
+          ]
+        }
+      ],
       "deferral": null
     },
     {

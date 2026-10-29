@@ -96,3 +96,9 @@ const batchDelivery = sessions.processBatch("id", () => Source);
 // @ts-expect-error durable batches preserve callback environments
 const batchMissingEnvironment: Effect.Effect<unknown, StorageError> = batchDelivery;
 void [durablePreserved, durableMissingEnvironment, eventPreserved, batchMissingEnvironment];
+
+import { FilesystemStorage } from "@effect-kit/storage/filesystem";
+export const fileProvider = FilesystemStorage.layer({
+  root: "application-files",
+  storeId: "application",
+});

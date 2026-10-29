@@ -123,3 +123,8 @@ in the same process. Browser smoke uses an in-memory protected store and custom
 target; reload, IndexedDB, mobile browsers and direct-upload UX remain separate work.
 No helper result implies AWS, R2, other provider/runtime combinations, all OSes,
 power-cut safety or release readiness.
+
+Bun 1.4.4 needs a focused scoped file-handle adapter for positional IO: its native
+Node compatibility path ignores the overload used by Effect 4.1. Other filesystem
+operations retain the official Bun layer. [Filesystem evidence](evidence/phase-6-filesystem.md)
+records actual offset/cursor and fresh-process crash regressions.
