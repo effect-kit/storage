@@ -243,3 +243,8 @@ generated 320 MiB transfer with a 32 MiB engine budget. It writes
 `.artifacts/transfers-resources.json` alongside the provider report. The manual provider config exposes GC for retained-memory sampling; this is a
 resource profile, not a throughput benchmark. These tests are
 local-only, do not run in default CI and do not establish hosted AWS qualification.
+
+The same local command builds subprocess fixtures and exercises durable upload/download
+recovery across fresh Node processes. `.artifacts/session-restart.json` records the
+crash matrix. No SQL service is required. Distributed coordination and hosted AWS
+remain outside that local evidence.

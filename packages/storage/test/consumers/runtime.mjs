@@ -1,9 +1,12 @@
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
 
-import { Effect, Layer, Result, Schema } from "effect";
+import { Effect, Layer, Redacted, Result, Schema, Stream } from "effect";
+import { KeyValueStore } from "effect/persistence";
 
 import { ObjectKey, ObjectSize, Storage, StoragePublicUrls } from "@effect-kit/storage";
+import { UploadSessions, UploadSessionStore } from "@effect-kit/storage/sessions";
+import { aes256Gcm } from "@effect-kit/storage/sessions/node";
 import { Faults, MemoryStorage, runStorageConformance } from "@effect-kit/storage/testing";
 import { Transfers, UploadSource } from "@effect-kit/storage/transfers";
 import { sha256 } from "@effect-kit/storage/transfers/node";
@@ -49,6 +52,42 @@ await Effect.runPromise(
       target: { write: () => Effect.void },
     });
     assert.equal(verified.progress.bytesVerified, 2);
+    const checkpointStore = yield* UploadSessionStore.make({
+      namespace: "packed",
+      ownership: "exclusive",
+      protection: aes256Gcm(Redacted.make(globalThis.crypto.getRandomValues(new Uint8Array(32)))),
+    }).pipe(Effect.provide(KeyValueStore.layerMemory));
+    const sessions = yield* UploadSessions.make(
+      transfers.endpoint,
+      { digest: sha256, maxBytes: 1024 },
+      {
+        configurationId: "packed-memory",
+        handles: {
+          encode: () => Effect.die("download has no handle"),
+          decode: () => Effect.die("download has no handle"),
+        },
+      },
+    ).pipe(Effect.provideService(UploadSessionStore, checkpointStore));
+    yield* sessions.createDownload({
+      id: "download",
+      ref: transfer.metadata.ref,
+      expectedChecksum: transfer.checksum,
+    });
+    const downloaded = [];
+    yield* sessions.resumeDownload("download", {
+      id: "download",
+      prefix: () => Stream.empty,
+      truncate: () => Effect.void,
+      write: (_offset, bytes) =>
+        Effect.sync(() => {
+          downloaded.push(...bytes);
+        }),
+      sync: Effect.void,
+      publish: () => Effect.void,
+    });
+    assert.deepEqual(downloaded, [1, 2]);
+    assert.equal((yield* sessions.status("download")).state, "completed");
+
     const faults = yield* Faults.make(memory, [
       {
         operation: "put",

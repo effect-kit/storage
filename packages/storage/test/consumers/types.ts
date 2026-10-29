@@ -3,6 +3,8 @@ import type { Scope } from "effect";
 
 import { ObjectKey, ObjectSize, StorageSigning } from "@effect-kit/storage";
 import type { ObjectMetadata, StorageError, StorageService, Storage } from "@effect-kit/storage";
+import { UploadSessions } from "@effect-kit/storage/sessions";
+import type { SessionsService } from "@effect-kit/storage/sessions";
 import { Faults, MemoryStorage } from "@effect-kit/storage/testing";
 import { Transfers, UploadSource } from "@effect-kit/storage/transfers";
 import type { TransferReceipt } from "@effect-kit/storage/transfers";
@@ -79,3 +81,19 @@ void [
   unscopedBody,
   noSigner,
 ];
+
+const durable = UploadSessions.create({ key, source: UploadSource.replayable(() => body, 10) });
+const durablePreserved: Effect.Effect<string, StorageError | SourceError, UploadSessions | Source> =
+  durable;
+// @ts-expect-error durable source dependencies cannot disappear
+const durableMissingEnvironment: Effect.Effect<string, StorageError | SourceError, UploadSessions> =
+  durable;
+declare const sessions: SessionsService;
+const eventDelivery = sessions.deliverEvents("id", () =>
+  Effect.flatMap(Source, () => Effect.fail(new SourceError())),
+);
+const eventPreserved: Effect.Effect<void, StorageError | SourceError, Source> = eventDelivery;
+const batchDelivery = sessions.processBatch("id", () => Source);
+// @ts-expect-error durable batches preserve callback environments
+const batchMissingEnvironment: Effect.Effect<unknown, StorageError> = batchDelivery;
+void [durablePreserved, durableMissingEnvironment, eventPreserved, batchMissingEnvironment];

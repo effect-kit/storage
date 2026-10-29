@@ -68,6 +68,16 @@
       "workspace-source": "./src/s3/transfers.ts",
       "types": "./dist/s3/transfers.d.ts",
       "default": "./dist/s3/transfers.js"
+    },
+    "./sessions": {
+      "workspace-source": "./src/sessions.ts",
+      "types": "./dist/sessions.d.ts",
+      "default": "./dist/sessions.js"
+    },
+    "./sessions/node": {
+      "workspace-source": "./src/sessions/node.ts",
+      "types": "./dist/sessions/node.d.ts",
+      "default": "./dist/sessions/node.js"
     }
   },
   "publishConfig": {
@@ -104,6 +114,14 @@
       "./s3/transfers": {
         "types": "./dist/s3/transfers.d.ts",
         "import": "./dist/s3/transfers.js"
+      },
+      "./sessions": {
+        "types": "./dist/sessions.d.ts",
+        "import": "./dist/sessions.js"
+      },
+      "./sessions/node": {
+        "types": "./dist/sessions/node.d.ts",
+        "import": "./dist/sessions/node.js"
       }
     },
     "access": "public",

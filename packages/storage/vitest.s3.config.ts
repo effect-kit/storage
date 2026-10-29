@@ -4,7 +4,11 @@ export default defineConfig({
   envDir: false,
   resolve: { conditions: ["workspace-source"] },
   test: {
-    include: ["test/provider/s3.acceptance.ts", "test/provider/transfers.acceptance.ts"],
+    include: [
+      "test/provider/s3.acceptance.ts",
+      "test/provider/transfers.acceptance.ts",
+      "test/provider/sessions.acceptance.ts",
+    ],
     testTimeout: 90_000,
     hookTimeout: 30_000,
     fileParallelism: false,

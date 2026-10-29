@@ -29,6 +29,8 @@ const manifest = {
     "./transfers": { types: "./dist/transfers.d.ts", import: "./dist/transfers.js" },
     "./transfers/node": { types: "./dist/transfers/node.d.ts", import: "./dist/transfers/node.js" },
     "./s3/transfers": { types: "./dist/s3/transfers.d.ts", import: "./dist/s3/transfers.js" },
+    "./sessions": { types: "./dist/sessions.d.ts", import: "./dist/sessions.js" },
+    "./sessions/node": { types: "./dist/sessions/node.d.ts", import: "./dist/sessions/node.js" },
     "./s3/post": { types: "./dist/s3/post.d.ts", import: "./dist/s3/post.js" },
   },
 };
@@ -46,6 +48,11 @@ const entries = [
   "package/dist/s3/signing.d.ts",
   "package/dist/s3/post.js",
   "package/dist/s3/post.d.ts",
+  "package/dist/sessions.js",
+  "package/dist/sessions.d.ts",
+  "package/dist/sessions/node.js",
+  "package/dist/sessions/node.d.ts",
+
   "package/dist/transfers.js",
   "package/dist/transfers.d.ts",
   "package/dist/transfers/node.js",
@@ -80,6 +87,11 @@ test("missing runtime/declarations/license and development exports fail", () => 
     "dist/s3/signing.d.ts",
     "dist/s3/post.js",
     "dist/s3/post.d.ts",
+    "dist/sessions.js",
+    "dist/sessions.d.ts",
+    "dist/sessions/node.js",
+    "dist/sessions/node.d.ts",
+
     "dist/transfers.js",
     "dist/transfers.d.ts",
     "dist/transfers/node.js",

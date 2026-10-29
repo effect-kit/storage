@@ -4,7 +4,7 @@ Object storage services and workflows for Effect.
 
 Development status: the portable API, memory reference and official-SDK S3 adapter
 are implemented. S3 has local protocol evidence; hosted AWS acceptance is pending.
-Managed transfers are implemented; durable sessions follow in phase 5.
+Managed transfers and durable sessions are implemented for the documented ownership profiles.
 Published-package installation instructions will accompany the first release.
 
 ## Use storage
@@ -77,7 +77,16 @@ The engine owns shared memory/request budgets, retained-part retries, pinned dow
 continuation, verified native/streamed copy, explicit move outcomes and lazy batches.
 See [the transfer API and resource policy](../../docs/transfers.md) and
 [measured local evidence](../../docs/evidence/phase-4.md). The engine is in-process;
-persistent restart and required audit/observer effects are phase 5 work.
+persistent restart and required events use the optional sessions entry point.
+
+## Durable sessions
+
+`/sessions` adds protected checkpoints over an application-provided Effect KeyValueStore;
+`/sessions/node` adds AES-GCM, an atomic filesystem backing and restartable file targets.
+PostgreSQL is not required. Base sessions require exclusive application ownership across
+processes; no generic distributed CAS/lease guarantee is claimed. See
+[session APIs and limits](../../docs/sessions.md), [restart evidence](../../docs/evidence/phase-5.md)
+and the repository example in `examples/durable-upload.mjs`.
 
 ## License
 

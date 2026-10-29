@@ -12,6 +12,12 @@ export const sha256: TransferDigest = {
       update: (bytes) => {
         hash.update(bytes);
       },
+      snapshot: () => ({
+        algorithm: "sha256",
+        encoding: "hex",
+        scope: "full-object",
+        value: hash.copy().digest("hex"),
+      }),
       finish: () => ({
         algorithm: "sha256",
         encoding: "hex",

@@ -27,3 +27,8 @@ controlled HTTP results, owned RustFS acceptance and the open AWS hosted gate.
 
 [007 — Managed transfer ownership](decisions/007-managed-transfers.md) records shared
 admission, protocol attempts, verified copy/move, uncertainty and observer boundaries.
+
+Phase 5 adds [Effect-backed durable sessions](../docs/sessions.md) and
+[separate-process recovery evidence](../docs/evidence/phase-5.md). ADR 005 now records
+the owner-approved exclusive-ownership base; PostgreSQL/distributed leases are optional
+backend work rather than required infrastructure.

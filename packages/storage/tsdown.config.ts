@@ -10,6 +10,8 @@ export default defineConfig({
     "src/transfers.ts",
     "src/transfers/node.ts",
     "src/s3/transfers.ts",
+    "src/sessions.ts",
+    "src/sessions/node.ts",
   ],
   unbundle: true,
   deps: { neverBundle: [/^node:/u] },

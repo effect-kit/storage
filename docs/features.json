@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-29",
+  "updatedAt": "2026-10-30",
   "features": [
     {
       "id": "OBJ-01",
@@ -693,14 +693,41 @@
     {
       "id": "XFR-04",
       "title": "Durable sessions",
-      "target": "Versioned state, leases/CAS, restart recovery, expiry, unknown completion, reconciliation",
+      "target": "Versioned protected state, restart recovery, expiry, unknown completion/reconciliation; optional backend CAS/lease coordination with explicit guarantees",
       "completionPhase": 5,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "in-progress",
+      "specifications": [
+        "docs/sessions.md",
+        "architecture/decisions/005-persistence-and-fixtures.md"
+      ],
+      "implementations": [
+        "packages/storage/src/sessions.ts",
+        "packages/storage/src/sessions/store.ts",
+        "packages/storage/src/sessions/upload.ts",
+        "packages/storage/src/sessions/download.ts"
+      ],
+      "tests": [
+        "packages/storage/test/sessions/sessions.test.ts",
+        "packages/storage/test/sessions/store.test.ts",
+        "packages/storage/test/provider/sessions.acceptance.ts"
+      ],
+      "examples": ["packages/storage/examples/durable-upload.mjs"],
+      "evidence": [
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/phase-5.md",
+          "sdkVersion": "effect@4.0.6 / @aws-sdk/client-s3@3.1159.0",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "exclusive-owner-effect-kvs-local-files-and-rustfs",
+          "testId": "packages/storage/test/provider/sessions.acceptance.ts",
+          "limitations": [
+            "Owner-approved exclusive ownership base; generic KVS is not distributed CAS/leases. Optional distributed extension remains unqualified.",
+            "Real local process termination/fsync/rename and native S3 protocol only; hosted AWS, other OS/runtime/provider guarantees remain pending."
+          ]
+        }
+      ],
       "deferral": null
     },
     {
@@ -708,14 +735,27 @@
       "title": "Download recovery",
       "target": "Range continuation pinned to object identity, integrity, cancellation, restart state",
       "completionPhase": 5,
-      "status": "in-progress",
-      "specifications": ["docs/transfers.md"],
+      "status": "implemented",
+      "specifications": [
+        "docs/transfers.md",
+        "docs/sessions.md",
+        "architecture/decisions/005-persistence-and-fixtures.md"
+      ],
       "implementations": [
         "packages/storage/src/transfers.ts",
-        "packages/storage/src/transfers/download.ts"
+        "packages/storage/src/transfers/download.ts",
+        "packages/storage/src/sessions.ts",
+        "packages/storage/src/sessions/store.ts",
+        "packages/storage/src/sessions/upload.ts",
+        "packages/storage/src/sessions/download.ts"
       ],
-      "tests": ["packages/storage/test/transfers/download-copy.test.ts"],
-      "examples": ["docs/transfers.md"],
+      "tests": [
+        "packages/storage/test/transfers/download-copy.test.ts",
+        "packages/storage/test/sessions/sessions.test.ts",
+        "packages/storage/test/sessions/store.test.ts",
+        "packages/storage/test/provider/sessions.acceptance.ts"
+      ],
+      "examples": ["docs/transfers.md", "packages/storage/examples/durable-upload.mjs"],
       "evidence": [
         {
           "kind": "runtime",
@@ -729,6 +769,20 @@
           "limitations": [
             "In-process transfer behavior; persistent recovery/batch checkpoints remain phase 5. Hosted AWS qualification remains pending at owner request."
           ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/phase-5.md",
+          "sdkVersion": "effect@4.0.6 / @aws-sdk/client-s3@3.1159.0",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "exclusive-owner-effect-kvs-local-files-and-rustfs",
+          "testId": "packages/storage/test/provider/sessions.acceptance.ts",
+          "limitations": [
+            "Owner-approved exclusive ownership base; generic KVS is not distributed CAS/leases. Optional distributed extension remains unqualified.",
+            "Real local process termination/fsync/rename and native S3 protocol only; hosted AWS, other OS/runtime/provider guarantees remain pending."
+          ]
         }
       ],
       "deferral": null
@@ -738,14 +792,27 @@
       "title": "Bulk transfers",
       "target": "Lazy inputs, bounded workers, partial success, progress, checkpoints, safe retries",
       "completionPhase": 4,
-      "status": "in-progress",
-      "specifications": ["docs/transfers.md"],
+      "status": "implemented",
+      "specifications": [
+        "docs/transfers.md",
+        "docs/sessions.md",
+        "architecture/decisions/005-persistence-and-fixtures.md"
+      ],
       "implementations": [
         "packages/storage/src/transfers.ts",
-        "packages/storage/src/transfers/runtime.ts"
+        "packages/storage/src/transfers/runtime.ts",
+        "packages/storage/src/sessions.ts",
+        "packages/storage/src/sessions/store.ts",
+        "packages/storage/src/sessions/upload.ts",
+        "packages/storage/src/sessions/download.ts"
       ],
-      "tests": ["packages/storage/test/transfers/download-copy.test.ts"],
-      "examples": ["docs/transfers.md"],
+      "tests": [
+        "packages/storage/test/transfers/download-copy.test.ts",
+        "packages/storage/test/sessions/sessions.test.ts",
+        "packages/storage/test/sessions/store.test.ts",
+        "packages/storage/test/provider/sessions.acceptance.ts"
+      ],
+      "examples": ["docs/transfers.md", "packages/storage/examples/durable-upload.mjs"],
       "evidence": [
         {
           "kind": "runtime",
@@ -758,6 +825,20 @@
           "testId": "packages/storage/test/transfers/download-copy.test.ts",
           "limitations": [
             "In-process transfer behavior; persistent recovery/batch checkpoints remain phase 5. Hosted AWS qualification remains pending at owner request."
+          ]
+        },
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/phase-5.md",
+          "sdkVersion": "effect@4.0.6 / @aws-sdk/client-s3@3.1159.0",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "exclusive-owner-effect-kvs-local-files-and-rustfs",
+          "testId": "packages/storage/test/provider/sessions.acceptance.ts",
+          "limitations": [
+            "Owner-approved exclusive ownership base; generic KVS is not distributed CAS/leases. Optional distributed extension remains unqualified.",
+            "Real local process termination/fsync/rename and native S3 protocol only; hosted AWS, other OS/runtime/provider guarantees remain pending."
           ]
         }
       ],
@@ -1118,12 +1199,39 @@
       "title": "Workflow events",
       "target": "Typed transfer lifecycle events, failure-safe observers, durable outbox integration boundary",
       "completionPhase": 5,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
-      "evidence": [],
+      "status": "implemented",
+      "specifications": [
+        "docs/sessions.md",
+        "architecture/decisions/005-persistence-and-fixtures.md"
+      ],
+      "implementations": [
+        "packages/storage/src/sessions.ts",
+        "packages/storage/src/sessions/store.ts",
+        "packages/storage/src/sessions/upload.ts",
+        "packages/storage/src/sessions/download.ts"
+      ],
+      "tests": [
+        "packages/storage/test/sessions/sessions.test.ts",
+        "packages/storage/test/sessions/store.test.ts",
+        "packages/storage/test/provider/sessions.acceptance.ts"
+      ],
+      "examples": ["packages/storage/examples/durable-upload.mjs"],
+      "evidence": [
+        {
+          "kind": "runtime",
+          "date": "2026-10-30",
+          "source": "docs/evidence/phase-5.md",
+          "sdkVersion": "effect@4.0.6 / @aws-sdk/client-s3@3.1159.0",
+          "apiVersion": null,
+          "runtime": "node-24.22.0",
+          "configuration": "exclusive-owner-effect-kvs-local-files-and-rustfs",
+          "testId": "packages/storage/test/provider/sessions.acceptance.ts",
+          "limitations": [
+            "Owner-approved exclusive ownership base; generic KVS is not distributed CAS/leases. Optional distributed extension remains unqualified.",
+            "Real local process termination/fsync/rename and native S3 protocol only; hosted AWS, other OS/runtime/provider guarantees remain pending."
+          ]
+        }
+      ],
       "deferral": null
     },
     {

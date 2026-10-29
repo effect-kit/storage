@@ -1,8 +1,11 @@
-import { Effect } from "effect";
+import { Effect, Redacted, Schema } from "effect";
 
+import type { MultipartHandle } from "../contracts/multipart.js";
 import type { S3StorageService } from "../s3.js";
+import { sessionError } from "../sessions/store.js";
 import type { TransferEndpoint } from "../transfers/models.js";
 import { operationMetadataKey } from "../transfers/upload.js";
+import { Upload } from "./native-models.js";
 import { nativeLimits } from "./native-models.js";
 
 const connections = new WeakMap<TransferEndpoint, S3StorageService>();
@@ -66,3 +69,16 @@ export function s3TransferEndpoint(storage: S3StorageService): TransferEndpoint 
   connections.set(endpoint, storage);
   return endpoint;
 }
+
+/** Native checksum policy survives restart alongside the opaque upload identity. */
+export const s3SessionHandles = {
+  encode: (handle: MultipartHandle) =>
+    Schema.encodeEffect(Schema.fromJsonString(Schema.toCodecJson(Upload)))(handle).pipe(
+      Effect.map(Redacted.make),
+      Effect.mapError(() => sessionError("InvalidS3Handle")),
+    ),
+  decode: (encoded: Redacted.Redacted<string>) =>
+    Schema.decodeUnknownEffect(Schema.fromJsonString(Schema.toCodecJson(Upload)))(
+      Redacted.value(encoded),
+    ).pipe(Effect.mapError(() => sessionError("InvalidS3Handle"))),
+};

@@ -47,6 +47,14 @@ const Manifest = Schema.Struct({
       types: Schema.Literal("./dist/s3/transfers.d.ts"),
       import: Schema.Literal("./dist/s3/transfers.js"),
     }),
+    "./sessions": Schema.Struct({
+      types: Schema.Literal("./dist/sessions.d.ts"),
+      import: Schema.Literal("./dist/sessions.js"),
+    }),
+    "./sessions/node": Schema.Struct({
+      types: Schema.Literal("./dist/sessions/node.d.ts"),
+      import: Schema.Literal("./dist/sessions/node.js"),
+    }),
     "./s3/post": Schema.Struct({
       types: Schema.Literal("./dist/s3/post.d.ts"),
       import: Schema.Literal("./dist/s3/post.js"),
@@ -84,6 +92,11 @@ export function checkArchive(manifestInput: unknown, entries: readonly string[])
     "dist/s3/signing.d.ts",
     "dist/s3/post.js",
     "dist/s3/post.d.ts",
+    "dist/sessions.js",
+    "dist/sessions.d.ts",
+    "dist/sessions/node.js",
+    "dist/sessions/node.d.ts",
+
     "dist/transfers.js",
     "dist/transfers.d.ts",
     "dist/transfers/node.js",

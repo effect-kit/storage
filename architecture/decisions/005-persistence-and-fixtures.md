@@ -1,22 +1,27 @@
 # 005 — Durable persistence, filesystem trust and local fixtures
 
-Date: 2026-10-28. Decision: accepted for subsequent implementation.
+Date: 2026-10-28. Decision: accepted; exclusive Effect KVS implementation revised/delivered 2026-10-30.
 
 ## Persistence
 
-Keep core independent of persistence. The first production UploadSessionStore
-uses compatible Effect SQL/PostgreSQL behind an optional subpath. Reuse SqlClient
-transactions/migrations; implement focused revision-CAS, lease and transition
-queries. Effect KeyValueStore/Persistence expose useful get/set/TTL facilities
-but their public contracts do not provide the required session CAS/lease protocol.
-A generic key/value read-then-write cannot substitute for it.
+Keep core independent of persistence. Updated 2026-10-30 by owner request: reuse
+Effect 4.0.6 persistence APIs and make PostgreSQL/distributed coordination optional.
+KeyValueStore.toSchemaStore provides typed mutable values; Persistence stores
+Persistable request Exits and TTLs. Neither public interface supplies session CAS
+or worker leases. Never substitute KVS read-then-write for distributed fencing.
 
-The Effect 4.0.6 / @effect/sql-pg 4.0.6 local probe connects to PostgreSQL 17.7,
-performs a conditional revision update and verifies transaction rollback.
-Distributed claims, fencing, lease renewal and durable resume are not implemented.
-No database transaction atomically commits a cloud upload; persist intent and
-reconcile each external/state crash window. Protect bearer handles through an
-application-supplied secret codec/reference store, never checkpoint credentials.
+Phase 5 uses versioned protected checkpoints over application-provided KeyValueStore,
+with explicit application-exclusive ownership across processes and in-process
+serialization. A narrow ownership extension can wrap an application's stronger
+coordinator; its guarantees are not invented by the base adapter. A Node filesystem
+backing adds atomic replacement/fsync for sequential process restart. Applications
+must authorize access and prevent concurrent independent processes for the same
+namespace. PostgreSQL is an optional future integration rather than a phase gate.
+
+No checkpoint transaction atomically commits a cloud write. Persist intent before
+external operations, reconcile uncertain results, and protect all sensitive handles
+through an application codec. Never serialize credentials. The earlier PostgreSQL
+17.7 probe remains historical evidence, not a required production dependency.
 
 ## Filesystem threat model
 

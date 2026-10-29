@@ -14,6 +14,7 @@ export interface TransferDigest {
   readonly create: () => {
     readonly update: (bytes: Uint8Array) => void;
     readonly finish: () => Checksum;
+    readonly snapshot?: () => Checksum;
   };
 }
 

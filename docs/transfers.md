@@ -199,3 +199,6 @@ bodies, URLs and arbitrary request IDs are never metric labels or span attribute
 Run `pnpm ci:check`, `pnpm test:extended` and manually `pnpm test:s3:local`.
 Hosted AWS, deployed Workers, other providers/runtimes, persistent recovery and long
 soak remain separate qualification work.
+
+Durable state and required delivery now have a separate [sessions API](sessions.md).
+The in-process Transfers methods retain their existing behavior and dependencies.
