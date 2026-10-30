@@ -1,0 +1,33 @@
+name: Supabase and Vercel local acceptance
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  app-storage-local:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: effect-kit/.github/actions/setup@v1
+        with:
+          cache: pnpm
+      - name: Check provider contracts
+        run: pnpm ci:check
+      - name: Install browser runtime
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Check packed consumers, browser modules and tus restarts
+        run: pnpm test:app:local
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: app-storage-local
+          path: .artifacts/app-storage-local.json
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 14

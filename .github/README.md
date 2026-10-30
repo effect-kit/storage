@@ -285,3 +285,10 @@ credentials. The pinned emulator explicitly bypasses its API-version check;
 report JSON records that limit. Upload only the two whitelisted local reports.
 Hosted GCS/Azure commands require owner-provided existing namespaces and credential
 setup; no hosted workflow or account provisioning is implicit in this local lane.
+
+`app-storage-local.yml` is manually dispatched. It runs package checks, installs
+Chromium, verifies packed Supabase/Vercel browser imports and exercises owned tus
+SIGKILL/restarts and runnable examples. It needs no hosted credentials. Only the
+whitelisted `.artifacts/app-storage-local.json` summary is uploaded; bundles,
+checkpoints, source files and environment values remain local. Hosted tests are a
+separate explicit command documented in `docs/app-storage-examples.md`.
