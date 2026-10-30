@@ -408,6 +408,26 @@
       "workspace-source": "./src/cache.ts",
       "types": "./dist/cache.d.ts",
       "default": "./dist/cache.js"
+    },
+    "./representation": {
+      "workspace-source": "./src/representation.ts",
+      "types": "./dist/representation.d.ts",
+      "default": "./dist/representation.js"
+    },
+    "./compression": {
+      "workspace-source": "./src/compression.ts",
+      "types": "./dist/compression.d.ts",
+      "default": "./dist/compression.js"
+    },
+    "./encryption": {
+      "workspace-source": "./src/encryption.ts",
+      "types": "./dist/encryption.d.ts",
+      "default": "./dist/encryption.js"
+    },
+    "./encryption/age": {
+      "workspace-source": "./src/encryption/age.ts",
+      "types": "./dist/encryption/age.d.ts",
+      "default": "./dist/encryption/age.js"
     }
   },
   "publishConfig": {
@@ -716,6 +736,22 @@
       "./cache": {
         "types": "./dist/cache.d.ts",
         "import": "./dist/cache.js"
+      },
+      "./representation": {
+        "types": "./dist/representation.d.ts",
+        "import": "./dist/representation.js"
+      },
+      "./compression": {
+        "types": "./dist/compression.d.ts",
+        "import": "./dist/compression.js"
+      },
+      "./encryption": {
+        "types": "./dist/encryption.d.ts",
+        "import": "./dist/encryption.js"
+      },
+      "./encryption/age": {
+        "types": "./dist/encryption/age.d.ts",
+        "import": "./dist/encryption/age.js"
       }
     },
     "access": "public",
@@ -750,6 +786,7 @@
     "@google-cloud/storage": "catalog:",
     "@tigrisdata/storage": "catalog:",
     "@vercel/blob": "catalog:",
+    "age-encryption": "catalog:",
     "effect": "catalog:",
     "fast-xml-parser": "catalog:",
     "klarity": "catalog:",
@@ -771,6 +808,7 @@
     "@google-cloud/storage": "^8.4.0",
     "@tigrisdata/storage": "^3.23.0",
     "@vercel/blob": "^2.8.2",
+    "age-encryption": "^0.3.1",
     "effect": "^4.1.0",
     "fast-xml-parser": "^5.11.2"
   },
@@ -812,6 +850,9 @@
       "optional": true
     },
     "fast-xml-parser": {
+      "optional": true
+    },
+    "age-encryption": {
       "optional": true
     }
   },

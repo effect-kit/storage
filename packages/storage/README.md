@@ -388,3 +388,30 @@ a narrowed primitive TransferDriver, preserving provider size limits. Native sig
 copy, multipart, lifecycle and administration services are deliberately excluded from
 the facade output because their restrictions have not been qualified through these
 wrappers. Supplying raw provider services separately grants independent authority.
+
+## Compression and object encryption
+
+`StorageCompression.make/layer({ format: "gzip", maxDecodedBytes, maxStoredBytes,
+maxExpansionRatio? })` from `/compression` uses platform CompressionStream with scoped
+FileSystem staging. `StorageEncryption.make/layer(limits)` from `/encryption` requires
+StorageEncryptionCodec. `/encryption/age` supplies `AgeEncryption.make/layer({ recipients,
+identities })` using the optional `age-encryption` peer and its standard authenticated
+streaming format. The identities Effect is resolved for each read, supporting retained
+rotation keys. Recipient policy changes require a newly constructed codec.
+
+Provide platform FileSystem/Path plus the provider layer; these are server-side facades.
+Both keep bounded, mode-0600 temporary files and verify complete decoded size/SHA-256
+before exposing a file stream. Their versioned JSON application envelope binds logical
+headers, source store identity and key inside the representation. Age encrypts that
+metadata too; this envelope delegates all cryptography to age. The adapter does not
+claim an independent cryptographic audit of this integration. Validate the chosen
+format/key policy for your deployment before treating encryption qualification complete.
+
+Storage metadata reports logical size/checksum and native physical ETag/version.
+`StorageRepresentation.inspect(target)` from `/representation` reports logical and
+stored metadata together. HEAD/list decode and verify objects, incurring full reads;
+ranges, direct signing, native copy and native resumable capabilities are excluded.
+Conditions use physical validators. Interruption releases scoped staging; retry reads
+verified logical bytes and creates a new representation. Compressed/encrypted objects
+must not be mixed with unmarked raw objects in the same facade view. Temporary plaintext
+requires a trusted local filesystem and appropriate disk/lifecycle policy.

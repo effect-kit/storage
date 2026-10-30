@@ -26,6 +26,8 @@ export interface TransferDigest {
 
 /** A provider supplies protocol operations, never transfer orchestration or retries. */
 export interface TransferEndpoint {
+  /** Original backend identity retained by facades to reject false cross-store isolation. */
+  readonly underlyingStoreId?: string;
   readonly storage: StorageService;
   readonly maximumObjectBytes: number;
   readonly maximumSingleUploadBytes: number;

@@ -2,6 +2,10 @@ import defineConfig from "klarity/tsdown/library";
 
 export default defineConfig({
   entry: [
+    "src/representation.ts",
+    "src/compression.ts",
+    "src/encryption.ts",
+    "src/encryption/age.ts",
     "src/composition.ts",
     "src/cache.ts",
     "src/uploads.ts",

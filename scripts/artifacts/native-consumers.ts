@@ -22,6 +22,7 @@ export async function checkNativeConsumers(archive: string): Promise<void> {
     version: string;
   };
   for (const [provider, sdk] of [
+    ["age", "age-encryption"],
     ["gcs", "@google-cloud/storage"],
     ["azure", "@azure/storage-blob"],
     ["supabase", undefined],

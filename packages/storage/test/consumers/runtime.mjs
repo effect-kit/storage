@@ -206,7 +206,17 @@ await Promise.all(
 );
 
 await Promise.all(
-  ["uploads", "http", "http/schema", "client"].map(async (path) => {
+  [
+    "uploads",
+    "http",
+    "http/schema",
+    "client",
+    "composition",
+    "cache",
+    "representation",
+    "compression",
+    "encryption",
+  ].map(async (path) => {
     assert(Object.keys(await import(`@effect-kit/storage/${path}`)).length > 0);
   }),
 );

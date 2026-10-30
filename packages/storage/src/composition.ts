@@ -106,21 +106,16 @@ export const StoragePrefix = {
   },
 };
 
-export const StorageReadOnly = {
-  make: Effect.gen(function* () {
-    const source = yield* Storage;
-    const denied = () =>
-      Effect.fail(
-        storageError("readOnly", source.provider, { _tag: "AccessDenied" }, "not-started"),
-      );
-    return Storage.make({
-      ...source,
-      capabilities: { ...source.capabilities, putConditions: [], deleteConditions: [] },
-      put: denied,
-      delete: denied,
-    });
-  }),
-  get layer() {
-    return storageLayer(StorageReadOnly.make);
-  },
-};
+const makeReadOnly = Effect.gen(function* () {
+  const source = yield* Storage;
+  const denied = () =>
+    Effect.fail(storageError("readOnly", source.provider, { _tag: "AccessDenied" }, "not-started"));
+  return Storage.make({
+    ...source,
+    capabilities: { ...source.capabilities, putConditions: [], deleteConditions: [] },
+    put: denied,
+    delete: denied,
+  });
+});
+
+export const StorageReadOnly = { make: makeReadOnly, layer: storageLayer(makeReadOnly) };

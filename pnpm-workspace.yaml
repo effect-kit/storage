@@ -2,6 +2,7 @@ packages:
   - packages/*
 
 catalog:
+  age-encryption: 0.3.1
   fast-xml-parser: 5.11.2
   "@tigrisdata/storage": 3.23.0
   "@google-cloud/storage": 8.4.0

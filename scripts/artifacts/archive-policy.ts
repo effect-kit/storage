@@ -1,6 +1,10 @@
 import { Schema } from "effect";
 
 export const advancedSubpaths = [
+  "representation",
+  "compression",
+  "encryption",
+  "encryption/age",
   "composition",
   "cache",
   "uploads",
