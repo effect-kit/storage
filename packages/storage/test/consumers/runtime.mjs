@@ -28,6 +28,7 @@ for (const peer of [
   "@aws-sdk/s3-presigned-post",
   "@google-cloud/storage",
   "@azure/storage-blob",
+  "@azure/identity",
   "@effect/sql-pg",
   "@vercel/blob",
   "@supabase/storage-js",

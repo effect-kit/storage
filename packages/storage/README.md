@@ -3,7 +3,8 @@
 Object storage services and workflows for Effect.
 
 Development status: the portable API, memory reference and official-SDK S3 adapter
-are implemented. S3 has local protocol evidence; hosted AWS acceptance is pending.
+are implemented alongside native GCS/Azure, filesystem and R2 Workers providers.
+Cloud support has local protocol evidence; hosted qualification is pending.
 Managed transfers and durable sessions are implemented for the documented ownership profiles.
 Published-package installation instructions will accompany the first release.
 
@@ -114,3 +115,17 @@ Hosted R2 acceptance is pending; local tests need no Cloudflare account.
 ## License
 
 Apache-2.0, Effect Kit Contributors.
+
+## Native GCS and Azure
+
+`GcsStorage.layer({ bucket })` from `/gcs` captures the official Google SDK and
+supplies native offset uploads. `AzureStorage.layer({ containerUrl, credential })`
+from `/azure` supplies native named blocks. Both provide the same portable Storage,
+managed Transfers and protected UploadSessions composition. Native strategy receipts
+require pinned SHA-256 readback; durable restart never adopts remote state by key alone.
+
+Signing is explicit through `/gcs/signing`, `/gcs/post`, or `/azure/signing`.
+`/azure/identity` alone requires the optional identity SDK. See the [GCS](../../docs/gcs.md),
+[Azure](../../docs/azure.md) and [phase 7 evidence](../../docs/evidence/phase-7.md) guides
+for authority, protocol, cleanup, runtime and hosted-qualification limits.
+`pnpm test:native:local` needs Docker and no cloud account.

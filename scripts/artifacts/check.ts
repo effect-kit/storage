@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
 import { checkArchive } from "./archive-policy.ts";
+import { checkNativeConsumers } from "./native-consumers.ts";
 import { checkS3Consumer } from "./s3-consumer.ts";
 
 const root = process.cwd();
@@ -123,6 +124,7 @@ try {
   );
   run(process.execPath, ["consumer.mjs"], temporary);
   await checkS3Consumer(temporary);
+  await checkNativeConsumers(archive);
   await writeFile(
     resolve(".artifacts/artifact-check.json"),
     `${JSON.stringify(
@@ -140,6 +142,8 @@ try {
           "public custom adapter and optional capability",
           "S3-only import without signing peers",
           "explicit S3/signing/POST peers and packed public contracts",
+          "isolated GCS SDK-only runtime and NodeNext/Bundler declarations",
+          "isolated Azure SDK-only runtime without identity and NodeNext/Bundler declarations",
           "SDK-free managed transfer runtime and source/sink E/R declarations",
           "isolated core transfer construction and provider-supplied S3 driver",
           "SDK-free protected session runtime and source/event/batch E/R contracts",
@@ -150,7 +154,7 @@ try {
     )}\n`,
   );
   console.log(
-    "Packed core/testing/transfers pass without SDK peers; S3 consumers pass with explicit peers.",
+    "Packed core/testing/transfers pass without SDK peers; S3, GCS and Azure consumers pass with their explicit peers.",
   );
 } catch (error) {
   if (error !== null && typeof error === "object" && "stderr" in error) {

@@ -93,6 +93,36 @@
       "workspace-source": "./src/r2-workers.ts",
       "types": "./dist/r2-workers.d.ts",
       "default": "./dist/r2-workers.js"
+    },
+    "./gcs": {
+      "workspace-source": "./src/gcs.ts",
+      "types": "./dist/gcs.d.ts",
+      "default": "./dist/gcs.js"
+    },
+    "./gcs/signing": {
+      "workspace-source": "./src/gcs/signing.ts",
+      "types": "./dist/gcs/signing.d.ts",
+      "default": "./dist/gcs/signing.js"
+    },
+    "./azure": {
+      "workspace-source": "./src/azure.ts",
+      "types": "./dist/azure.d.ts",
+      "default": "./dist/azure.js"
+    },
+    "./azure/signing": {
+      "workspace-source": "./src/azure/signing.ts",
+      "types": "./dist/azure/signing.d.ts",
+      "default": "./dist/azure/signing.js"
+    },
+    "./azure/identity": {
+      "workspace-source": "./src/azure/identity.ts",
+      "types": "./dist/azure/identity.d.ts",
+      "default": "./dist/azure/identity.js"
+    },
+    "./gcs/post": {
+      "workspace-source": "./src/gcs/post.ts",
+      "types": "./dist/gcs/post.d.ts",
+      "default": "./dist/gcs/post.js"
     }
   },
   "publishConfig": {
@@ -149,6 +179,30 @@
       "./r2-workers": {
         "types": "./dist/r2-workers.d.ts",
         "import": "./dist/r2-workers.js"
+      },
+      "./gcs": {
+        "types": "./dist/gcs.d.ts",
+        "import": "./dist/gcs.js"
+      },
+      "./gcs/signing": {
+        "types": "./dist/gcs/signing.d.ts",
+        "import": "./dist/gcs/signing.js"
+      },
+      "./azure": {
+        "types": "./dist/azure.d.ts",
+        "import": "./dist/azure.js"
+      },
+      "./azure/signing": {
+        "types": "./dist/azure/signing.d.ts",
+        "import": "./dist/azure/signing.js"
+      },
+      "./azure/identity": {
+        "types": "./dist/azure/identity.d.ts",
+        "import": "./dist/azure/identity.js"
+      },
+      "./gcs/post": {
+        "types": "./dist/gcs/post.d.ts",
+        "import": "./dist/gcs/post.js"
       }
     },
     "access": "public",
@@ -172,12 +226,15 @@
     "@aws-sdk/client-s3": "catalog:",
     "@aws-sdk/s3-presigned-post": "catalog:",
     "@aws-sdk/s3-request-presigner": "catalog:",
+    "@azure/identity": "catalog:",
+    "@azure/storage-blob": "catalog:",
     "@cloudflare/workers-types": "catalog:",
     "@effect/platform-browser": "catalog:",
     "@effect/platform-bun": "catalog:",
     "@effect/platform-deno": "catalog:",
     "@effect/platform-node": "catalog:",
     "@effect/vitest": "catalog:",
+    "@google-cloud/storage": "catalog:",
     "effect": "catalog:",
     "klarity": "catalog:",
     "redis": "catalog:",
@@ -189,10 +246,13 @@
     "@aws-sdk/client-s3": "^3.1159.0",
     "@aws-sdk/s3-presigned-post": "^3.1159.0",
     "@aws-sdk/s3-request-presigner": "^3.1159.0",
+    "@azure/identity": "^4.14.0",
+    "@azure/storage-blob": "^12.34.0",
     "@effect/platform-browser": "^4.1.0",
     "@effect/platform-bun": "^4.1.0",
     "@effect/platform-deno": "^4.1.0",
     "@effect/platform-node": "^4.1.0",
+    "@google-cloud/storage": "^8.4.0",
     "effect": "^4.1.0"
   },
   "peerDependenciesMeta": {
@@ -215,6 +275,15 @@
       "optional": true
     },
     "@effect/platform-browser": {
+      "optional": true
+    },
+    "@google-cloud/storage": {
+      "optional": true
+    },
+    "@azure/storage-blob": {
+      "optional": true
+    },
+    "@azure/identity": {
       "optional": true
     }
   },

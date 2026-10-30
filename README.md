@@ -11,6 +11,7 @@ uploads, pinned downloads, verified copy/move and lazy batches. Durable sessions
 Runtime layers for Node, Bun, Deno and browsers supply hashing and platform services.
 The filesystem provider adds atomic object envelopes on an application-owned directory.
 Native R2 Workers uses caller-owned bindings and has local workerd acceptance.
+Native GCS and Azure adapters add offset/block uploads, signing and protected restartable sessions, with local SDK/protocol evidence.
 
 ## Package
 
@@ -30,27 +31,30 @@ pnpm ci:check
 pnpm test:extended
 ```
 
-| Command                          | Purpose                                                      |
-| -------------------------------- | ------------------------------------------------------------ |
-| `pnpm dev`                       | Watch package builds                                         |
-| `pnpm build`                     | Build ESM and declarations with tsdown                       |
-| `pnpm format` / `format:check`   | Oxfmt formatting                                             |
-| `pnpm lint`                      | Oxlint, including tooling                                    |
-| `pnpm typecheck`                 | Source, tests, tooling and configurations                    |
-| `pnpm test`                      | Offline catalog/archive-policy and package tests             |
-| `pnpm catalog:check`             | Validate complete feature/provider inventories and evidence  |
-| `pnpm ci:check`                  | Formatting, catalogs, lint, types, tests and build           |
-| `pnpm check:package`             | Publint and Are the Types Wrong                              |
-| `pnpm test:artifacts`            | Build, pack and test isolated production consumers           |
-| `pnpm test:runtimes [runtime]`   | Exact packed runtime helpers and isolated declarations       |
-| `pnpm test:filesystem [runtime]` | Real Node/Bun file, process race and crash acceptance        |
-| `pnpm test:r2:workers`           | Isolated packed Worker and owned local R2 binding acceptance |
-| `pnpm test:extended`             | Artifact checks; add later manual suites as they exist       |
+| Command                          | Purpose                                                        |
+| -------------------------------- | -------------------------------------------------------------- |
+| `pnpm dev`                       | Watch package builds                                           |
+| `pnpm build`                     | Build ESM and declarations with tsdown                         |
+| `pnpm format` / `format:check`   | Oxfmt formatting                                               |
+| `pnpm lint`                      | Oxlint, including tooling                                      |
+| `pnpm typecheck`                 | Source, tests, tooling and configurations                      |
+| `pnpm test`                      | Offline catalog/archive-policy and package tests               |
+| `pnpm catalog:check`             | Validate complete feature/provider inventories and evidence    |
+| `pnpm ci:check`                  | Formatting, catalogs, lint, types, tests and build             |
+| `pnpm check:package`             | Publint and Are the Types Wrong                                |
+| `pnpm test:artifacts`            | Build, pack and test isolated production consumers             |
+| `pnpm test:runtimes [runtime]`   | Exact packed runtime helpers and isolated declarations         |
+| `pnpm test:filesystem [runtime]` | Real Node/Bun file, process race and crash acceptance          |
+| `pnpm test:r2:workers`           | Isolated packed Worker and owned local R2 binding acceptance   |
+| `pnpm test:native:local`         | Owned Azurite, SDK protocol faults and native process restarts |
+| `pnpm test:native:hosted`        | Explicit existing GCS/Azure test namespace qualification       |
+| `pnpm test:extended`             | Artifact checks; add later manual suites as they exist         |
 
 The artifact lane installs exact local tarballs with Effect and TypeScript from the
 local pnpm store in offline mode. A frozen workspace install seeds the required store;
 core/testing consumers install no provider peers. A separate S3 consumer installs
-its explicit client/signing peers. Consumers run outside the workspace with NodeNext
+its explicit client/signing peers. GCS and Azure consumers each install only their
+chosen native SDK, with identity isolated from ordinary Azure imports. Consumers run outside the workspace with NodeNext
 and Bundler declaration checks.
 
 Default CI is offline and deterministic after dependency installation. Hosted provider,
@@ -91,3 +95,6 @@ by this work.
 ## License
 
 Apache-2.0. Each published package includes its own LICENSE.
+
+Native provider guides: [Google Cloud Storage](docs/gcs.md), [Azure Blob](docs/azure.md),
+and [phase 7 evidence](docs/evidence/phase-7.md).

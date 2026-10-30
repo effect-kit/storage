@@ -239,3 +239,17 @@ no durable upload handle codec is supplied. Upload creation fails before source
 reads. Neither a primitive driver nor local handle reconstruction implies restartable
 multipart upload support. See the [filesystem](filesystem.md) and [R2](r2-workers.md)
 provider guides for exact capabilities and runtime evidence.
+
+GCS and Azure now supply durable native upload strategies through the same layer
+composition. GCS checkpoints protect the resumable bearer URL and probe the actual
+committed offset on restart. Azure checkpoints retain deterministic block IDs,
+source checksums and sizes; incomplete or uncertain stages are safely repeated.
+Both fingerprint the complete replayable source and verify the pinned publication.
+No S3 part façade or provider registry is used. Offset handles and named-block
+records have separate checkpoint fields; checkpoints contain no cloud credentials.
+
+Azure abort abandons only this session's block IDs. It never deletes the committed
+blob and cannot promise immediate uncommitted-block reclamation. GCS abort cancels
+the known native session; unknown initiation still requires orphan discovery.
+`pnpm test:native:local` verifies nine SIGKILL/restart boundaries using the production
+protected file store. See [phase 7 evidence](evidence/phase-7.md) for exact limits.

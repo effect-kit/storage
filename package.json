@@ -46,7 +46,9 @@
     "test:s3:aws": "pnpm --filter @effect-kit/storage exec vitest run --config vitest.s3.config.ts",
     "test:runtimes": "pnpm build && node scripts/runtime/check.ts",
     "test:filesystem": "pnpm build && node scripts/filesystem/check.ts",
-    "test:r2:workers": "pnpm build && node scripts/r2-workers/check.ts"
+    "test:r2:workers": "pnpm build && node scripts/r2-workers/check.ts",
+    "test:native:local": "pnpm build && node scripts/native/check.ts",
+    "test:native:hosted": "pnpm --filter @effect-kit/storage exec vitest run --config vitest.native-hosted.config.ts"
   },
   "dependencies": {
     "effect": "catalog:"

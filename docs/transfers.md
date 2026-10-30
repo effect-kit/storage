@@ -208,3 +208,19 @@ qualifies helper behavior independently of provider transports.
 Durable state and required delivery now have a separate [sessions API](sessions.md).
 The in-process methods keep their workflow behavior; construction captures runtime
 and provider services.
+
+## Native offsets and blocks
+
+GCS and Azure layers supply their native driver automatically. Upload strategy
+accepts `offset` or `blocks` as well as auto/single/multipart. Native offset/block
+chunks currently execute sequentially under the shared request and workspace policy.
+GCS probes committed offsets before replay, including partial acceptance. Azure
+uses deterministic named blocks and commits only the intended ordered IDs.
+
+Standalone native strategy uploads release their data workspace before a pinned
+full SHA-256 destination readback. Admission validates both workspaces before source
+reads; verification shares the operation's deadline and attempt limit. Their receipt
+phase is verified. A verification failure reports a succeeded mutation. Copy and
+sessions already own their verification stage and avoid a nested admission lease.
+Unknown-size GCS offset sources fail before reading; choose a bounded single upload.
+See [GCS](gcs.md) and [Azure](azure.md) for native limits and cancellation semantics.

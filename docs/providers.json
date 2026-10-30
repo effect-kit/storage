@@ -1045,74 +1045,594 @@
       "name": "Google Cloud Storage",
       "transport": "@google-cloud/storage",
       "implementationPhase": 7,
-      "implementation": "planned",
-      "runtimes": ["node"],
-      "sources": ["https://docs.cloud.google.com/storage/docs/request-preconditions"],
-      "notes": ["Preserve generation strings; guard SDK unsafe-number coercion."],
+      "implementation": "implemented",
+      "runtimes": ["node-24.22.0"],
+      "sources": [
+        "https://docs.cloud.google.com/storage/docs/request-preconditions",
+        "docs/gcs.md",
+        "docs/evidence/phase-7.md",
+        "docs/transfers.md",
+        "docs/sessions.md"
+      ],
+      "notes": [
+        "Official Google SDK 8.4.0 public authorization hook; lossless JSON API generation strings and abortable single-attempt Node HTTP exchanges.",
+        "Managed offset/block uploads and durable sessions verify pinned destination bytes with SHA-256. Native copy operations expose continuation/status; managed copy uses the shared streamed path.",
+        "Controlled SDK/HTTP, signing, protected checkpoint and separate-process local evidence; hosted qualification remains pending.",
+        "Node 24.22.0 profile only; runtime helper support does not qualify provider SDKs on additional platforms."
+      ],
       "operations": [
         {
           "featureId": "OBJ-01",
           "operation": "put",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "json-api-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/gcs.md."
+          ],
+          "implementations": ["packages/storage/src/gcs/primitives.ts"],
+          "tests": ["packages/storage/test/gcs/storage.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@google-cloud/storage@8.4.0",
+              "apiVersion": "JSON v1",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http",
+              "testId": "packages/storage/test/gcs/storage.test.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-02",
           "operation": "get",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "json-api-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/gcs.md."
+          ],
+          "implementations": ["packages/storage/src/gcs/primitives.ts"],
+          "tests": ["packages/storage/test/gcs/storage.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@google-cloud/storage@8.4.0",
+              "apiVersion": "JSON v1",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http",
+              "testId": "packages/storage/test/gcs/storage.test.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-03",
           "operation": "head",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "json-api-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/gcs.md."
+          ],
+          "implementations": ["packages/storage/src/gcs/primitives.ts"],
+          "tests": ["packages/storage/test/gcs/storage.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@google-cloud/storage@8.4.0",
+              "apiVersion": "JSON v1",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http",
+              "testId": "packages/storage/test/gcs/storage.test.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-04",
           "operation": "delete",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "json-api-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/gcs.md."
+          ],
+          "implementations": ["packages/storage/src/gcs/primitives.ts"],
+          "tests": ["packages/storage/test/gcs/storage.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@google-cloud/storage@8.4.0",
+              "apiVersion": "JSON v1",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http",
+              "testId": "packages/storage/test/gcs/storage.test.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-05",
           "operation": "listPage",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "json-api-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/gcs.md."
+          ],
+          "implementations": ["packages/storage/src/gcs/primitives.ts"],
+          "tests": ["packages/storage/test/gcs/storage.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@google-cloud/storage@8.4.0",
+              "apiVersion": "JSON v1",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http",
+              "testId": "packages/storage/test/gcs/storage.test.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "OBJ-06",
+          "operation": "native-copy-and-verified-move",
+          "configuration": "json-api-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/gcs.md."
+          ],
+          "implementations": ["packages/storage/src/gcs/native.ts"],
+          "tests": ["packages/storage/test/gcs/native.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@google-cloud/storage@8.4.0",
+              "apiVersion": "JSON v1",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http",
+              "testId": "packages/storage/test/gcs/native.test.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "OBJ-07",
+          "operation": "conditions",
+          "configuration": "json-api-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/gcs.md.",
+            "Portable ETag retrieval conditions and atomic create-only; mutation CAS uses native generation/metageneration, not ETag headers."
+          ],
+          "implementations": ["packages/storage/src/gcs/primitives.ts"],
+          "tests": ["packages/storage/test/gcs/storage.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@google-cloud/storage@8.4.0",
+              "apiVersion": "JSON v1",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http",
+              "testId": "packages/storage/test/gcs/storage.test.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "OBJ-08",
+          "operation": "ranges",
+          "configuration": "json-api-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/gcs.md."
+          ],
+          "implementations": ["packages/storage/src/gcs/primitives.ts"],
+          "tests": ["packages/storage/test/gcs/storage.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@google-cloud/storage@8.4.0",
+              "apiVersion": "JSON v1",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http",
+              "testId": "packages/storage/test/gcs/storage.test.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "OBJ-09",
+          "operation": "native-identity",
+          "configuration": "json-api-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/gcs.md."
+          ],
+          "implementations": ["packages/storage/src/gcs/mapping.ts"],
+          "tests": ["packages/storage/test/gcs/storage.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@google-cloud/storage@8.4.0",
+              "apiVersion": "JSON v1",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http",
+              "testId": "packages/storage/test/gcs/storage.test.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "SIG-01",
+          "operation": "signed-requests",
+          "configuration": "json-api-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/gcs.md."
+          ],
+          "implementations": ["packages/storage/src/gcs/signing.ts"],
+          "tests": ["packages/storage/test/gcs/signing.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@google-cloud/storage@8.4.0",
+              "apiVersion": "JSON v1",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http",
+              "testId": "packages/storage/test/gcs/signing.test.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "SIG-02",
+          "operation": "browser-grants",
+          "configuration": "json-api-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/gcs.md."
+          ],
+          "implementations": ["packages/storage/src/gcs/post.ts"],
+          "tests": ["packages/storage/test/gcs/signing.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@google-cloud/storage@8.4.0",
+              "apiVersion": "JSON v1",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http",
+              "testId": "packages/storage/test/gcs/signing.test.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "SIG-03",
+          "operation": "public-delivery",
+          "configuration": "json-api-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/gcs.md."
+          ],
+          "implementations": ["packages/storage/src/gcs.ts"],
+          "tests": ["packages/storage/test/native-urls.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@google-cloud/storage@8.4.0",
+              "apiVersion": "JSON v1",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http",
+              "testId": "packages/storage/test/native-urls.test.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "XFR-01",
+          "operation": "managed-upload",
+          "configuration": "json-api-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/gcs.md.",
+            "Sequential native protocol chunks; workspace admission and requests share the existing engine. Full pinned SHA-256 readback follows native publication."
+          ],
+          "implementations": ["packages/storage/src/gcs/resumable.ts"],
+          "tests": ["packages/storage/test/gcs/storage.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@google-cloud/storage@8.4.0",
+              "apiVersion": "JSON v1",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http",
+              "testId": "packages/storage/test/gcs/storage.test.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "XFR-03",
+          "operation": "native-resume",
+          "configuration": "json-api-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/gcs.md.",
+            "Sequential native protocol chunks; workspace admission and requests share the existing engine. Full pinned SHA-256 readback follows native publication."
+          ],
+          "implementations": ["packages/storage/src/gcs/resumable.ts"],
+          "tests": ["packages/storage/test/gcs/storage.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@google-cloud/storage@8.4.0",
+              "apiVersion": "JSON v1",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http",
+              "testId": "packages/storage/test/gcs/storage.test.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "XFR-04",
+          "operation": "durable-upload",
+          "configuration": "json-api-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/gcs.md.",
+            "Sequential native protocol chunks; workspace admission and requests share the existing engine. Full pinned SHA-256 readback follows native publication."
+          ],
+          "implementations": ["packages/storage/src/gcs/resumable.ts"],
+          "tests": ["packages/storage/test/provider/native-worker/run.mjs"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@google-cloud/storage@8.4.0",
+              "apiVersion": "JSON v1",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http",
+              "testId": "packages/storage/test/provider/native-worker/run.mjs",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "XFR-05",
+          "operation": "pinned-download-recovery",
+          "configuration": "json-api-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/gcs.md."
+          ],
+          "implementations": ["packages/storage/src/gcs/primitives.ts"],
+          "tests": ["packages/storage/test/gcs/storage.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@google-cloud/storage@8.4.0",
+              "apiVersion": "JSON v1",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http",
+              "testId": "packages/storage/test/gcs/storage.test.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "INT-01",
+          "operation": "checksums",
+          "configuration": "json-api-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/gcs.md."
+          ],
+          "implementations": ["packages/storage/src/gcs/primitives.ts"],
+          "tests": ["packages/storage/test/gcs/storage.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@google-cloud/storage@8.4.0",
+              "apiVersion": "JSON v1",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http",
+              "testId": "packages/storage/test/gcs/storage.test.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "SEC-01",
+          "operation": "credentials",
+          "configuration": "json-api-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/gcs.md."
+          ],
+          "implementations": ["packages/storage/src/gcs/config.ts"],
+          "tests": ["packages/storage/test/gcs/storage.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@google-cloud/storage@8.4.0",
+              "apiVersion": "JSON v1",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http",
+              "testId": "packages/storage/test/gcs/storage.test.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "SEC-02",
+          "operation": "encryption",
+          "configuration": "json-api-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/gcs.md."
+          ],
+          "implementations": ["packages/storage/src/gcs/config.ts"],
+          "tests": ["packages/storage/test/gcs/storage.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@google-cloud/storage@8.4.0",
+              "apiVersion": "JSON v1",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http",
+              "testId": "packages/storage/test/gcs/storage.test.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
           "deferral": null
         }
       ]
@@ -1122,78 +1642,597 @@
       "name": "Azure Blob",
       "transport": "@azure/storage-blob",
       "implementationPhase": 7,
-      "implementation": "planned",
-      "runtimes": ["node"],
+      "implementation": "implemented",
+      "runtimes": ["node-24.22.0"],
       "sources": [
-        "https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-upload-javascript"
+        "https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-upload-javascript",
+        "docs/azure.md",
+        "docs/evidence/phase-7.md",
+        "docs/transfers.md",
+        "docs/sessions.md"
       ],
       "notes": [
-        "Block blobs first; preserve lease, ETag, version and account feature differences."
+        "Official Azure SDK 12.34.0; optional identity 4.14.0; block blobs, explicit borrowed-client retry attestation, leases and async copy.",
+        "Managed offset/block uploads and durable sessions verify pinned destination bytes with SHA-256. Native copy operations expose continuation/status; managed copy uses the shared streamed path.",
+        "Controlled SDK/HTTP, signing, protected checkpoint and separate-process local evidence; hosted qualification remains pending.",
+        "Node 24.22.0 profile only; runtime helper support does not qualify provider SDKs on additional platforms.",
+        "Azurite requires an explicit API-version check bypass for SDK service version 2026-10-06. This does not qualify hosted identity, encryption, CRC64 framing, retention or HNS.",
+        "Block cancellation abandons uncommitted IDs and never deletes the existing committed blob."
       ],
       "operations": [
         {
           "featureId": "OBJ-01",
           "operation": "put",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "block-blob-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/azure.md."
+          ],
+          "implementations": ["packages/storage/src/azure/primitives.ts"],
+          "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@azure/storage-blob@12.34.0",
+              "apiVersion": "2026-10-06",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http-and-azurite",
+              "testId": "packages/storage/test/azure/storage.acceptance.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-02",
           "operation": "get",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "block-blob-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/azure.md."
+          ],
+          "implementations": ["packages/storage/src/azure/primitives.ts"],
+          "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@azure/storage-blob@12.34.0",
+              "apiVersion": "2026-10-06",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http-and-azurite",
+              "testId": "packages/storage/test/azure/storage.acceptance.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-03",
           "operation": "head",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "block-blob-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/azure.md."
+          ],
+          "implementations": ["packages/storage/src/azure/primitives.ts"],
+          "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@azure/storage-blob@12.34.0",
+              "apiVersion": "2026-10-06",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http-and-azurite",
+              "testId": "packages/storage/test/azure/storage.acceptance.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-04",
           "operation": "delete",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "block-blob-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/azure.md."
+          ],
+          "implementations": ["packages/storage/src/azure/primitives.ts"],
+          "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@azure/storage-blob@12.34.0",
+              "apiVersion": "2026-10-06",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http-and-azurite",
+              "testId": "packages/storage/test/azure/storage.acceptance.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-05",
           "operation": "listPage",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "block-blob-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/azure.md."
+          ],
+          "implementations": ["packages/storage/src/azure/primitives.ts"],
+          "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@azure/storage-blob@12.34.0",
+              "apiVersion": "2026-10-06",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http-and-azurite",
+              "testId": "packages/storage/test/azure/storage.acceptance.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "OBJ-06",
+          "operation": "native-copy-and-verified-move",
+          "configuration": "block-blob-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/azure.md."
+          ],
+          "implementations": ["packages/storage/src/azure/native.ts"],
+          "tests": ["packages/storage/test/azure/copy.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@azure/storage-blob@12.34.0",
+              "apiVersion": "2026-10-06",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http-and-azurite",
+              "testId": "packages/storage/test/azure/copy.test.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "OBJ-07",
+          "operation": "conditions",
+          "configuration": "block-blob-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/azure.md."
+          ],
+          "implementations": ["packages/storage/src/azure/primitives.ts"],
+          "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@azure/storage-blob@12.34.0",
+              "apiVersion": "2026-10-06",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http-and-azurite",
+              "testId": "packages/storage/test/azure/storage.acceptance.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "OBJ-08",
+          "operation": "ranges",
+          "configuration": "block-blob-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/azure.md."
+          ],
+          "implementations": ["packages/storage/src/azure/primitives.ts"],
+          "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@azure/storage-blob@12.34.0",
+              "apiVersion": "2026-10-06",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http-and-azurite",
+              "testId": "packages/storage/test/azure/storage.acceptance.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "OBJ-09",
+          "operation": "native-identity",
+          "configuration": "block-blob-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/azure.md."
+          ],
+          "implementations": ["packages/storage/src/azure/mapping.ts"],
+          "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@azure/storage-blob@12.34.0",
+              "apiVersion": "2026-10-06",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http-and-azurite",
+              "testId": "packages/storage/test/azure/storage.acceptance.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "SIG-01",
+          "operation": "signed-requests",
+          "configuration": "block-blob-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/azure.md."
+          ],
+          "implementations": ["packages/storage/src/azure/signing.ts"],
+          "tests": ["packages/storage/test/azure/signing.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@azure/storage-blob@12.34.0",
+              "apiVersion": "2026-10-06",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http-and-azurite",
+              "testId": "packages/storage/test/azure/signing.test.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "SIG-02",
+          "operation": "browser-grants",
+          "configuration": "block-blob-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/azure.md."
+          ],
+          "implementations": ["packages/storage/src/azure/signing.ts"],
+          "tests": ["packages/storage/test/azure/signing.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@azure/storage-blob@12.34.0",
+              "apiVersion": "2026-10-06",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http-and-azurite",
+              "testId": "packages/storage/test/azure/signing.test.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "SIG-03",
+          "operation": "public-delivery",
+          "configuration": "block-blob-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/azure.md."
+          ],
+          "implementations": ["packages/storage/src/azure.ts"],
+          "tests": ["packages/storage/test/native-urls.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@azure/storage-blob@12.34.0",
+              "apiVersion": "2026-10-06",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http-and-azurite",
+              "testId": "packages/storage/test/native-urls.test.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "XFR-01",
+          "operation": "managed-upload",
+          "configuration": "block-blob-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/azure.md.",
+            "Sequential native protocol chunks; workspace admission and requests share the existing engine. Full pinned SHA-256 readback follows native publication."
+          ],
+          "implementations": ["packages/storage/src/azure/blocks.ts"],
+          "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@azure/storage-blob@12.34.0",
+              "apiVersion": "2026-10-06",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http-and-azurite",
+              "testId": "packages/storage/test/azure/storage.acceptance.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "XFR-03",
+          "operation": "native-resume",
+          "configuration": "block-blob-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/azure.md.",
+            "Sequential native protocol chunks; workspace admission and requests share the existing engine. Full pinned SHA-256 readback follows native publication.",
+            "Aborting named blocks does not remove uncommitted bytes; provider expiry owns cleanup."
+          ],
+          "implementations": ["packages/storage/src/azure/blocks.ts"],
+          "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@azure/storage-blob@12.34.0",
+              "apiVersion": "2026-10-06",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http-and-azurite",
+              "testId": "packages/storage/test/azure/storage.acceptance.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "XFR-04",
+          "operation": "durable-upload",
+          "configuration": "block-blob-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/azure.md.",
+            "Sequential native protocol chunks; workspace admission and requests share the existing engine. Full pinned SHA-256 readback follows native publication.",
+            "Aborting named blocks does not remove uncommitted bytes; provider expiry owns cleanup."
+          ],
+          "implementations": ["packages/storage/src/azure/blocks.ts"],
+          "tests": ["packages/storage/test/provider/native-worker/run.mjs"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@azure/storage-blob@12.34.0",
+              "apiVersion": "2026-10-06",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http-and-azurite",
+              "testId": "packages/storage/test/provider/native-worker/run.mjs",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "XFR-05",
+          "operation": "pinned-download-recovery",
+          "configuration": "block-blob-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/azure.md."
+          ],
+          "implementations": ["packages/storage/src/azure/primitives.ts"],
+          "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@azure/storage-blob@12.34.0",
+              "apiVersion": "2026-10-06",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http-and-azurite",
+              "testId": "packages/storage/test/azure/storage.acceptance.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "INT-01",
+          "operation": "checksums",
+          "configuration": "block-blob-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/azure.md."
+          ],
+          "implementations": ["packages/storage/src/azure/primitives.ts"],
+          "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@azure/storage-blob@12.34.0",
+              "apiVersion": "2026-10-06",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http-and-azurite",
+              "testId": "packages/storage/test/azure/storage.acceptance.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "SEC-01",
+          "operation": "credentials",
+          "configuration": "block-blob-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/azure.md."
+          ],
+          "implementations": ["packages/storage/src/azure/config.ts"],
+          "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@azure/storage-blob@12.34.0",
+              "apiVersion": "2026-10-06",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http-and-azurite",
+              "testId": "packages/storage/test/azure/storage.acceptance.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "SEC-02",
+          "operation": "encryption",
+          "configuration": "block-blob-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
+            "Exact supported behavior and limits: docs/azure.md."
+          ],
+          "implementations": ["packages/storage/src/azure/config.ts"],
+          "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-7.md",
+              "sdkVersion": "@azure/storage-blob@12.34.0",
+              "apiVersion": "2026-10-06",
+              "runtime": "node-24.22.0",
+              "configuration": "controlled-sdk-http-and-azurite",
+              "testId": "packages/storage/test/azure/storage.acceptance.ts",
+              "limitations": [
+                "Hosted qualification pending; local protocol, signing and restart evidence only."
+              ]
+            }
+          ],
           "deferral": null
         }
       ]
