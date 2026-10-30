@@ -1,0 +1,33 @@
+name: Native GCS and Azure acceptance
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-local:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: effect-kit/.github/actions/setup@v1
+        with:
+          cache: pnpm
+      - name: Check SDK contracts and build
+        run: pnpm ci:check
+      - name: Run owned local protocols and process restarts
+        run: pnpm test:native:local
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: native-local
+          path: |
+            .artifacts/native-local.json
+            .artifacts/azure-local-tests.json
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 14

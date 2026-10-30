@@ -277,3 +277,11 @@ Local Darwin results do not certify those remote Ubuntu runners. This workflow w
 linted locally but not dispatched. Windows, hosted R2 and physical power-cut tests
 remain separate qualification work. The local R2 reset fixture must never be deployed
 against application data; the application example is a separate read-only Worker.
+
+`native-local.yml` is a manually dispatched GCS/Azure lane. It runs deterministic
+SDK contract checks, an owned loopback Azurite container and nine native process
+restart boundaries with encrypted checkpoints. It needs Docker and no cloud
+credentials. The pinned emulator explicitly bypasses its API-version check;
+report JSON records that limit. Upload only the two whitelisted local reports.
+Hosted GCS/Azure commands require owner-provided existing namespaces and credential
+setup; no hosted workflow or account provisioning is implicit in this local lane.
