@@ -176,8 +176,19 @@ export function planUpload(
           { _tag: "InvalidConfiguration", field: "native.limits" },
           "not-started",
         );
+      const fixed = native === "offset" ? endpoint.offsets?.limits.fixedChunkBytes : undefined;
+      if (
+        fixed !== undefined &&
+        (!Number.isSafeInteger(fixed) || fixed <= 0 || fixed > maxPart || fixed % alignment !== 0)
+      )
+        return yield* storageError(
+          "upload.plan",
+          provider,
+          { _tag: "InvalidConfiguration", field: "native.fixedChunkBytes" },
+          "not-started",
+        );
       partBytes =
-        (native === "offset" ? endpoint.offsets?.limits.fixedChunkBytes : undefined) ??
+        fixed ??
         Math.ceil(
           Math.max(policy.partBytes, Math.ceil((length ?? maximumBytes) / count)) / alignment,
         ) * alignment;

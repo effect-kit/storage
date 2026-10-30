@@ -895,11 +895,19 @@
       "title": "Resumable",
       "target": "GCS/Azure/tus/native protocols, checkpointing, offset/part reconciliation, source fingerprint",
       "completionPhase": 8,
-      "status": "planned",
-      "specifications": [],
-      "implementations": [],
-      "tests": [],
-      "examples": [],
+      "status": "in-progress",
+      "specifications": ["docs/transfers.md", "docs/supabase.md", "docs/vercel.md"],
+      "implementations": [
+        "packages/storage/src/gcs/resumable.ts",
+        "packages/storage/src/azure/blocks.ts",
+        "packages/storage/src/supabase/tus.ts"
+      ],
+      "tests": [
+        "packages/storage/test/gcs/sessions.test.ts",
+        "packages/storage/test/supabase/sessions.test.ts",
+        "packages/storage/test/vercel/multipart.test.ts"
+      ],
+      "examples": ["packages/storage/examples/supabase.mjs"],
       "evidence": [],
       "deferral": null
     },

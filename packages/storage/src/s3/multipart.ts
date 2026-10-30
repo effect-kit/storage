@@ -148,10 +148,22 @@ export function multipart(connection: S3Connection): S3MultipartUploads {
     initiate: Effect.fnUntraced(function* (input) {
       const value = yield* decodeRequest(Initiate, input, "initiate", "s3", true);
       if (value.headers) yield* validateHeaders(value.headers, "initiate");
-      const checksumAlgorithm = value.checksum?.ChecksumAlgorithm ?? "CRC32";
+      if (connection.multipartChecksums === false && value.checksum)
+        return yield* storageError(
+          "initiate",
+          "s3",
+          { _tag: "Unsupported", capability: "multipart-checksums" },
+          "not-started",
+        );
+      const checksumAlgorithm =
+        connection.multipartChecksums === false
+          ? undefined
+          : (value.checksum?.ChecksumAlgorithm ?? "CRC32");
       const checksumType =
-        value.checksum?.ChecksumType ??
-        (checksumAlgorithm === "CRC64NVME" ? "FULL_OBJECT" : "COMPOSITE");
+        connection.multipartChecksums === false
+          ? undefined
+          : (value.checksum?.ChecksumType ??
+            (checksumAlgorithm === "CRC64NVME" ? "FULL_OBJECT" : "COMPOSITE"));
       const output = yield* request(connection, "initiate", true, (signal) =>
         client.send(
           new CreateMultipartUploadCommand({

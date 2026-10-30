@@ -35,3 +35,5 @@ void transfers;
 void [preserved, missing, multipart, missingPartError, base, S3Signing.layer, S3Post.layer];
 
 void UploadSessions.make({ configurationId: "consumer" });
+
+export { SupabaseS3Storage } from "@effect-kit/storage/supabase/s3";

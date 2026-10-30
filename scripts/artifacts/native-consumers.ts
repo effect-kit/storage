@@ -1,9 +1,11 @@
 /* oxlint-disable no-await-in-loop -- Each isolated consumer changes its installed manifest and type-check configuration in sequence. */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { copyFile, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { copyFile, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+
+import { build } from "vite";
 
 /** Each native provider is checked in a fresh install containing only its chosen peers. */
 export async function checkNativeConsumers(archive: string): Promise<void> {
@@ -22,6 +24,8 @@ export async function checkNativeConsumers(archive: string): Promise<void> {
   for (const [provider, sdk] of [
     ["gcs", "@google-cloud/storage"],
     ["azure", "@azure/storage-blob"],
+    ["supabase", undefined],
+    ["vercel", "@vercel/blob"],
   ] as const) {
     const temporary = await mkdtemp(join(tmpdir(), `storage-${provider}-consumer-`));
     const run = (command: string, args: string[]) =>
@@ -31,8 +35,8 @@ export async function checkNativeConsumers(archive: string): Promise<void> {
         env: { ...process.env, npm_config_offline: "true" },
       });
     try {
-      const version = library.peerDependencies[sdk];
-      assert(version);
+      const version = sdk ? library.peerDependencies[sdk] : undefined;
+      if (sdk) assert(version);
       await writeFile(
         join(temporary, "package.json"),
         JSON.stringify({
@@ -41,7 +45,7 @@ export async function checkNativeConsumers(archive: string): Promise<void> {
           dependencies: {
             "@effect-kit/storage": `file:${archive}`,
             effect: effect.version,
-            [sdk]: version.replace(/^\^/u, ""),
+            ...(sdk && version ? { [sdk]: version.replace(/^\^/u, "") } : {}),
           },
           devDependencies: { typescript: typescript.version, "@types/node": node.version },
         }),
@@ -80,6 +84,37 @@ export async function checkNativeConsumers(archive: string): Promise<void> {
         run(process.execPath, ["node_modules/typescript/bin/tsc", "-p", "tsconfig.json"]);
       }
       run(process.execPath, ["consumer.mjs"]);
+      if (provider === "supabase" || provider === "vercel") {
+        const source =
+          provider === "supabase"
+            ? 'import { SupabaseStorage } from "@effect-kit/storage/supabase"; globalThis.storageBrowserProbe = typeof SupabaseStorage.layer;'
+            : 'import { VercelClient } from "@effect-kit/storage/vercel/client"; globalThis.storageBrowserProbe = typeof VercelClient.upload;';
+        const entry = join(temporary, "browser-probe.js");
+        const outDir = join(temporary, "browser");
+        await writeFile(entry, source);
+        await build({
+          root: temporary,
+          configFile: false,
+          logLevel: "silent",
+          build: {
+            outDir,
+            emptyOutDir: true,
+            minify: false,
+            lib: {
+              entry,
+              formats: ["iife"],
+              name: "StorageBrowserProbe",
+              fileName: () => "probe.js",
+            },
+          },
+        });
+        const files = await readdir(outDir);
+        assert(files.includes("probe.js"));
+        const bundled = await readFile(join(outDir, "probe.js"), "utf8");
+        assert(!bundled.includes("__vite-browser-external"));
+        assert(!/from ["']node:|require\(["']node:/u.test(bundled));
+        await writeFile(resolve(`.artifacts/app-browser-${provider}.js`), bundled);
+      }
     } finally {
       await rm(temporary, { recursive: true, force: true });
     }

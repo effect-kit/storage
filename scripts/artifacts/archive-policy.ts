@@ -7,6 +7,7 @@ const Manifest = Schema.Struct({
   main: Schema.Literal("./dist/index.js"),
   types: Schema.Literal("./dist/index.d.ts"),
   peerDependencies: Schema.Struct({
+    "@vercel/blob": Schema.String,
     "@effect/platform-node": Schema.NonEmptyString,
     "@effect/platform-bun": Schema.NonEmptyString,
     "@effect/platform-deno": Schema.NonEmptyString,
@@ -20,6 +21,7 @@ const Manifest = Schema.Struct({
     "@aws-sdk/s3-presigned-post": Schema.NonEmptyString,
   }),
   peerDependenciesMeta: Schema.Struct({
+    "@vercel/blob": Schema.Struct({ optional: Schema.Literal(true) }),
     "@effect/platform-browser": Schema.Struct({ optional: Schema.Literal(true) }),
     "@effect/platform-deno": Schema.Struct({ optional: Schema.Literal(true) }),
     "@effect/platform-bun": Schema.Struct({ optional: Schema.Literal(true) }),
@@ -32,6 +34,34 @@ const Manifest = Schema.Struct({
     "@aws-sdk/s3-presigned-post": Schema.Struct({ optional: Schema.Literal(true) }),
   }),
   exports: Schema.Struct({
+    "./supabase": Schema.Struct({
+      types: Schema.Literal("./dist/supabase.d.ts"),
+      import: Schema.Literal("./dist/supabase.js"),
+    }),
+    "./supabase/signing": Schema.Struct({
+      types: Schema.Literal("./dist/supabase/signing.d.ts"),
+      import: Schema.Literal("./dist/supabase/signing.js"),
+    }),
+    "./supabase/s3": Schema.Struct({
+      types: Schema.Literal("./dist/supabase/s3.d.ts"),
+      import: Schema.Literal("./dist/supabase/s3.js"),
+    }),
+    "./vercel": Schema.Struct({
+      types: Schema.Literal("./dist/vercel.d.ts"),
+      import: Schema.Literal("./dist/vercel.js"),
+    }),
+    "./vercel/signing": Schema.Struct({
+      types: Schema.Literal("./dist/vercel/signing.d.ts"),
+      import: Schema.Literal("./dist/vercel/signing.js"),
+    }),
+    "./vercel/client": Schema.Struct({
+      types: Schema.Literal("./dist/vercel/client.d.ts"),
+      import: Schema.Literal("./dist/vercel/client.js"),
+    }),
+    "./vercel/uploads": Schema.Struct({
+      types: Schema.Literal("./dist/vercel/uploads.d.ts"),
+      import: Schema.Literal("./dist/vercel/uploads.js"),
+    }),
     ".": Schema.Struct({
       types: Schema.Literal("./dist/index.d.ts"),
       import: Schema.Literal("./dist/index.js"),

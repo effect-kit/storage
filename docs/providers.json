@@ -2771,75 +2771,220 @@
       "name": "Supabase Storage",
       "transport": "Effect HttpClient REST + optional tus",
       "implementationPhase": 8,
-      "implementation": "planned",
-      "runtimes": ["node"],
-      "sources": ["https://supabase.com/docs/guides/storage/security/access-control"],
+      "implementation": "implemented",
+      "runtimes": ["node-24.22.0"],
+      "sources": [
+        "https://supabase.com/docs/guides/storage/security/access-control",
+        "docs/supabase.md",
+        "docs/evidence/phase-8.md"
+      ],
       "notes": [
-        "JWT/RLS and privileged S3/service credentials are explicit separate authority paths."
+        "JWT/RLS and privileged S3/service credentials are explicit separate authority paths.",
+        "Local owned HTTP/SDK evidence only; hosted RLS, cloud grants, CDN and OIDC remain unqualified.",
+        "Native REST preserves same-response metadata; tus uses fixed 6 MiB chunks and protected exclusive-owner checkpoints. Explicit S3 profile requires its own AWS client and authority."
       ],
       "operations": [
         {
           "featureId": "OBJ-01",
           "operation": "put",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "native-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Exact behavior and limitations: docs/supabase.md.",
+            "Hosted qualification pending; loopback fixtures do not establish provider guarantees."
+          ],
+          "implementations": ["packages/storage/src/supabase/primitives.ts"],
+          "tests": ["packages/storage/test/supabase/storage.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-8.md",
+              "sdkVersion": null,
+              "apiVersion": "Storage REST v1",
+              "runtime": "node-24.22.0",
+              "configuration": "owned-loopback",
+              "testId": "packages/storage/test/supabase/storage.test.ts",
+              "limitations": ["No hosted account/store authority, RLS or cache qualification."]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-02",
           "operation": "get",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "native-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Exact behavior and limitations: docs/supabase.md.",
+            "Hosted qualification pending; loopback fixtures do not establish provider guarantees."
+          ],
+          "implementations": ["packages/storage/src/supabase/primitives.ts"],
+          "tests": ["packages/storage/test/supabase/storage.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-8.md",
+              "sdkVersion": null,
+              "apiVersion": "Storage REST v1",
+              "runtime": "node-24.22.0",
+              "configuration": "owned-loopback",
+              "testId": "packages/storage/test/supabase/storage.test.ts",
+              "limitations": ["No hosted account/store authority, RLS or cache qualification."]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-03",
           "operation": "head",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "native-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Exact behavior and limitations: docs/supabase.md.",
+            "Hosted qualification pending; loopback fixtures do not establish provider guarantees."
+          ],
+          "implementations": ["packages/storage/src/supabase/primitives.ts"],
+          "tests": ["packages/storage/test/supabase/storage.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-8.md",
+              "sdkVersion": null,
+              "apiVersion": "Storage REST v1",
+              "runtime": "node-24.22.0",
+              "configuration": "owned-loopback",
+              "testId": "packages/storage/test/supabase/storage.test.ts",
+              "limitations": ["No hosted account/store authority, RLS or cache qualification."]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-04",
           "operation": "delete",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "native-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Exact behavior and limitations: docs/supabase.md.",
+            "Hosted qualification pending; loopback fixtures do not establish provider guarantees."
+          ],
+          "implementations": ["packages/storage/src/supabase/primitives.ts"],
+          "tests": ["packages/storage/test/supabase/storage.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-8.md",
+              "sdkVersion": null,
+              "apiVersion": "Storage REST v1",
+              "runtime": "node-24.22.0",
+              "configuration": "owned-loopback",
+              "testId": "packages/storage/test/supabase/storage.test.ts",
+              "limitations": ["No hosted account/store authority, RLS or cache qualification."]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-05",
           "operation": "listPage",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
+          "configuration": "native-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Exact behavior and limitations: docs/supabase.md.",
+            "Hosted qualification pending; loopback fixtures do not establish provider guarantees."
+          ],
+          "implementations": ["packages/storage/src/supabase/primitives.ts"],
+          "tests": ["packages/storage/test/supabase/storage.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-8.md",
+              "sdkVersion": null,
+              "apiVersion": "Storage REST v1",
+              "runtime": "node-24.22.0",
+              "configuration": "owned-loopback",
+              "testId": "packages/storage/test/supabase/storage.test.ts",
+              "limitations": ["No hosted account/store authority, RLS or cache qualification."]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "SIG-01",
+          "operation": "native-signing",
+          "configuration": "native-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Exact provider constraints: docs/supabase.md.",
+            "Hosted semantics remain unqualified."
+          ],
+          "implementations": ["packages/storage/src/supabase/signing.ts"],
+          "tests": ["packages/storage/test/supabase/storage.test.ts"],
+          "evidence": [],
+          "deferral": null
+        },
+        {
+          "featureId": "SIG-02",
+          "operation": "upload-grants",
+          "configuration": "native-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Exact provider constraints: docs/supabase.md.",
+            "Hosted semantics remain unqualified."
+          ],
+          "implementations": ["packages/storage/src/supabase/signing.ts"],
+          "tests": ["packages/storage/test/supabase/storage.test.ts"],
+          "evidence": [],
+          "deferral": null
+        },
+        {
+          "featureId": "XFR-03",
+          "operation": "native-resume",
+          "configuration": "native-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Exact provider constraints: docs/supabase.md.",
+            "Hosted semantics remain unqualified."
+          ],
+          "implementations": ["packages/storage/src/supabase/tus.ts"],
+          "tests": ["packages/storage/test/supabase/sessions.test.ts"],
+          "evidence": [],
+          "deferral": null
+        },
+        {
+          "featureId": "XFR-04",
+          "operation": "durable-upload",
+          "configuration": "native-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Exact provider constraints: docs/supabase.md.",
+            "Hosted semantics remain unqualified."
+          ],
+          "implementations": ["packages/storage/src/supabase/tus.ts"],
+          "tests": ["packages/storage/test/supabase/sessions.test.ts"],
           "evidence": [],
           "deferral": null
         }
@@ -2850,73 +2995,218 @@
       "name": "Vercel Blob",
       "transport": "@vercel/blob",
       "implementationPhase": 8,
-      "implementation": "planned",
-      "runtimes": ["node"],
-      "sources": ["https://vercel.com/docs/vercel-blob/using-blob-sdk"],
-      "notes": ["SDK normalizes 206 to 200; range handling must inspect Content-Range."],
+      "implementation": "implemented",
+      "runtimes": ["node-24.22.0"],
+      "sources": [
+        "https://vercel.com/docs/vercel-blob/using-blob-sdk",
+        "docs/vercel.md",
+        "docs/evidence/phase-8.md"
+      ],
+      "notes": [
+        "SDK normalizes 206 to 200; range handling must inspect Content-Range.",
+        "Local owned HTTP/SDK evidence only; hosted RLS, cloud grants, CDN and OIDC remain unqualified.",
+        "SDK 2.8.2 requires VERCEL_BLOB_RETRIES=0; no public multipart inventory/abort or durable upload codec. Public delivery may remain cached."
+      ],
       "operations": [
         {
           "featureId": "OBJ-01",
           "operation": "put",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "native-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Exact behavior and limitations: docs/vercel.md.",
+            "Hosted qualification pending; loopback fixtures do not establish provider guarantees."
+          ],
+          "implementations": ["packages/storage/src/vercel/primitives.ts"],
+          "tests": ["packages/storage/test/vercel/storage.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-8.md",
+              "sdkVersion": "@vercel/blob@2.8.2",
+              "apiVersion": "Blob API 13",
+              "runtime": "node-24.22.0",
+              "configuration": "owned-loopback",
+              "testId": "packages/storage/test/vercel/storage.test.ts",
+              "limitations": ["No hosted account/store authority, RLS or cache qualification."]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-02",
           "operation": "get",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "native-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Exact behavior and limitations: docs/vercel.md.",
+            "Hosted qualification pending; loopback fixtures do not establish provider guarantees."
+          ],
+          "implementations": ["packages/storage/src/vercel/primitives.ts"],
+          "tests": ["packages/storage/test/vercel/storage.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-8.md",
+              "sdkVersion": "@vercel/blob@2.8.2",
+              "apiVersion": "Blob API 13",
+              "runtime": "node-24.22.0",
+              "configuration": "owned-loopback",
+              "testId": "packages/storage/test/vercel/storage.test.ts",
+              "limitations": ["No hosted account/store authority, RLS or cache qualification."]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-03",
           "operation": "head",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "native-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Exact behavior and limitations: docs/vercel.md.",
+            "Hosted qualification pending; loopback fixtures do not establish provider guarantees."
+          ],
+          "implementations": ["packages/storage/src/vercel/primitives.ts"],
+          "tests": ["packages/storage/test/vercel/storage.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-8.md",
+              "sdkVersion": "@vercel/blob@2.8.2",
+              "apiVersion": "Blob API 13",
+              "runtime": "node-24.22.0",
+              "configuration": "owned-loopback",
+              "testId": "packages/storage/test/vercel/storage.test.ts",
+              "limitations": ["No hosted account/store authority, RLS or cache qualification."]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-04",
           "operation": "delete",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
-          "evidence": [],
+          "configuration": "native-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Exact behavior and limitations: docs/vercel.md.",
+            "Hosted qualification pending; loopback fixtures do not establish provider guarantees."
+          ],
+          "implementations": ["packages/storage/src/vercel/primitives.ts"],
+          "tests": ["packages/storage/test/vercel/storage.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-8.md",
+              "sdkVersion": "@vercel/blob@2.8.2",
+              "apiVersion": "Blob API 13",
+              "runtime": "node-24.22.0",
+              "configuration": "owned-loopback",
+              "testId": "packages/storage/test/vercel/storage.test.ts",
+              "limitations": ["No hosted account/store authority, RLS or cache qualification."]
+            }
+          ],
           "deferral": null
         },
         {
           "featureId": "OBJ-05",
           "operation": "listPage",
-          "configuration": "unqualified",
-          "runtime": "node",
-          "support": "unknown",
-          "status": "research-needed",
-          "constraints": [],
-          "implementations": [],
-          "tests": [],
+          "configuration": "native-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Exact behavior and limitations: docs/vercel.md.",
+            "Hosted qualification pending; loopback fixtures do not establish provider guarantees."
+          ],
+          "implementations": ["packages/storage/src/vercel/primitives.ts"],
+          "tests": ["packages/storage/test/vercel/storage.test.ts"],
+          "evidence": [
+            {
+              "kind": "local-protocol",
+              "date": "2026-10-30",
+              "source": "docs/evidence/phase-8.md",
+              "sdkVersion": "@vercel/blob@2.8.2",
+              "apiVersion": "Blob API 13",
+              "runtime": "node-24.22.0",
+              "configuration": "owned-loopback",
+              "testId": "packages/storage/test/vercel/storage.test.ts",
+              "limitations": ["No hosted account/store authority, RLS or cache qualification."]
+            }
+          ],
+          "deferral": null
+        },
+        {
+          "featureId": "SIG-01",
+          "operation": "native-signing",
+          "configuration": "native-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Exact provider constraints: docs/vercel.md.",
+            "Hosted semantics remain unqualified."
+          ],
+          "implementations": ["packages/storage/src/vercel/signing.ts"],
+          "tests": ["packages/storage/test/vercel/storage.test.ts"],
+          "evidence": [],
+          "deferral": null
+        },
+        {
+          "featureId": "SIG-02",
+          "operation": "upload-grants",
+          "configuration": "native-default",
+          "runtime": "node-24.22.0",
+          "support": "native",
+          "status": "implemented-not-live-verified",
+          "constraints": [
+            "Exact provider constraints: docs/vercel.md.",
+            "Hosted semantics remain unqualified."
+          ],
+          "implementations": ["packages/storage/src/vercel/signing.ts"],
+          "tests": ["packages/storage/test/vercel/storage.test.ts"],
+          "evidence": [],
+          "deferral": null
+        },
+        {
+          "featureId": "XFR-03",
+          "operation": "native-resume",
+          "configuration": "native-default",
+          "runtime": "node-24.22.0",
+          "support": "unavailable",
+          "status": "unsupported-adapter",
+          "constraints": [
+            "No public multipart inventory/abort; fail durable admission before initiation."
+          ],
+          "implementations": ["packages/storage/src/vercel/multipart.ts"],
+          "tests": ["packages/storage/test/vercel/multipart.test.ts"],
+          "evidence": [],
+          "deferral": null
+        },
+        {
+          "featureId": "XFR-04",
+          "operation": "durable-upload",
+          "configuration": "native-default",
+          "runtime": "node-24.22.0",
+          "support": "unavailable",
+          "status": "unsupported-adapter",
+          "constraints": [
+            "No public multipart inventory/abort; fail durable admission before initiation."
+          ],
+          "implementations": ["packages/storage/src/vercel/multipart.ts"],
+          "tests": ["packages/storage/test/vercel/multipart.test.ts"],
           "evidence": [],
           "deferral": null
         }

@@ -129,3 +129,20 @@ Signing is explicit through `/gcs/signing`, `/gcs/post`, or `/azure/signing`.
 [Azure](../../docs/azure.md) and [phase 7 evidence](../../docs/evidence/phase-7.md) guides
 for authority, protocol, cleanup, runtime and hosted-qualification limits.
 `pnpm test:native:local` needs Docker and no cloud account.
+
+## Supabase and Vercel
+
+`/supabase` supplies native REST Storage without SDK peers. Explicit user/service
+credentials preserve authority; opt-in tus adds fixed-chunk transfers and protected
+restartable sessions. `/supabase/signing` supplies native download/upload grants;
+`/supabase/s3` is a separate AWS-client profile with explicit S3 credential modes.
+
+`/vercel` uses the optional official `@vercel/blob` peer. Configure public/private
+store identity and disable SDK retries with `VERCEL_BLOB_RETRIES=0`. Native signing,
+constrained upload grants, browser SDK uploads and authenticated server callbacks
+have focused `/vercel/signing`, `/vercel/client` and `/vercel/uploads` entry points.
+Multipart inventory/abort is unavailable; durable Vercel uploads fail before initiation.
+
+See [Supabase setup](../../docs/supabase.md), [Vercel setup](../../docs/vercel.md),
+[examples](../../docs/app-storage-examples.md) and [phase 8 evidence](../../docs/evidence/phase-8.md).
+These adapters have local protocol evidence; hosted RLS/CDN/OIDC qualification remains pending.

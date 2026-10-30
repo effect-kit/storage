@@ -72,6 +72,9 @@ export type ResolvedS3Config = Omit<
 };
 
 export interface S3Connection {
+  /** Compatibility transports may lack the optional S3 checksum read extension. */
+  readonly readChecksums?: false;
+  readonly multipartChecksums?: false;
   readonly client: S3Client;
   readonly config: ResolvedS3Config;
 }

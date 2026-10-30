@@ -253,3 +253,15 @@ blob and cannot promise immediate uncommitted-block reclamation. GCS abort cance
 the known native session; unknown initiation still requires orphan discovery.
 `pnpm test:native:local` verifies nine SIGKILL/restart boundaries using the production
 protected file store. See [phase 7 evidence](evidence/phase-7.md) for exact limits.
+
+Supabase tus reuses offset checkpoints through `/supabase`. Completion metadata is
+resolved in a separately budgeted request and verification retains the commit
+receipt's validator. Reconciliation cannot adopt another writer's object merely
+because its bytes match. A finished URL that has disappeared can be reconciled
+only through the saved operation marker and size, followed by pinned verification.
+`pnpm test:app:local` covers five actual tus SIGKILL/restart boundaries.
+
+Vercel does not supply an upload handle codec: its public SDK lacks the inventory
+needed for safe crash recovery. Durable upload admission fails before initiation;
+in-process multipart cancellation reports remote cleanup limitations. See the
+[Supabase](supabase.md) and [Vercel](vercel.md) guides for exact profiles.

@@ -301,20 +301,28 @@ export const reconcileUpload = Effect.fnUntraced(function* (
         orElse: () => Effect.fail(sessionError("ReconciliationTimeout", true)),
       }),
     );
-    if (remote._tag === "Completed")
-      return yield* store.write(
-        { ...original, state: "verifying", metadata: remote.metadata },
-        original.revision,
-      );
+    if (remote._tag === "Completed") {
+      const metadata = runtime.endpoint.offsets.resolveCompletion
+        ? yield* runtime.cleanupRequest(runtime.endpoint.offsets.resolveCompletion(handle)).pipe(
+            Effect.timeoutOrElse({
+              duration: runtime.policy.cleanupTimeoutMillis,
+              orElse: () => Effect.fail(sessionError("ReconciliationTimeout", true)),
+            }),
+          )
+        : remote.metadata;
+      return yield* store.write({ ...original, state: "verifying", metadata }, original.revision);
+    }
     if (remote._tag === "Uploading")
       return yield* store.write(
         { ...original, state: "uploading", offset: remote.committedOffset },
         original.revision,
       );
-    return yield* sessionError(
-      remote._tag === "Expired" ? "SessionExpired" : "ReconciliationRequired",
-      true,
-    );
+    // Some tus servers remove a finished URL. Only the saved operation marker can recover that completion.
+    if (remote._tag !== "Expired" || !runtime.endpoint.reconcile)
+      return yield* sessionError(
+        remote._tag === "Expired" ? "SessionExpired" : "ReconciliationRequired",
+        true,
+      );
   }
   // An unknown initiation has no safely observed handle. Never adopt an upload by key alone.
   if (original.state === "initiating" || !runtime.endpoint.reconcile)

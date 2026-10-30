@@ -31,3 +31,6 @@ await Effect.runPromise(
     }),
   ),
 );
+
+const { SupabaseS3Storage } = await import("@effect-kit/storage/supabase/s3");
+assert(SupabaseS3Storage.layer);

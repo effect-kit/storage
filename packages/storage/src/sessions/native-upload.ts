@@ -187,6 +187,7 @@ export const runNativeUpload = Effect.fnUntraced(function* <E, R>(
             target: { write: () => Effect.void },
           },
           operation,
+          metadata,
         );
         yield* save({
           ...checkpoint,

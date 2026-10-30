@@ -123,6 +123,41 @@
       "workspace-source": "./src/gcs/post.ts",
       "types": "./dist/gcs/post.d.ts",
       "default": "./dist/gcs/post.js"
+    },
+    "./supabase": {
+      "workspace-source": "./src/supabase.ts",
+      "types": "./dist/supabase.d.ts",
+      "default": "./dist/supabase.js"
+    },
+    "./supabase/signing": {
+      "workspace-source": "./src/supabase/signing.ts",
+      "types": "./dist/supabase/signing.d.ts",
+      "default": "./dist/supabase/signing.js"
+    },
+    "./vercel": {
+      "workspace-source": "./src/vercel.ts",
+      "types": "./dist/vercel.d.ts",
+      "default": "./dist/vercel.js"
+    },
+    "./vercel/signing": {
+      "workspace-source": "./src/vercel/signing.ts",
+      "types": "./dist/vercel/signing.d.ts",
+      "default": "./dist/vercel/signing.js"
+    },
+    "./supabase/s3": {
+      "workspace-source": "./src/supabase/s3.ts",
+      "types": "./dist/supabase/s3.d.ts",
+      "default": "./dist/supabase/s3.js"
+    },
+    "./vercel/uploads": {
+      "workspace-source": "./src/vercel/uploads.ts",
+      "types": "./dist/vercel/uploads.d.ts",
+      "default": "./dist/vercel/uploads.js"
+    },
+    "./vercel/client": {
+      "workspace-source": "./src/vercel/client.ts",
+      "types": "./dist/vercel/client.d.ts",
+      "default": "./dist/vercel/client.js"
     }
   },
   "publishConfig": {
@@ -203,6 +238,34 @@
       "./gcs/post": {
         "types": "./dist/gcs/post.d.ts",
         "import": "./dist/gcs/post.js"
+      },
+      "./supabase": {
+        "types": "./dist/supabase.d.ts",
+        "import": "./dist/supabase.js"
+      },
+      "./supabase/signing": {
+        "types": "./dist/supabase/signing.d.ts",
+        "import": "./dist/supabase/signing.js"
+      },
+      "./vercel": {
+        "types": "./dist/vercel.d.ts",
+        "import": "./dist/vercel.js"
+      },
+      "./vercel/signing": {
+        "types": "./dist/vercel/signing.d.ts",
+        "import": "./dist/vercel/signing.js"
+      },
+      "./supabase/s3": {
+        "types": "./dist/supabase/s3.d.ts",
+        "import": "./dist/supabase/s3.js"
+      },
+      "./vercel/uploads": {
+        "types": "./dist/vercel/uploads.d.ts",
+        "import": "./dist/vercel/uploads.js"
+      },
+      "./vercel/client": {
+        "types": "./dist/vercel/client.d.ts",
+        "import": "./dist/vercel/client.js"
       }
     },
     "access": "public",
@@ -235,6 +298,7 @@
     "@effect/platform-node": "catalog:",
     "@effect/vitest": "catalog:",
     "@google-cloud/storage": "catalog:",
+    "@vercel/blob": "catalog:",
     "effect": "catalog:",
     "klarity": "catalog:",
     "redis": "catalog:",
@@ -253,6 +317,7 @@
     "@effect/platform-deno": "^4.1.0",
     "@effect/platform-node": "^4.1.0",
     "@google-cloud/storage": "^8.4.0",
+    "@vercel/blob": "^2.8.2",
     "effect": "^4.1.0"
   },
   "peerDependenciesMeta": {
@@ -284,6 +349,9 @@
       "optional": true
     },
     "@azure/identity": {
+      "optional": true
+    },
+    "@vercel/blob": {
       "optional": true
     }
   },

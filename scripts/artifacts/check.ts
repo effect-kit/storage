@@ -144,6 +144,8 @@ try {
           "explicit S3/signing/POST peers and packed public contracts",
           "isolated GCS SDK-only runtime and NodeNext/Bundler declarations",
           "isolated Azure SDK-only runtime without identity and NodeNext/Bundler declarations",
+          "SDK-free Supabase native consumer and explicit Supabase S3 AWS peer",
+          "isolated Vercel SDK-only server/client/handler NodeNext and Bundler consumers",
           "SDK-free managed transfer runtime and source/sink E/R declarations",
           "isolated core transfer construction and provider-supplied S3 driver",
           "SDK-free protected session runtime and source/event/batch E/R contracts",
@@ -154,7 +156,7 @@ try {
     )}\n`,
   );
   console.log(
-    "Packed core/testing/transfers pass without SDK peers; S3, GCS and Azure consumers pass with their explicit peers.",
+    "Packed core/testing/transfers pass without SDK peers; S3, GCS, Azure, Supabase and Vercel consumers pass with their explicit peers.",
   );
 } catch (error) {
   if (error !== null && typeof error === "object" && "stderr" in error) {

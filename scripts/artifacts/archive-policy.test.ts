@@ -10,6 +10,7 @@ const manifest = {
   main: "./dist/index.js",
   types: "./dist/index.d.ts",
   peerDependencies: {
+    "@vercel/blob": "^2.8.2",
     "@effect/platform-node": "^4.1.0",
     "@effect/platform-bun": "^4.1.0",
     "@effect/platform-deno": "^4.1.0",
@@ -23,6 +24,7 @@ const manifest = {
     "@aws-sdk/s3-presigned-post": "^3.1159.0",
   },
   peerDependenciesMeta: {
+    "@vercel/blob": { optional: true },
     "@effect/platform-browser": { optional: true },
     "@effect/platform-deno": { optional: true },
     "@effect/platform-bun": { optional: true },
@@ -35,6 +37,16 @@ const manifest = {
     "@aws-sdk/s3-presigned-post": { optional: true },
   },
   exports: {
+    "./supabase": { types: "./dist/supabase.d.ts", import: "./dist/supabase.js" },
+    "./supabase/signing": {
+      types: "./dist/supabase/signing.d.ts",
+      import: "./dist/supabase/signing.js",
+    },
+    "./supabase/s3": { types: "./dist/supabase/s3.d.ts", import: "./dist/supabase/s3.js" },
+    "./vercel": { types: "./dist/vercel.d.ts", import: "./dist/vercel.js" },
+    "./vercel/signing": { types: "./dist/vercel/signing.d.ts", import: "./dist/vercel/signing.js" },
+    "./vercel/client": { types: "./dist/vercel/client.d.ts", import: "./dist/vercel/client.js" },
+    "./vercel/uploads": { types: "./dist/vercel/uploads.d.ts", import: "./dist/vercel/uploads.js" },
     ".": { types: "./dist/index.d.ts", import: "./dist/index.js" },
     "./testing": { types: "./dist/testing.d.ts", import: "./dist/testing.js" },
     "./node": { types: "./dist/node.d.ts", import: "./dist/node.js" },
@@ -58,6 +70,20 @@ const manifest = {
   },
 };
 const entries = [
+  "package/dist/supabase.js",
+  "package/dist/supabase.d.ts",
+  "package/dist/supabase/signing.js",
+  "package/dist/supabase/signing.d.ts",
+  "package/dist/supabase/s3.js",
+  "package/dist/supabase/s3.d.ts",
+  "package/dist/vercel.js",
+  "package/dist/vercel.d.ts",
+  "package/dist/vercel/signing.js",
+  "package/dist/vercel/signing.d.ts",
+  "package/dist/vercel/client.js",
+  "package/dist/vercel/client.d.ts",
+  "package/dist/vercel/uploads.js",
+  "package/dist/vercel/uploads.d.ts",
   "package/package.json",
   "package/README.md",
   "package/LICENSE",
@@ -172,7 +198,10 @@ test("missing runtime/declarations/license and development exports fail", () => 
       checkArchive(
         {
           ...manifest,
-          exports: { ...manifest.exports, [removed]: manifest.exports["./node"] },
+          exports: {
+            ...manifest.exports,
+            [removed]: manifest.exports["./node"],
+          },
         },
         entries,
       ),

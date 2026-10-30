@@ -98,3 +98,8 @@ Apache-2.0. Each published package includes its own LICENSE.
 
 Native provider guides: [Google Cloud Storage](docs/gcs.md), [Azure Blob](docs/azure.md),
 and [phase 7 evidence](docs/evidence/phase-7.md).
+
+Supabase and Vercel adapters: [Supabase](docs/supabase.md), [Vercel Blob](docs/vercel.md),
+[runnable examples](docs/app-storage-examples.md), and [phase 8 evidence](docs/evidence/phase-8.md).
+Use `pnpm test:app:local` for packed browser module probes and tus process restarts;
+`pnpm test:app:hosted` requires explicit existing provider resources and test authority.

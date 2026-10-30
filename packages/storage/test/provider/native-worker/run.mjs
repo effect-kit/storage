@@ -8,6 +8,7 @@ import { AzureStorage } from "../../../dist/azure.js";
 import { GcsStorage } from "../../../dist/gcs.js";
 import * as Runtime from "../../../dist/node.js";
 import { UploadSessions, UploadSessionStore } from "../../../dist/sessions.js";
+import { SupabaseStorage } from "../../../dist/supabase.js";
 import { TransferDriver, Transfers, UploadSource } from "../../../dist/transfers.js";
 
 const [provider, endpoint, directory, command, boundary = ""] = process.argv.slice(2);
@@ -27,25 +28,35 @@ const crash = (name) =>
       })
     : Effect.void;
 const guard = (name, effect) => effect.pipe(Effect.tap(() => crash(name)));
-const size = 600000;
+const size = provider === "supabase" ? 7 * 1024 ** 2 : 600000;
 const source = UploadSource.bytes(new Uint8Array(size).fill(19));
 await Effect.runPromise(
   Effect.scoped(
     Effect.gen(function* () {
-      const native =
-        provider === "gcs"
-          ? GcsStorage.layer({
-              bucket: "test-bucket",
-              apiEndpoint: endpoint,
-              useAuthWithCustomEndpoint: false,
-            })
-          : AzureStorage.layer({
-              containerUrl: endpoint,
-              credential: new StorageSharedKeyCredential(
-                "storagephase",
-                Buffer.from("disposable-local-emulator-key-32").toString("base64"),
-              ),
-            });
+      let native;
+      if (provider === "gcs")
+        native = GcsStorage.layer({
+          bucket: "test-bucket",
+          apiEndpoint: endpoint,
+          useAuthWithCustomEndpoint: false,
+        });
+      else if (provider === "azure")
+        native = AzureStorage.layer({
+          containerUrl: endpoint,
+          credential: new StorageSharedKeyCredential(
+            "storagephase",
+            Buffer.from("disposable-local-emulator-key-32").toString("base64"),
+          ),
+        });
+      else if (provider === "supabase")
+        native = SupabaseStorage.layer({
+          url: endpoint,
+          bucket: "bucket",
+          storeId: "supabase:local-restart",
+          auth: { mode: "user", token: Redacted.make("local-user") },
+          resumable: true,
+        });
+      else throw new Error("Unknown local provider");
       const context = yield* Layer.build(native);
       const driver = Context.get(context, TransferDriver);
       if (provider === "azure" && (command === "crash" || command === "example-setup"))
@@ -107,9 +118,9 @@ await Effect.runPromise(
       const managed = yield* Layer.build(
         Transfers.layer({
           partBytes: 256 * 1024,
-          maxBytes: 1024 * 1024,
+          maxBytes: provider === "supabase" ? 10 * 1024 ** 2 : 1024 * 1024,
           maxSourceChunkBytes: 1024 * 1024,
-          memoryBudgetBytes: 8 * 1024 * 1024,
+          memoryBudgetBytes: provider === "supabase" ? 40 * 1024 ** 2 : 8 * 1024 * 1024,
         }),
       ).pipe(Effect.provide(context.pipe(Context.add(TransferDriver, traced))));
       const sessions = yield* UploadSessions.make({ configurationId: "native-restart" }).pipe(
