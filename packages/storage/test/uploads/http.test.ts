@@ -1,15 +1,19 @@
 import { assert, it } from "@effect/vitest";
-import { Effect, Layer } from "effect";
+import { Effect, Layer, Stream } from "effect";
 import { HttpClient, HttpClientResponse, HttpRouter, HttpServer } from "effect/http";
 import { HttpApiClient } from "effect/http-api";
 import { KeyValueStore } from "effect/persistence";
 
 import { StorageHttp, makeStorageUploadApi } from "../../src/http.js";
-import { Storage } from "../../src/storage.js";
+import { Storage, type StorageService } from "../../src/storage.js";
 import { Uploads, failUpload, type UploadError } from "../../src/uploads.js";
 import { actor, input, setup } from "./fixture.js";
 
-const fixture = Effect.fnUntraced(function* (cookie = false, filename = "report café.txt") {
+const fixture = Effect.fnUntraced(function* (
+  cookie = false,
+  filename = "report café.txt",
+  instrument?: (storage: StorageService) => StorageService,
+) {
   const test = yield* setup();
   const created = yield* test.uploads.create({ actor, input, idempotencyKey: "http" });
   yield* test.uploads.content({
@@ -36,7 +40,7 @@ const fixture = Effect.fnUntraced(function* (cookie = false, filename = "report 
     }).pipe(
       Layer.provide(
         Layer.mergeAll(
-          Layer.succeed(Storage, test.storage),
+          Layer.succeed(Storage, instrument ? instrument(test.storage) : test.storage),
           Layer.succeed(Uploads, test.uploads),
           HttpServer.layerServices,
         ),
@@ -232,6 +236,42 @@ it.effect("download filenames cannot inject response headers", () =>
       const response = yield* test.request("/files/owned-file");
       assert.strictEqual(response.status, 400);
       assert.isNull(response.headers.get("set-cookie"));
+    }),
+  ).pipe(Effect.provide(KeyValueStore.layerMemory)),
+);
+
+it.live("cancelling an HTTP download releases the streaming producer and request scope", () =>
+  Effect.scoped(
+    Effect.gen(function* () {
+      let released = false;
+      const test = yield* fixture(false, "file.txt", (storage) => ({
+        ...storage,
+        get: (request) =>
+          storage.get(request).pipe(
+            Effect.map((result) =>
+              result._tag === "Object"
+                ? {
+                    ...result,
+                    body: Stream.concat(result.body, Stream.never).pipe(
+                      Stream.ensuring(
+                        Effect.sync(() => {
+                          released = true;
+                        }),
+                      ),
+                    ),
+                  }
+                : result,
+            ),
+          ),
+      }));
+      const response = yield* test.request("/files/owned-file");
+      const reader = response.body?.getReader();
+      if (!reader) return assert.fail("Missing download stream");
+      const first = yield* Effect.promise(() => reader.read());
+      assert.strictEqual(first.done, false);
+      assert.strictEqual(released, false);
+      yield* Effect.promise(() => reader.cancel());
+      assert.strictEqual(released, true);
     }),
   ).pipe(Effect.provide(KeyValueStore.layerMemory)),
 );
