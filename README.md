@@ -38,9 +38,8 @@ pnpm test:extended
 | `pnpm format` / `format:check`   | Oxfmt formatting                                               |
 | `pnpm lint`                      | Oxlint, including tooling                                      |
 | `pnpm typecheck`                 | Source, tests, tooling and configurations                      |
-| `pnpm test`                      | Offline catalog/archive-policy and package tests               |
-| `pnpm catalog:check`             | Validate complete feature/provider inventories and evidence    |
-| `pnpm ci:check`                  | Formatting, catalogs, lint, types, tests and build             |
+| `pnpm test`                      | Offline archive-policy and package tests                       |
+| `pnpm ci:check`                  | Formatting, lint, types, tests and build                       |
 | `pnpm check:package`             | Publint and Are the Types Wrong                                |
 | `pnpm test:artifacts`            | Build, pack and test isolated production consumers             |
 | `pnpm test:runtimes [runtime]`   | Exact packed runtime helpers and isolated declarations         |
@@ -64,9 +63,9 @@ Local investigations stay in ignored `research/` and are never required by CI.
 ## Project metadata
 
 - [Architecture decisions](architecture/README.md)
-- [Feature catalog](catalogs/features.json): 47 stable feature IDs and delivery ownership.
-- [Provider catalog](catalogs/providers.json): 16 distinct targets, configuration-specific operations and evidence.
-- [Catalog schema](scripts/catalog/schema.ts)
+
+Feature and provider planning records stay in ignored `research/catalogs/`.
+They are not build or CI inputs.
 
 A documented native capability, local fixture result and real-provider acceptance are
 different evidence. Unknown support is never treated as a pass.

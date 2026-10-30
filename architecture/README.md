@@ -13,10 +13,8 @@ These decisions guide native adapters and transfer workflows in subsequent phase
 | [005 — Persistence and fixtures](decisions/005-persistence-and-fixtures.md)     | Session store, filesystem threat model, local services      |
 | [006 — Qualification and releases](decisions/006-qualification-and-releases.md) | Evidence, runtimes, CI and artifact/release boundaries      |
 
-Use the [feature](../catalogs/features.json) and [provider](../catalogs/providers.json)
-catalogs to track delivery. Each feature has a target
-and implementation phase; planned contracts and documented vendor support are not
-completed implementations. [Artifact checks](../scripts/artifacts/check.ts) validate
+Feature/provider delivery tracking stays in ignored research. Planned contracts
+and documented vendor support are not completed implementations. [Artifact checks](../scripts/artifacts/check.ts) validate
 packed consumers; [core conformance tests](../packages/storage/test/conformance.test.ts)
 exercise the portable memory contract.
 
