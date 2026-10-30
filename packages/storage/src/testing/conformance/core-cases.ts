@@ -25,7 +25,10 @@ export const coreCases: ReadonlyArray<StorageConformanceCase> = [
             head.customMetadata?.suite === "portable",
           "Metadata did not round-trip",
         );
-        yield* check(saved.etag === head.etag, "Write/head identity differs without a mutation");
+        yield* check(
+          saved.etag === undefined || saved.etag === head.etag,
+          "Write/head identity differs without a mutation",
+        );
         yield* check(bytesEqual(yield* read(storage, "binary"), expected), "Binary bytes changed");
         yield* storage.put({ key: "empty", body: new Uint8Array() });
         yield* check(

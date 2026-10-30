@@ -18,7 +18,11 @@ export type ResumableState =
 
 /** Offset protocols such as GCS/tus, with provider-specific constraints. */
 export interface OffsetUploads {
-  readonly limits: { readonly alignmentBytes: number; readonly maximumChunkBytes: number };
+  readonly limits: {
+    readonly alignmentBytes: number;
+    readonly maximumChunkBytes: number;
+    readonly fixedChunkBytes?: number;
+  };
   readonly create: (
     request: Omit<PutRequest, "body">,
   ) => Effect.Effect<ResumableHandle, StorageError>;
@@ -30,6 +34,10 @@ export interface OffsetUploads {
     readonly contentLength: number;
     readonly final: boolean;
   }) => Effect.Effect<ResumableState, StorageError | E, R>;
+  /** Resolve a protocol-only completion receipt in its own budgeted request. */
+  readonly resolveCompletion?: (
+    upload: ResumableHandle,
+  ) => Effect.Effect<ObjectMetadata, StorageError>;
   readonly cancel: (upload: ResumableHandle) => Effect.Effect<void, StorageError>;
 }
 

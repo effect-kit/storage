@@ -177,6 +177,7 @@ export function planUpload(
           "not-started",
         );
       partBytes =
+        (native === "offset" ? endpoint.offsets?.limits.fixedChunkBytes : undefined) ??
         Math.ceil(
           Math.max(policy.partBytes, Math.ceil((length ?? maximumBytes) / count)) / alignment,
         ) * alignment;

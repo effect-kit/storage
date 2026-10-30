@@ -224,3 +224,10 @@ phase is verified. A verification failure reports a succeeded mutation. Copy and
 sessions already own their verification stage and avoid a nested admission lease.
 Unknown-size GCS offset sources fail before reading; choose a bounded single upload.
 See [GCS](gcs.md) and [Azure](azure.md) for native limits and cancellation semantics.
+
+Offset adapters may declare `limits.fixedChunkBytes` for protocols with a required
+chunk size. The planner uses that size for full chunks and still admits memory
+before reading a source. An optional `resolveCompletion` fetches object metadata
+when the final protocol response contains only an offset; the engine runs that
+lookup as a separate budgeted request before pinned destination verification.
+Pagination cursors use the same SHA-256 query binding in browser and server builds.

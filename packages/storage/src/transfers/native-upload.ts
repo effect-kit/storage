@@ -230,7 +230,9 @@ export const nativeUpload = Effect.fnUntraced(function* <E, R>(
       if (!(yield* reader.next(Math.min(plan.partBytes, length - reader.count())))) break;
     }
     checksum = yield* verify();
-    metadata = remote.metadata;
+    metadata = offsets.resolveCompletion
+      ? yield* operation.request(offsets.resolveCompletion(handle), { retry: true })
+      : remote.metadata;
     committed = true;
   } else {
     const blocks = endpoint.blocks;

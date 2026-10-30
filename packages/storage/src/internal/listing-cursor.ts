@@ -1,7 +1,8 @@
-import { createHash } from "node:crypto";
-
 import { Effect, Schema } from "effect";
 import { Base64Url } from "effect/encoding";
+
+import { sha256 } from "@noble/hashes/sha2.js";
+import { bytesToHex } from "@noble/hashes/utils.js";
 
 import { storageError } from "../errors.js";
 
@@ -36,7 +37,10 @@ export const decodeCursor = Effect.fnUntraced(function* (
       storageError(operation, provider, { _tag: "InvalidInput", field: "cursor" }),
     ),
   );
-  if (value.storeId !== storeId || value.query !== createHash("sha256").update(query).digest("hex"))
+  if (
+    value.storeId !== storeId ||
+    value.query !== bytesToHex(sha256(new TextEncoder().encode(query)))
+  )
     return yield* storageError(operation, provider, { _tag: "InvalidInput", field: "cursor" });
   return value.token;
 });
@@ -46,7 +50,7 @@ export function encodeCursor(storeId: string, query: string, token: string) {
     Schema.encodeSync(Cursor)({
       version: 1,
       storeId,
-      query: createHash("sha256").update(query).digest("hex"),
+      query: bytesToHex(sha256(new TextEncoder().encode(query))),
       token,
     }),
   );
