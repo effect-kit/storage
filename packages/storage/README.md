@@ -265,3 +265,56 @@ can redeliver. `/session-events` supplies `sessionEventDelivery({ resolve, outbo
 resolve an event through an application-owned index, bind its object identity, then
 reconcile the existing protected session and deliver its durable events. Provider
 events never directly mark sessions complete or replace a committed object outcome.
+
+## Authorized browser uploads
+
+`/uploads` provides `Uploads`, `UploadStore` and `UploadGrantDriver`. Supply Storage,
+a provider grant driver, a protected upload store over Effect KeyValueStore, and
+application authorization/publication hooks. `authorize` runs on every operation
+with a trusted actor, upload ID and action; derive a stable destination from those
+inputs. `publish`, quota reservation/settlement/release and external transactions
+must be idempotent using the upload ID. Application authentication owns actor identity.
+
+The application must keep staging and unpublished objects private. Grants target a
+unique staging key. Completion verifies size and full SHA-256, snapshots to a unique
+backend-owned create-only final key and verifies again before inspection/publication.
+Verification streams bytes; it can incur backend bandwidth and provider read costs.
+Declared MIME type is advisory until an application inspection hook validates content.
+The final object reference is delivered to `publish`; app readers should resolve only
+published references. The library does not automatically change bucket visibility.
+
+`UploadStore.layer({ namespace, ownership, protection })` uses an application KVS and
+existing AES-GCM runtime helpers. Exclusive ownership excludes competing processes;
+it is not a distributed coordinator. Records protect bearer handles and retain
+uncertain initiation, publication and cleanup debt. Expiry or abort cannot revoke all
+previously issued native grants or stop every in-flight request. Native fixed grant
+lifetimes can exceed intent expiry; grant DTOs report their own lifetime, and cleanup
+tracks that authority separately. Final publication is still guarded by intent state.
+
+Grant drivers: `/s3/uploads` exports `S3UploadGrants.layer` for signed PUT, POST and
+multipart (POST additionally needs its optional signing peer); `/gcs/uploads` exports
+`GcsUploadGrants.layer` for resumable uploads; `/azure/uploads` exports
+`AzureUploadGrants.layer` using separately supplied StorageSigning; `/supabase/uploads`
+exports `SupabaseAuthorizedUploads` for native upload tokens; `/supabase/tus-uploads`
+exports `SupabaseTusUploadGrants.layer` requiring application-validated per-actor user
+tokens and a public API key, never service-role credentials in browser headers;
+`/vercel/authorized-uploads` exports `VercelAuthorizedUploads` using VercelUploadGrants.
+`SignedUploadGrants` adapts other qualified StorageSigning services, and
+`UploadGrantDriver.proxy` provides authenticated server-proxied uploads.
+
+`/http` supplies `StorageHttp.routes({ authenticate, authentication, allowedOrigins,
+resolveDownload, prefix })`. Cookie mutations require an allowed Origin; bearer
+requests may omit Origin, but any supplied Origin is checked. Routes use versioned
+DTOs, bounded JSON, streamed raw/form uploads and authorized private downloads with
+range/conditional handling. `/http/schema` exposes shared DTOs and the HttpApi
+contract. `StorageHttp.callbacks` requires provider authentication and an application
+binding resolver, then uses StorageEventInbox and authoritative upload verification.
+
+`/client` provides `UploadClient.make/layer` and `UploadClientStore`. The client exposes
+create/transfer/complete/status/abort/reconcile/upload/resume. Files are hashed in
+bounded chunks before intent creation and checked again on resume. Fetch progress
+reports accepted bytes rather than fabricated socket progress; optional XHR reports
+request-body bytes (including form overhead). Temporary grants never enter resume
+records. Persist only the schema-checked upload ticket in an application-owned store;
+filenames and application context can still be sensitive. Interrupting an Effect
+cancels local fetch/XHR work; use explicit abort to abandon the server-side intent.

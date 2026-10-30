@@ -2,6 +2,17 @@ import defineConfig from "klarity/tsdown/library";
 
 export default defineConfig({
   entry: [
+    "src/uploads.ts",
+    "src/http.ts",
+    "src/client.ts",
+    "src/http/schema.ts",
+    "src/s3/uploads.ts",
+    "src/gcs/uploads.ts",
+    "src/azure/uploads.ts",
+    "src/supabase/uploads.ts",
+    "src/supabase/tus-uploads.ts",
+    "src/vercel/authorized-uploads.ts",
+
     "src/minio/admin.ts",
     "src/wasabi/admin.ts",
     "src/spaces/admin.ts",

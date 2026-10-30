@@ -348,6 +348,56 @@
       "workspace-source": "./src/tigris/events.ts",
       "types": "./dist/tigris/events.d.ts",
       "import": "./dist/tigris/events.js"
+    },
+    "./uploads": {
+      "workspace-source": "./src/uploads.ts",
+      "types": "./dist/uploads.d.ts",
+      "import": "./dist/uploads.js"
+    },
+    "./http": {
+      "workspace-source": "./src/http.ts",
+      "types": "./dist/http.d.ts",
+      "import": "./dist/http.js"
+    },
+    "./client": {
+      "workspace-source": "./src/client.ts",
+      "types": "./dist/client.d.ts",
+      "import": "./dist/client.js"
+    },
+    "./http/schema": {
+      "workspace-source": "./src/http/schema.ts",
+      "types": "./dist/http/schema.d.ts",
+      "import": "./dist/http/schema.js"
+    },
+    "./s3/uploads": {
+      "workspace-source": "./src/s3/uploads.ts",
+      "types": "./dist/s3/uploads.d.ts",
+      "import": "./dist/s3/uploads.js"
+    },
+    "./gcs/uploads": {
+      "workspace-source": "./src/gcs/uploads.ts",
+      "types": "./dist/gcs/uploads.d.ts",
+      "import": "./dist/gcs/uploads.js"
+    },
+    "./azure/uploads": {
+      "workspace-source": "./src/azure/uploads.ts",
+      "types": "./dist/azure/uploads.d.ts",
+      "import": "./dist/azure/uploads.js"
+    },
+    "./supabase/uploads": {
+      "workspace-source": "./src/supabase/uploads.ts",
+      "types": "./dist/supabase/uploads.d.ts",
+      "import": "./dist/supabase/uploads.js"
+    },
+    "./supabase/tus-uploads": {
+      "workspace-source": "./src/supabase/tus-uploads.ts",
+      "types": "./dist/supabase/tus-uploads.d.ts",
+      "import": "./dist/supabase/tus-uploads.js"
+    },
+    "./vercel/authorized-uploads": {
+      "workspace-source": "./src/vercel/authorized-uploads.ts",
+      "types": "./dist/vercel/authorized-uploads.d.ts",
+      "import": "./dist/vercel/authorized-uploads.js"
     }
   },
   "publishConfig": {
@@ -608,6 +658,46 @@
       "./tigris/events": {
         "types": "./dist/tigris/events.d.ts",
         "import": "./dist/tigris/events.js"
+      },
+      "./uploads": {
+        "types": "./dist/uploads.d.ts",
+        "import": "./dist/uploads.js"
+      },
+      "./http": {
+        "types": "./dist/http.d.ts",
+        "import": "./dist/http.js"
+      },
+      "./client": {
+        "types": "./dist/client.d.ts",
+        "import": "./dist/client.js"
+      },
+      "./http/schema": {
+        "types": "./dist/http/schema.d.ts",
+        "import": "./dist/http/schema.js"
+      },
+      "./s3/uploads": {
+        "types": "./dist/s3/uploads.d.ts",
+        "import": "./dist/s3/uploads.js"
+      },
+      "./gcs/uploads": {
+        "types": "./dist/gcs/uploads.d.ts",
+        "import": "./dist/gcs/uploads.js"
+      },
+      "./azure/uploads": {
+        "types": "./dist/azure/uploads.d.ts",
+        "import": "./dist/azure/uploads.js"
+      },
+      "./supabase/uploads": {
+        "types": "./dist/supabase/uploads.d.ts",
+        "import": "./dist/supabase/uploads.js"
+      },
+      "./supabase/tus-uploads": {
+        "types": "./dist/supabase/tus-uploads.d.ts",
+        "import": "./dist/supabase/tus-uploads.js"
+      },
+      "./vercel/authorized-uploads": {
+        "types": "./dist/vercel/authorized-uploads.d.ts",
+        "import": "./dist/vercel/authorized-uploads.js"
       }
     },
     "access": "public",
