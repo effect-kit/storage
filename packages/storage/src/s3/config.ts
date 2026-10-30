@@ -6,6 +6,7 @@ import type { S3Client, S3ClientConfig } from "@aws-sdk/client-s3";
 
 import { storageError } from "../errors.js";
 import { ObjectValidator } from "../object.js";
+import type { S3Profile } from "./profile.js";
 
 export type S3Encryption =
   | { readonly mode: "AES256" }
@@ -72,6 +73,7 @@ export type ResolvedS3Config = Omit<
 };
 
 export interface S3Connection {
+  readonly profile?: S3Profile;
   /** Compatibility transports may lack the optional S3 checksum read extension. */
   readonly readChecksums?: false;
   readonly multipartChecksums?: false;

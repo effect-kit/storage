@@ -34,3 +34,11 @@ await Effect.runPromise(
 
 const { SupabaseS3Storage } = await import("@effect-kit/storage/supabase/s3");
 assert(SupabaseS3Storage.layer);
+
+// Named transports use only the S3 peer; signing peers remain optional.
+await Promise.all(
+  ["r2", "minio", "tigris", "spaces", "b2", "wasabi", "scaleway", "hetzner"].map(async (name) => {
+    const entry = await import(`@effect-kit/storage/${name}`);
+    assert(Object.values(entry).some((value) => typeof value?.layer === "function"));
+  }),
+);

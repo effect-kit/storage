@@ -17,6 +17,7 @@ export const listPage = Effect.fnUntraced(function* (
   const { config, client } = connection;
   const query = JSON.stringify([
     "objects",
+    ...(connection.profile ? [connection.profile.provider, connection.profile.configuration] : []),
     input.prefix ?? "",
     input.delimiter ?? null,
     input.limit ?? 1000,

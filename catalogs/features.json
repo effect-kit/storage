@@ -22,16 +22,25 @@
         "packages/storage/src/s3/upload-body.ts",
         "packages/storage/src/transfers.ts",
         "packages/storage/src/transfers/upload.ts",
-        "packages/storage/src/transfers/sources.ts"
+        "packages/storage/src/transfers/sources.ts",
+        "packages/storage/src/s3-compatible/config.ts",
+        "packages/storage/src/s3/profile.ts"
       ],
       "tests": [
         "packages/storage/test/memory.test.ts",
         "packages/storage/test/conformance.test.ts",
         "packages/storage/test/s3/primitives.test.ts",
         "packages/storage/test/s3/resources.test.ts",
-        "packages/storage/test/transfers/upload.test.ts"
+        "packages/storage/test/transfers/upload.test.ts",
+        "packages/storage/test/s3-compatible/protocol.test.ts",
+        "packages/storage/test/s3-compatible/policy.test.ts",
+        "packages/storage/test/provider/compatible.acceptance.ts"
       ],
-      "examples": ["packages/storage/README.md", "packages/storage/examples/durable-upload.mjs"],
+      "examples": [
+        "packages/storage/README.md",
+        "packages/storage/examples/durable-upload.mjs",
+        "packages/storage/examples/compatible.mjs"
+      ],
       "evidence": [
         {
           "kind": "runtime",
@@ -106,7 +115,9 @@
         "packages/storage/src/testing/memory.ts",
         "packages/storage/src/s3/primitives.ts",
         "packages/storage/src/transfers.ts",
-        "packages/storage/src/transfers/download.ts"
+        "packages/storage/src/transfers/download.ts",
+        "packages/storage/src/s3-compatible/config.ts",
+        "packages/storage/src/s3/profile.ts"
       ],
       "tests": [
         "packages/storage/test/storage.test.ts",
@@ -114,9 +125,16 @@
         "packages/storage/test/s3/primitives.test.ts",
         "packages/storage/test/s3/resources.test.ts",
         "packages/storage/test/transfers/download-copy.test.ts",
-        "packages/storage/test/transfers/files.test.ts"
+        "packages/storage/test/transfers/files.test.ts",
+        "packages/storage/test/s3-compatible/protocol.test.ts",
+        "packages/storage/test/s3-compatible/policy.test.ts",
+        "packages/storage/test/provider/compatible.acceptance.ts"
       ],
-      "examples": ["packages/storage/README.md", "packages/storage/examples/durable-upload.mjs"],
+      "examples": [
+        "packages/storage/README.md",
+        "packages/storage/examples/durable-upload.mjs",
+        "packages/storage/examples/compatible.mjs"
+      ],
       "evidence": [
         {
           "kind": "runtime",
@@ -190,14 +208,19 @@
         "packages/storage/src/storage.ts",
         "packages/storage/src/testing/memory.ts",
         "packages/storage/src/s3/object-mapping.ts",
-        "packages/storage/src/s3/primitives.ts"
+        "packages/storage/src/s3/primitives.ts",
+        "packages/storage/src/s3-compatible/config.ts",
+        "packages/storage/src/s3/profile.ts"
       ],
       "tests": [
         "packages/storage/test/models.test.ts",
         "packages/storage/test/conformance.test.ts",
-        "packages/storage/test/s3/primitives.test.ts"
+        "packages/storage/test/s3/primitives.test.ts",
+        "packages/storage/test/s3-compatible/protocol.test.ts",
+        "packages/storage/test/s3-compatible/policy.test.ts",
+        "packages/storage/test/provider/compatible.acceptance.ts"
       ],
-      "examples": ["packages/storage/README.md"],
+      "examples": ["packages/storage/README.md", "packages/storage/examples/compatible.mjs"],
       "evidence": [
         {
           "kind": "runtime",
@@ -260,15 +283,24 @@
         "packages/storage/src/s3/primitives.ts",
         "packages/storage/src/s3/bulk-delete.ts",
         "packages/storage/src/transfers.ts",
-        "packages/storage/src/transfers/copy.ts"
+        "packages/storage/src/transfers/copy.ts",
+        "packages/storage/src/s3-compatible/config.ts",
+        "packages/storage/src/s3/profile.ts"
       ],
       "tests": [
         "packages/storage/test/faults.test.ts",
         "packages/storage/test/conformance.test.ts",
         "packages/storage/test/s3/native.test.ts",
-        "packages/storage/test/transfers/download-copy.test.ts"
+        "packages/storage/test/transfers/download-copy.test.ts",
+        "packages/storage/test/s3-compatible/protocol.test.ts",
+        "packages/storage/test/s3-compatible/policy.test.ts",
+        "packages/storage/test/provider/compatible.acceptance.ts"
       ],
-      "examples": ["packages/storage/README.md", "packages/storage/examples/durable-upload.mjs"],
+      "examples": [
+        "packages/storage/README.md",
+        "packages/storage/examples/durable-upload.mjs",
+        "packages/storage/examples/compatible.mjs"
+      ],
       "evidence": [
         {
           "kind": "runtime",
@@ -340,14 +372,19 @@
       "implementations": [
         "packages/storage/src/storage.ts",
         "packages/storage/src/testing/memory-list.ts",
-        "packages/storage/src/s3/listing.ts"
+        "packages/storage/src/s3/listing.ts",
+        "packages/storage/src/s3-compatible/config.ts",
+        "packages/storage/src/s3/profile.ts"
       ],
       "tests": [
         "packages/storage/test/storage.test.ts",
         "packages/storage/test/conformance.test.ts",
-        "packages/storage/test/s3/primitives.test.ts"
+        "packages/storage/test/s3/primitives.test.ts",
+        "packages/storage/test/s3-compatible/protocol.test.ts",
+        "packages/storage/test/s3-compatible/policy.test.ts",
+        "packages/storage/test/provider/compatible.acceptance.ts"
       ],
-      "examples": ["packages/storage/README.md"],
+      "examples": ["packages/storage/README.md", "packages/storage/examples/compatible.mjs"],
       "evidence": [
         {
           "kind": "runtime",
@@ -401,13 +438,22 @@
       "implementations": [
         "packages/storage/src/s3/copy.ts",
         "packages/storage/src/transfers.ts",
-        "packages/storage/src/transfers/copy.ts"
+        "packages/storage/src/transfers/copy.ts",
+        "packages/storage/src/s3-compatible/config.ts",
+        "packages/storage/src/s3/profile.ts"
       ],
       "tests": [
         "packages/storage/test/s3/native.test.ts",
-        "packages/storage/test/transfers/download-copy.test.ts"
+        "packages/storage/test/transfers/download-copy.test.ts",
+        "packages/storage/test/s3-compatible/protocol.test.ts",
+        "packages/storage/test/s3-compatible/policy.test.ts",
+        "packages/storage/test/provider/compatible.acceptance.ts"
       ],
-      "examples": ["packages/storage/README.md", "packages/storage/examples/durable-upload.mjs"],
+      "examples": [
+        "packages/storage/README.md",
+        "packages/storage/examples/durable-upload.mjs",
+        "packages/storage/examples/compatible.mjs"
+      ],
       "evidence": [
         {
           "kind": "local-protocol",
@@ -651,9 +697,18 @@
       "completionPhase": 3,
       "status": "implemented",
       "specifications": ["packages/storage/src/s3.ts"],
-      "implementations": ["packages/storage/src/s3/signing.ts"],
-      "tests": ["packages/storage/test/s3/signing.test.ts"],
-      "examples": ["packages/storage/README.md"],
+      "implementations": [
+        "packages/storage/src/s3/signing.ts",
+        "packages/storage/src/s3-compatible/config.ts",
+        "packages/storage/src/s3/profile.ts"
+      ],
+      "tests": [
+        "packages/storage/test/s3/signing.test.ts",
+        "packages/storage/test/s3-compatible/protocol.test.ts",
+        "packages/storage/test/s3-compatible/policy.test.ts",
+        "packages/storage/test/provider/compatible.acceptance.ts"
+      ],
+      "examples": ["packages/storage/README.md", "packages/storage/examples/compatible.mjs"],
       "evidence": [
         {
           "kind": "local-protocol",
@@ -862,14 +917,23 @@
         "packages/storage/src/s3/copy.ts",
         "packages/storage/src/transfers.ts",
         "packages/storage/src/transfers/upload.ts",
-        "packages/storage/src/transfers/part-receipts.ts"
+        "packages/storage/src/transfers/part-receipts.ts",
+        "packages/storage/src/s3-compatible/config.ts",
+        "packages/storage/src/s3/profile.ts"
       ],
       "tests": [
         "packages/storage/test/s3/native.test.ts",
         "packages/storage/test/transfers/upload.test.ts",
-        "packages/storage/test/transfers/s3.test.ts"
+        "packages/storage/test/transfers/s3.test.ts",
+        "packages/storage/test/s3-compatible/protocol.test.ts",
+        "packages/storage/test/s3-compatible/policy.test.ts",
+        "packages/storage/test/provider/compatible.acceptance.ts"
       ],
-      "examples": ["packages/storage/README.md", "packages/storage/examples/durable-upload.mjs"],
+      "examples": [
+        "packages/storage/README.md",
+        "packages/storage/examples/durable-upload.mjs",
+        "packages/storage/examples/compatible.mjs"
+      ],
       "evidence": [
         {
           "kind": "local-protocol",
@@ -955,15 +1019,23 @@
         "packages/storage/src/sessions/store.ts",
         "packages/storage/src/sessions/upload.ts",
         "packages/storage/src/sessions/download.ts",
-        "packages/storage/src/transfers/managed-runtime.ts"
+        "packages/storage/src/transfers/managed-runtime.ts",
+        "packages/storage/src/s3-compatible/config.ts",
+        "packages/storage/src/s3/profile.ts"
       ],
       "tests": [
         "packages/storage/test/sessions/sessions.test.ts",
         "packages/storage/test/sessions/store.test.ts",
         "packages/storage/test/provider/sessions.acceptance.ts",
-        "packages/storage/test/transfers/composition.test.ts"
+        "packages/storage/test/transfers/composition.test.ts",
+        "packages/storage/test/s3-compatible/protocol.test.ts",
+        "packages/storage/test/s3-compatible/policy.test.ts",
+        "packages/storage/test/provider/compatible.acceptance.ts"
       ],
-      "examples": ["packages/storage/examples/durable-upload.mjs"],
+      "examples": [
+        "packages/storage/examples/durable-upload.mjs",
+        "packages/storage/examples/compatible.mjs"
+      ],
       "evidence": [
         {
           "kind": "runtime",
@@ -1264,7 +1336,9 @@
         "packages/storage/src/transfers/reader.ts",
         "packages/storage/src/runtime/node-hash.ts",
         "packages/storage/src/transfers/managed-runtime.ts",
-        "packages/storage/src/runtime/portable-hash.ts"
+        "packages/storage/src/runtime/portable-hash.ts",
+        "packages/storage/src/s3-compatible/config.ts",
+        "packages/storage/src/s3/profile.ts"
       ],
       "tests": [
         "packages/storage/test/s3/primitives.test.ts",
@@ -1272,9 +1346,16 @@
         "packages/storage/test/transfers/upload.test.ts",
         "packages/storage/test/transfers/download-copy.test.ts",
         "packages/storage/test/transfers/composition.test.ts",
-        "packages/storage/test/runtime/crypto.test.ts"
+        "packages/storage/test/runtime/crypto.test.ts",
+        "packages/storage/test/s3-compatible/protocol.test.ts",
+        "packages/storage/test/s3-compatible/policy.test.ts",
+        "packages/storage/test/provider/compatible.acceptance.ts"
       ],
-      "examples": ["packages/storage/README.md", "packages/storage/examples/durable-upload.mjs"],
+      "examples": [
+        "packages/storage/README.md",
+        "packages/storage/examples/durable-upload.mjs",
+        "packages/storage/examples/compatible.mjs"
+      ],
       "evidence": [
         {
           "kind": "local-protocol",
@@ -1480,13 +1561,18 @@
       "implementations": [
         "packages/storage/src/s3.ts",
         "packages/storage/src/s3/config.ts",
-        "packages/storage/src/s3/signing-credentials.ts"
+        "packages/storage/src/s3/signing-credentials.ts",
+        "packages/storage/src/s3-compatible/config.ts",
+        "packages/storage/src/s3/profile.ts"
       ],
       "tests": [
         "packages/storage/test/s3/resources.test.ts",
-        "packages/storage/test/s3/signing.test.ts"
+        "packages/storage/test/s3/signing.test.ts",
+        "packages/storage/test/s3-compatible/protocol.test.ts",
+        "packages/storage/test/s3-compatible/policy.test.ts",
+        "packages/storage/test/provider/compatible.acceptance.ts"
       ],
-      "examples": ["packages/storage/README.md"],
+      "examples": ["packages/storage/README.md", "packages/storage/examples/compatible.mjs"],
       "evidence": [
         {
           "kind": "local-protocol",
@@ -1511,9 +1597,19 @@
       "completionPhase": 12,
       "status": "in-progress",
       "specifications": ["packages/storage/src/s3.ts"],
-      "implementations": ["packages/storage/src/s3/config.ts", "packages/storage/src/s3/copy.ts"],
-      "tests": ["packages/storage/test/s3/signing.test.ts"],
-      "examples": ["packages/storage/README.md"],
+      "implementations": [
+        "packages/storage/src/s3/config.ts",
+        "packages/storage/src/s3/copy.ts",
+        "packages/storage/src/s3-compatible/config.ts",
+        "packages/storage/src/s3/profile.ts"
+      ],
+      "tests": [
+        "packages/storage/test/s3/signing.test.ts",
+        "packages/storage/test/s3-compatible/protocol.test.ts",
+        "packages/storage/test/s3-compatible/policy.test.ts",
+        "packages/storage/test/provider/compatible.acceptance.ts"
+      ],
+      "examples": ["packages/storage/README.md", "packages/storage/examples/compatible.mjs"],
       "evidence": [
         {
           "kind": "local-protocol",

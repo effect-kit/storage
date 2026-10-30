@@ -27,6 +27,7 @@ import {
   nativeLimits,
 } from "./native-models.js";
 import { checksums, condition, headers, metadata, validateRef } from "./object-mapping.js";
+import { enforceProfile } from "./profile.js";
 import { request } from "./transport.js";
 import { uploadBody } from "./upload-body.js";
 import { S3Key, validateHeaders } from "./validation.js";
@@ -143,10 +144,14 @@ function partChecksums(part: UploadedPart) {
 
 export function multipart(connection: S3Connection): S3MultipartUploads {
   const { client, config } = connection;
+  const limits = connection.profile
+    ? { ...connection.profile.limits, completeConditions: connection.profile.completeConditions }
+    : nativeLimits;
   return {
-    limits: nativeLimits,
+    limits,
     initiate: Effect.fnUntraced(function* (input) {
       const value = yield* decodeRequest(Initiate, input, "initiate", "s3", true);
+      yield* enforceProfile(connection, "initiate", value);
       if (value.headers) yield* validateHeaders(value.headers, "initiate");
       if (connection.multipartChecksums === false && value.checksum)
         return yield* storageError(
@@ -200,6 +205,7 @@ export function multipart(connection: S3Connection): S3MultipartUploads {
       readonly checksum?: S3ChecksumOptions;
     }) {
       const value = yield* decodeRequest(Part, input, "uploadPart", "s3", true);
+      yield* enforceProfile(connection, "uploadPart", value);
       yield* validateUpload(connection, value.upload, "uploadPart");
       if (
         value.checksum?.ChecksumType ||
@@ -218,7 +224,7 @@ export function multipart(connection: S3Connection): S3MultipartUploads {
         {
           body: input.body,
           contentLength: value.contentLength,
-          maxBytes: nativeLimits.maximumPartBytes,
+          maxBytes: limits.maximumPartBytes,
         },
         "uploadPart",
         (body, length) =>
@@ -258,6 +264,7 @@ export function multipart(connection: S3Connection): S3MultipartUploads {
       yield* validateUpload(connection, value.upload, "listParts");
       const query = JSON.stringify([
         "parts",
+        ...(connection.profile ? [connection.profile.configuration] : []),
         value.upload.ref.key,
         Redacted.value(value.upload.uploadId),
       ]);
@@ -305,6 +312,7 @@ export function multipart(connection: S3Connection): S3MultipartUploads {
     }),
     complete: Effect.fnUntraced(function* (input) {
       const value = yield* decodeRequest(Complete, input, "complete", "s3", true);
+      yield* enforceProfile(connection, "complete", value);
       yield* validateUpload(connection, value.upload, "complete");
       if (
         value.checksum?.ChecksumAlgorithm ||
@@ -329,7 +337,7 @@ export function multipart(connection: S3Connection): S3MultipartUploads {
       if (
         parts
           .slice(0, -1)
-          .some((part) => part.size !== undefined && part.size < nativeLimits.minimumPartBytes)
+          .some((part) => part.size !== undefined && part.size < limits.minimumPartBytes)
       )
         return yield* storageError(
           "complete",
@@ -385,7 +393,12 @@ export function multipart(connection: S3Connection): S3MultipartUploads {
         });
       if ((value.limit ?? 1000) > nativeLimits.maximumPageSize)
         return yield* storageError("listUploads", "s3", { _tag: "InvalidInput", field: "limit" });
-      const query = JSON.stringify(["uploads", value.prefix ?? "", value.limit ?? 1000]);
+      const query = JSON.stringify([
+        "uploads",
+        ...(connection.profile ? [connection.profile.configuration] : []),
+        value.prefix ?? "",
+        value.limit ?? 1000,
+      ]);
       const token = yield* decodeCursor("s3", value.cursor, config.storeId, query, "listUploads");
       const marker =
         token === undefined

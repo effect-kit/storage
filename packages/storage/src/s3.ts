@@ -8,14 +8,15 @@ import type { StorageError } from "./errors.js";
 import { storageError } from "./errors.js";
 import type { ObjectMetadata } from "./object.js";
 import type { PutRequest } from "./requests.js";
-import { deleteObjects } from "./s3/bulk-delete.js";
+import type { deleteObjects } from "./s3/bulk-delete.js";
 import { resolveConfig } from "./s3/config.js";
-import type { S3Config, S3Connection, ResolvedS3Config } from "./s3/config.js";
-import { copyObject, copyPart } from "./s3/copy.js";
-import { multipart } from "./s3/multipart.js";
+import type { S3Config, ResolvedS3Config } from "./s3/config.js";
+import type { copyObject, copyPart } from "./s3/copy.js";
+import type { multipart } from "./s3/multipart.js";
 import { validateRef } from "./s3/object-mapping.js";
-import { primitives, putObject } from "./s3/primitives.js";
 import type { S3PutOptions } from "./s3/primitives.js";
+import type { S3Profile } from "./s3/profile.js";
+import { assemble } from "./s3/service.js";
 import { makeS3TransferDriver } from "./s3/transfer-driver.js";
 import { Storage } from "./storage.js";
 import type { StorageService } from "./storage.js";
@@ -31,6 +32,7 @@ export { nativeLimits as s3Limits } from "./s3/native-models.js";
 
 export interface S3StorageService extends StorageService {
   /** Native escape hatch; ownership follows the constructor used to acquire this service. */
+  readonly profile?: S3Profile;
   readonly client: S3Client;
   readonly config: ResolvedS3Config;
   readonly multipart: ReturnType<typeof multipart>;
@@ -49,18 +51,6 @@ export interface S3StorageService extends StorageService {
     input: PutRequest<E, R>,
     options?: S3PutOptions,
   ) => Effect.Effect<ObjectMetadata, StorageError | E, R>;
-}
-
-function assemble(connection: S3Connection): S3StorageService {
-  return {
-    ...primitives(connection),
-    ...connection,
-    multipart: multipart(connection),
-    copyObject: (input, source) => copyObject(connection, input, source),
-    copyPart: (input, source) => copyPart(connection, input, source),
-    deleteObjects: (input) => deleteObjects(connection, input),
-    putObject: (input, options) => putObject(connection, input, options),
-  };
 }
 
 const services = (service: S3StorageService) =>

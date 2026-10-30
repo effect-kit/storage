@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 
+import type { Scope } from "effect";
 import { Effect, Schema } from "effect";
 
 import {
@@ -9,6 +10,7 @@ import {
   ListObjectVersionsCommand,
 } from "@aws-sdk/client-s3";
 
+import type { StorageError } from "../../src/errors.js";
 import type { ObjectMetadata } from "../../src/object.js";
 import type { ObjectTarget } from "../../src/requests.js";
 import { S3Storage } from "../../src/s3.js";
@@ -17,7 +19,7 @@ import { mapS3Error } from "../../src/s3/transport.js";
 import { Storage } from "../../src/storage.js";
 
 const Environment = Schema.Struct({
-  mode: Schema.Literals(["local", "aws"]),
+  mode: Schema.Literals(["local", "aws", "compatible"]),
   bucket: Schema.NonEmptyString,
   region: Schema.NonEmptyString,
   prefix: Schema.String.check(Schema.isPattern(/^[A-Za-z0-9][A-Za-z0-9/_-]*\/$/u)),
@@ -25,7 +27,9 @@ const Environment = Schema.Struct({
 });
 
 export const environment = Schema.decodeUnknownSync(Environment)({
-  mode: process.env.STORAGE_S3_ACCEPTANCE,
+  mode:
+    process.env.STORAGE_S3_ACCEPTANCE ??
+    (process.env.STORAGE_COMPATIBLE_MODE === "hosted" ? "compatible" : undefined),
   bucket: process.env.STORAGE_S3_TEST_BUCKET,
   region: process.env.STORAGE_S3_TEST_REGION,
   prefix: process.env.STORAGE_S3_TEST_PREFIX,
@@ -39,7 +43,7 @@ if (environment.mode === "aws" && environment.endpoint)
 const native = <A>(execute: () => Promise<A>) =>
   Effect.tryPromise({ try: execute, catch: (cause) => mapS3Error(cause, "fixture-cleanup", true) });
 
-const cleanup = Effect.fnUntraced(function* (storage: S3StorageService, prefix: string) {
+export const cleanup = Effect.fnUntraced(function* (storage: S3StorageService, prefix: string) {
   const Bucket = storage.config.bucket;
   let key: string | undefined;
   let upload: string | undefined;
@@ -120,8 +124,14 @@ export const s3Fixture = Effect.fnUntraced(function* () {
 });
 
 /** Fixture-only namespace mapping lets the public suite use its own logical keys. */
-export const conformanceFixture = Effect.fnUntraced(function* () {
-  const { storage, prefix } = yield* s3Fixture();
+export const conformanceFixture = Effect.fnUntraced(function* (
+  acquire: () => Effect.Effect<
+    { storage: S3StorageService; prefix: string },
+    StorageError,
+    Scope.Scope
+  > = s3Fixture,
+) {
+  const { storage, prefix } = yield* acquire();
   const storeId = `${storage.storeId}:${prefix}`;
   const observed = (input: ObjectMetadata): ObjectMetadata => ({
     ...input,

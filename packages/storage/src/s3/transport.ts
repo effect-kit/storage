@@ -114,7 +114,14 @@ export function request<A>(
   }).pipe(
     Effect.catch((cause) =>
       Effect.flatMap(Clock.currentTimeMillis, (now) =>
-        Effect.fail(mapS3Error(cause, operation, mutation, now)),
+        Effect.fail(
+          connection.profile
+            ? new StorageError({
+                ...mapS3Error(cause, operation, mutation, now),
+                provider: connection.profile.provider,
+              })
+            : mapS3Error(cause, operation, mutation, now),
+        ),
       ),
     ),
     Effect.timeoutOrElse({

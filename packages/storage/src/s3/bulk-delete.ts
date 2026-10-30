@@ -9,6 +9,7 @@ import { DeleteRequest } from "../requests.js";
 import { authority } from "./config.js";
 import type { S3Connection } from "./config.js";
 import { target, validateRef } from "./object-mapping.js";
+import { enforceProfile } from "./profile.js";
 import { mapS3Error, request } from "./transport.js";
 
 export interface S3DeleteOutcome {
@@ -28,6 +29,7 @@ export const deleteObjects = Effect.fnUntraced(function* (
   );
   const identities = new Set<string>();
   for (const value of values) {
+    yield* enforceProfile(connection, "deleteObjects", value);
     if ("ref" in value) yield* validateRef(value.ref, connection.config, "deleteObjects");
     if (value.condition)
       return yield* storageError(

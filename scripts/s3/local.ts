@@ -94,6 +94,37 @@ try {
       },
     },
   );
+  if (result.status === 0) {
+    const profileBucket = `profiles-${randomUUID()}`;
+    await client.send(new CreateBucketCommand({ Bucket: profileBucket }));
+    const profiles = spawnSync(
+      "pnpm",
+      [
+        "--filter",
+        "@effect-kit/storage",
+        "exec",
+        "vitest",
+        "run",
+        "--config",
+        "vitest.compatible.config.ts",
+      ],
+      {
+        stdio: "inherit",
+        env: {
+          ...process.env,
+          STORAGE_COMPATIBLE_MODE: "local-rustfs",
+          STORAGE_S3_ACCEPTANCE: "local",
+          STORAGE_S3_TEST_BUCKET: profileBucket,
+          STORAGE_S3_TEST_REGION: "us-east-1",
+          STORAGE_S3_TEST_PREFIX: "acceptance/",
+          STORAGE_S3_TEST_ENDPOINT: endpoint,
+          STORAGE_COMPATIBLE_ACCESS_KEY_ID: credentials.accessKeyId,
+          STORAGE_COMPATIBLE_SECRET_ACCESS_KEY: credentials.secretAccessKey,
+        },
+      },
+    );
+    if (profiles.status !== 0) throw new Error("Named profile local acceptance failed");
+  }
   await writeFile(
     resolve(".artifacts/s3-local-fixture.json"),
     `${JSON.stringify({ image, runtime: process.version, configuration: "local-rustfs-versioned", exitCode: result.status, limitations: ["Local S3 protocol evidence; does not qualify AWS IAM, regions, encryption or hosted consistency."] }, null, 2)}\n`,

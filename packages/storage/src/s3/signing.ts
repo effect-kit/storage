@@ -21,6 +21,7 @@ import type { S3StorageService } from "../s3.js";
 import { authority, encryptionHeaders, readEncryption } from "./config.js";
 import { ChecksumOptions, PartNumber, Upload } from "./native-models.js";
 import { condition, headers, validateRef } from "./object-mapping.js";
+import { enforceProfile } from "./profile.js";
 import { signingCredentials } from "./signing-credentials.js";
 import { request } from "./transport.js";
 
@@ -172,6 +173,7 @@ export class S3Signing extends Context.Service<S3Signing, S3SigningService>()(
     return {
       sign: Effect.fnUntraced(function* (input) {
         const value = yield* decodeRequest(SignRequest, input, "sign", "s3");
+        yield* enforceProfile(storage, "sign", value);
         yield* validateRef(value.ref, storage.config, "sign");
         if (
           value.method !== "PUT" &&
@@ -215,6 +217,7 @@ export class S3Signing extends Context.Service<S3Signing, S3SigningService>()(
       }),
       signPart: Effect.fnUntraced(function* (input) {
         const value = yield* decodeRequest(SignPart, input, "signPart", "s3");
+        yield* enforceProfile(storage, "signPart", value);
         yield* validateRef(value.upload.ref, storage.config, "signPart");
         if (
           value.upload.ref.version ||

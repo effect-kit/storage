@@ -24,6 +24,7 @@ import type { S3Connection } from "./config.js";
 import { listPage } from "./listing.js";
 import { PutOptions, nativeLimits } from "./native-models.js";
 import { condition, headers, metadata, refError, target } from "./object-mapping.js";
+import { enforceProfile } from "./profile.js";
 import { mapS3Error, request } from "./transport.js";
 import { uploadBody } from "./upload-body.js";
 import { S3Key, validateHeaders } from "./validation.js";
@@ -50,6 +51,7 @@ const verifyTarget = Effect.fnUntraced(function* (
   input: HeadRequest,
   operation: string,
 ) {
+  yield* enforceProfile(connection, operation, input);
   if ("ref" in input) {
     const error = refError(input.ref, connection.config, operation);
     if (error) return yield* error;
@@ -82,15 +84,27 @@ export const putObject = Effect.fnUntraced(function* <E = never, R = never>(
     "put",
   );
   const settings = yield* decodeRequest(PutOptions, options, "put", "s3");
+  yield* enforceProfile(connection, "put", { ...value, checksum: settings });
+  if (
+    connection.profile &&
+    ((settings.StorageClass &&
+      !connection.profile.storageClasses.includes(settings.StorageClass)) ||
+      (settings.Tagging && !connection.profile.tagging))
+  )
+    return yield* storageError(
+      "put",
+      connection.profile.provider,
+      { _tag: "Unsupported", capability: "storage-class-or-tagging" },
+      "not-started",
+    );
+  const maximum =
+    connection.profile?.limits.maximumSinglePutBytes ?? nativeLimits.maximumSinglePutBytes;
   const output = yield* uploadBody(
     connection,
     {
       ...value,
       body: input.body,
-      maxBytes: Math.min(
-        value.maxBytes ?? nativeLimits.maximumSinglePutBytes,
-        nativeLimits.maximumSinglePutBytes,
-      ),
+      maxBytes: Math.min(value.maxBytes ?? maximum, maximum),
     },
     "put",
     (body, length) =>
@@ -320,9 +334,9 @@ const remove = Effect.fnUntraced(function* (connection: S3Connection, input: Del
 
 export function primitives(connection: S3Connection) {
   return Storage.make({
-    provider: "s3",
+    provider: connection.profile?.provider ?? "s3",
     storeId: connection.config.storeId,
-    capabilities: {
+    capabilities: connection.profile?.capabilities ?? {
       putConditions: ["create-only", "if-match"],
       getConditions: ["if-match", "if-none-match"],
       deleteConditions: ["if-match"],

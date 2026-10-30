@@ -34,6 +34,38 @@ const Manifest = Schema.Struct({
     "@aws-sdk/s3-presigned-post": Schema.Struct({ optional: Schema.Literal(true) }),
   }),
   exports: Schema.Struct({
+    "./r2": Schema.Struct({
+      types: Schema.Literal("./dist/r2.d.ts"),
+      import: Schema.Literal("./dist/r2.js"),
+    }),
+    "./minio": Schema.Struct({
+      types: Schema.Literal("./dist/minio.d.ts"),
+      import: Schema.Literal("./dist/minio.js"),
+    }),
+    "./tigris": Schema.Struct({
+      types: Schema.Literal("./dist/tigris.d.ts"),
+      import: Schema.Literal("./dist/tigris.js"),
+    }),
+    "./spaces": Schema.Struct({
+      types: Schema.Literal("./dist/spaces.d.ts"),
+      import: Schema.Literal("./dist/spaces.js"),
+    }),
+    "./b2": Schema.Struct({
+      types: Schema.Literal("./dist/b2.d.ts"),
+      import: Schema.Literal("./dist/b2.js"),
+    }),
+    "./wasabi": Schema.Struct({
+      types: Schema.Literal("./dist/wasabi.d.ts"),
+      import: Schema.Literal("./dist/wasabi.js"),
+    }),
+    "./scaleway": Schema.Struct({
+      types: Schema.Literal("./dist/scaleway.d.ts"),
+      import: Schema.Literal("./dist/scaleway.js"),
+    }),
+    "./hetzner": Schema.Struct({
+      types: Schema.Literal("./dist/hetzner.d.ts"),
+      import: Schema.Literal("./dist/hetzner.js"),
+    }),
     "./supabase": Schema.Struct({
       types: Schema.Literal("./dist/supabase.d.ts"),
       import: Schema.Literal("./dist/supabase.js"),
@@ -196,6 +228,22 @@ export function checkArchive(manifestInput: unknown, entries: readonly string[])
     "dist/azure/identity.d.ts",
     "dist/s3.js",
     "dist/s3.d.ts",
+    "dist/r2.js",
+    "dist/r2.d.ts",
+    "dist/minio.js",
+    "dist/minio.d.ts",
+    "dist/tigris.js",
+    "dist/tigris.d.ts",
+    "dist/spaces.js",
+    "dist/spaces.d.ts",
+    "dist/b2.js",
+    "dist/b2.d.ts",
+    "dist/wasabi.js",
+    "dist/wasabi.d.ts",
+    "dist/scaleway.js",
+    "dist/scaleway.d.ts",
+    "dist/hetzner.js",
+    "dist/hetzner.d.ts",
     "dist/s3/signing.js",
     "dist/s3/signing.d.ts",
     "dist/s3/post.js",

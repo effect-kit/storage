@@ -12,13 +12,16 @@ const connections = new WeakMap<TransferEndpoint, S3StorageService>();
 
 /** SDK attempts are already fixed to one by S3Storage; Transfers owns all retry policy. */
 export function makeS3TransferDriver(storage: S3StorageService): TransferEndpoint {
+  const profile = storage.profile;
+  const limits = profile?.limits ?? nativeLimits;
   const endpoint: TransferEndpoint = {
     storage,
-    maximumObjectBytes: nativeLimits.maximumPartBytes * nativeLimits.maximumParts,
-    maximumSingleUploadBytes: nativeLimits.maximumSinglePutBytes,
+    maximumObjectBytes:
+      profile?.maximumObjectBytes ?? nativeLimits.maximumPartBytes * nativeLimits.maximumParts,
+    maximumSingleUploadBytes: limits.maximumSinglePutBytes,
     transportOverheadBytes: 1024 * 1024,
     multipart: storage.multipart,
-    handles: s3SessionHandles,
+    handles: profile ? profileSessionHandles(profile.configuration) : s3SessionHandles,
     reconcile: ({ key, operationId, size }) =>
       storage.head({ key }).pipe(
         Effect.map((metadata) =>
@@ -29,8 +32,13 @@ export function makeS3TransferDriver(storage: S3StorageService): TransferEndpoin
         Effect.catchReason("StorageError", "NotFound", () => Effect.succeed(undefined)),
       ),
     nativeCopy: {
-      maximumBytes: nativeLimits.maximumSingleCopyBytes,
+      maximumBytes: limits.maximumSingleCopyBytes,
       accepts: (source) =>
+        profile?.copy !== "none" &&
+        (profile?.copy !== "bucket" ||
+          (connections.get(source)?.config.bucket === storage.config.bucket &&
+            !storage.config.encryption &&
+            !connections.get(source)?.config.encryption)) &&
         connections.get(source)?.config.endpoint === storage.config.endpoint &&
         connections.has(source),
       copy: (intent) =>
@@ -45,26 +53,30 @@ export function makeS3TransferDriver(storage: S3StorageService): TransferEndpoin
           },
           connections.get(intent.source),
         ),
-      part: (intent) =>
-        storage
-          .copyPart(
-            {
-              upload: intent.upload,
-              partNumber: intent.partNumber,
-              source: intent.ref,
-              sourceIfMatch: intent.etag,
-              range: { _tag: "Bounded", start: intent.start, end: intent.end },
-            },
-            connections.get(intent.source),
-          )
-          .pipe(
-            Effect.map((part) => ({
-              partNumber: part.partNumber,
-              etag: part.etag,
-              checksums: part.checksums,
-              size: intent.end - intent.start + 1,
-            })),
-          ),
+      ...(profile && !profile.copyPartConditions
+        ? {}
+        : {
+            part: (intent) =>
+              storage
+                .copyPart(
+                  {
+                    upload: intent.upload,
+                    partNumber: intent.partNumber,
+                    source: intent.ref,
+                    sourceIfMatch: intent.etag,
+                    range: { _tag: "Bounded", start: intent.start, end: intent.end },
+                  },
+                  connections.get(intent.source),
+                )
+                .pipe(
+                  Effect.map((part) => ({
+                    partNumber: part.partNumber,
+                    etag: part.etag,
+                    checksums: part.checksums,
+                    size: intent.end - intent.start + 1,
+                  })),
+                ),
+          }),
     },
   };
   connections.set(endpoint, storage);
@@ -83,3 +95,24 @@ const s3SessionHandles = {
       Redacted.value(encoded),
     ).pipe(Effect.mapError(() => storageError("handleCodec", "s3", { _tag: "InvalidSession" }))),
 };
+
+function profileSessionHandles(configuration: string) {
+  const envelope = Schema.fromJsonString(
+    Schema.Struct({ configuration: Schema.Literal(configuration), handle: Schema.String }),
+  );
+  return {
+    encode: (handle: MultipartHandle) =>
+      s3SessionHandles.encode(handle).pipe(
+        Effect.flatMap((encoded) =>
+          Schema.encodeEffect(envelope)({ configuration, handle: Redacted.value(encoded) }),
+        ),
+        Effect.map(Redacted.make),
+        Effect.mapError(() => storageError("handleCodec", "s3", { _tag: "InvalidSession" })),
+      ),
+    decode: (encoded: Redacted.Redacted<string>) =>
+      Schema.decodeUnknownEffect(envelope)(Redacted.value(encoded)).pipe(
+        Effect.mapError(() => storageError("handleCodec", "s3", { _tag: "InvalidSession" })),
+        Effect.flatMap((value) => s3SessionHandles.decode(Redacted.make(value.handle))),
+      ),
+  };
+}

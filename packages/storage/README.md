@@ -136,3 +136,33 @@ Multipart inventory/abort is unavailable; durable Vercel uploads fail before ini
 These adapters have local protocol evidence; hosted RLS/CDN/OIDC qualification remains pending.
 
 Product documentation will be published on the separate landing site after implementation.
+
+## Named S3-compatible providers
+
+`/r2`, `/minio`, `/tigris`, `/spaces`, `/b2`, `/wasabi`, `/scaleway` and `/hetzner`
+export `R2Storage`, `MinioStorage`, `TigrisStorage`, `SpacesStorage`, `B2Storage`,
+`WasabiStorage`, `ScalewayStorage` and `HetznerStorage`. Install the optional official
+`@aws-sdk/client-s3` peer. Each provides Storage, its named service, S3Storage and
+TransferDriver over one owned client. Use the existing `/s3/signing` and `/s3/post`
+services with their optional signing peers; profile restrictions also apply there.
+
+All constructors require explicit `bucket` and `credentials` (an AWS credential
+identity or refresh provider). R2 adds `accountId` and optional `jurisdiction`;
+Tigris requires `placement`; Spaces requires `region` and `tier`. B2, Wasabi and
+Scaleway require `region`. Hetzner also requires stable `versioning`; MinIO requires
+`endpoint`, `region`, `edition`, `serverVersion` and `versioning`. These describe an
+existing deployment; constructors do not provision or inspect account configuration.
+Trusted endpoint overrides support gateways. HTTPS is required except loopback fixtures.
+
+See `examples/compatible.mjs`: set `STORAGE_COMPATIBLE_PROVIDER`, nonsecret provider
+settings as `STORAGE_COMPATIBLE_CONFIG` JSON, explicit access/secret key environment
+variables and `STORAGE_COMPATIBLE_KEY`. It writes that key and reads it back.
+
+Conditions/checksums with unresolved semantics fail before source reads. Scaleway
+uses 1,000 parts; other profiles currently use a conservative 10,000-part adapter
+bound. All profiles cap objects at 5 decimal TB and parts/single puts at 5 decimal GB;
+these are adapter ceilings, not claims about every native service maximum. SDK checksum
+protection remains enabled for Scaleway/Wasabi; other profiles use required-only SDK
+checksums and currently reject explicit unqualified combinations. Managed verification
+and optional protected sessions remain available. Session handles bind configuration.
+Local RustFS results do not qualify any hosted provider or an actual MinIO edition.

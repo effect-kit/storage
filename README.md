@@ -94,3 +94,19 @@ Apache-2.0. Each published package includes its own LICENSE.
 Provider examples live in [packages/storage/examples](packages/storage/examples).
 Use `pnpm test:app:local` for packed browser module probes and tus process restarts;
 `pnpm test:app:hosted` requires explicit existing provider resources and test authority.
+
+Named S3-compatible providers use the optional official AWS client through `/r2`,
+`/minio`, `/tigris`, `/spaces`, `/b2`, `/wasabi`, `/scaleway` and `/hetzner`. Their
+configuration profiles narrow capabilities and share the existing transfer/session
+engine. `pnpm test:s3:local` also runs the named profiles against owned RustFS;
+this is separate from actual vendor qualification.
+
+`pnpm test:compatible:hosted` selects an existing provider with
+`STORAGE_COMPATIBLE_MODE=hosted`, `STORAGE_COMPATIBLE_ALLOW_HOSTED=yes` and
+`STORAGE_COMPATIBLE_PROVIDER`. Supply nonsecret constructor settings as
+`STORAGE_COMPATIBLE_CONFIG` JSON, explicit `STORAGE_COMPATIBLE_ACCESS_KEY_ID` and
+`STORAGE_COMPATIBLE_SECRET_ACCESS_KEY` (optional `STORAGE_COMPATIBLE_SESSION_TOKEN`),
+and `STORAGE_S3_TEST_BUCKET`, `STORAGE_S3_TEST_REGION`, `STORAGE_S3_TEST_PREFIX`.
+The authorized prefix must be `effect-storage-acceptance/<run>/`. The suite creates
+unique children of that prefix and removes its own objects, versions and uploads.
+It never creates buckets, changes policies or configures retention.

@@ -19,6 +19,7 @@ import {
   metadata,
   validateRef,
 } from "./object-mapping.js";
+import { enforceProfile } from "./profile.js";
 import { request } from "./transport.js";
 import { validateHeaders } from "./validation.js";
 
@@ -46,6 +47,22 @@ export const copyObject = Effect.fnUntraced(function* (
       "not-started",
     );
   const value = yield* decodeRequest(CopyRequest, input, "copy", "s3", true);
+  yield* enforceProfile(connection, "copy", value);
+  const profile = connection.profile;
+  if (
+    profile &&
+    (profile.copy === "none" ||
+      (profile.copy === "bucket" &&
+        (connection.config.bucket !== source.config.bucket ||
+          connection.config.encryption?.mode === "customer" ||
+          source.config.encryption?.mode === "customer")))
+  )
+    return yield* storageError(
+      "copy",
+      profile.provider,
+      { _tag: "Unsupported", capability: "native-copy-profile" },
+      "not-started",
+    );
   yield* validateRef(value.source, source.config, "copy");
   if (value.headers) yield* validateHeaders(value.headers, "copy");
   if (value.headers && value.metadataDirective !== "REPLACE")
@@ -126,6 +143,23 @@ export const copyPart = Effect.fnUntraced(function* (
       "not-started",
     );
   const value = yield* decodeRequest(CopyPartRequest, input, "copyPart", "s3", true);
+  yield* enforceProfile(connection, "copyPart", value);
+  const profile = connection.profile;
+  if (
+    profile &&
+    (profile.copy === "none" ||
+      (profile.copy === "bucket" &&
+        (connection.config.bucket !== source.config.bucket ||
+          connection.config.encryption?.mode === "customer" ||
+          source.config.encryption?.mode === "customer")) ||
+      (value.sourceIfMatch && !profile.copyPartConditions))
+  )
+    return yield* storageError(
+      "copyPart",
+      profile.provider,
+      { _tag: "Unsupported", capability: "native-copy-profile" },
+      "not-started",
+    );
   yield* validateRef(value.upload.ref, connection.config, "copyPart");
   if (value.upload.ref.version)
     return yield* storageError(

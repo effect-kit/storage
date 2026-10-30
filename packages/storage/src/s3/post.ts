@@ -43,6 +43,16 @@ export class S3Post extends Context.Service<
     return {
       create: Effect.fnUntraced(function* (input) {
         const value = yield* decodeRequest(PostRequest, input, "post", "s3");
+        if (
+          storage.profile &&
+          (!storage.profile.post || value.maxBytes > storage.profile.limits.maximumSinglePutBytes)
+        )
+          return yield* storageError(
+            "post",
+            storage.profile.provider,
+            { _tag: "Unsupported", capability: "post-policy" },
+            "not-started",
+          );
         if ((value.minBytes ?? 0) > value.maxBytes || value.key.includes(`\${filename}`))
           return yield* storageError("post", "s3", { _tag: "InvalidInput", field: "policy" });
         if (

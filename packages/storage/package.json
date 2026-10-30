@@ -158,6 +158,46 @@
       "workspace-source": "./src/vercel/client.ts",
       "types": "./dist/vercel/client.d.ts",
       "default": "./dist/vercel/client.js"
+    },
+    "./r2": {
+      "workspace-source": "./src/r2.ts",
+      "types": "./dist/r2.d.ts",
+      "default": "./dist/r2.js"
+    },
+    "./minio": {
+      "workspace-source": "./src/minio.ts",
+      "types": "./dist/minio.d.ts",
+      "default": "./dist/minio.js"
+    },
+    "./tigris": {
+      "workspace-source": "./src/tigris.ts",
+      "types": "./dist/tigris.d.ts",
+      "default": "./dist/tigris.js"
+    },
+    "./spaces": {
+      "workspace-source": "./src/spaces.ts",
+      "types": "./dist/spaces.d.ts",
+      "default": "./dist/spaces.js"
+    },
+    "./b2": {
+      "workspace-source": "./src/b2.ts",
+      "types": "./dist/b2.d.ts",
+      "default": "./dist/b2.js"
+    },
+    "./wasabi": {
+      "workspace-source": "./src/wasabi.ts",
+      "types": "./dist/wasabi.d.ts",
+      "default": "./dist/wasabi.js"
+    },
+    "./scaleway": {
+      "workspace-source": "./src/scaleway.ts",
+      "types": "./dist/scaleway.d.ts",
+      "default": "./dist/scaleway.js"
+    },
+    "./hetzner": {
+      "workspace-source": "./src/hetzner.ts",
+      "types": "./dist/hetzner.d.ts",
+      "default": "./dist/hetzner.js"
     }
   },
   "publishConfig": {
@@ -266,6 +306,38 @@
       "./vercel/client": {
         "types": "./dist/vercel/client.d.ts",
         "import": "./dist/vercel/client.js"
+      },
+      "./r2": {
+        "types": "./dist/r2.d.ts",
+        "import": "./dist/r2.js"
+      },
+      "./minio": {
+        "types": "./dist/minio.d.ts",
+        "import": "./dist/minio.js"
+      },
+      "./tigris": {
+        "types": "./dist/tigris.d.ts",
+        "import": "./dist/tigris.js"
+      },
+      "./spaces": {
+        "types": "./dist/spaces.d.ts",
+        "import": "./dist/spaces.js"
+      },
+      "./b2": {
+        "types": "./dist/b2.d.ts",
+        "import": "./dist/b2.js"
+      },
+      "./wasabi": {
+        "types": "./dist/wasabi.d.ts",
+        "import": "./dist/wasabi.js"
+      },
+      "./scaleway": {
+        "types": "./dist/scaleway.d.ts",
+        "import": "./dist/scaleway.js"
+      },
+      "./hetzner": {
+        "types": "./dist/hetzner.d.ts",
+        "import": "./dist/hetzner.js"
       }
     },
     "access": "public",

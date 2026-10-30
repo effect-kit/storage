@@ -35,17 +35,40 @@ const source = UploadSource.replayable(
   size,
 );
 
+let providerLayer;
+if (process.env.STORAGE_COMPATIBLE_RESTART_PROVIDER) {
+  const names = {
+    r2: "R2Storage",
+    minio: "MinioStorage",
+    tigris: "TigrisStorage",
+    spaces: "SpacesStorage",
+    b2: "B2Storage",
+    wasabi: "WasabiStorage",
+    scaleway: "ScalewayStorage",
+    hetzner: "HetznerStorage",
+  };
+  const name = process.env.STORAGE_COMPATIBLE_RESTART_PROVIDER;
+  if (!Object.hasOwn(names, name)) throw new Error("Unknown restart provider");
+  const entry = await import(`../../../dist/${name}.js`);
+  providerLayer = entry[names[name]].layer({
+    ...JSON.parse(process.env.STORAGE_COMPATIBLE_RESTART_CONFIG),
+    credentials: {
+      accessKeyId: process.env.STORAGE_COMPATIBLE_ACCESS_KEY_ID,
+      secretAccessKey: process.env.STORAGE_COMPATIBLE_SECRET_ACCESS_KEY,
+    },
+  });
+} else
+  providerLayer = S3Storage.layer({
+    bucket: process.env.STORAGE_S3_TEST_BUCKET,
+    region: process.env.STORAGE_S3_TEST_REGION,
+    endpoint: process.env.STORAGE_S3_TEST_ENDPOINT,
+    forcePathStyle: true,
+  });
+
 await Effect.runPromise(
   Effect.scoped(
     Effect.gen(function* () {
-      const provider = yield* Layer.build(
-        S3Storage.layer({
-          bucket: process.env.STORAGE_S3_TEST_BUCKET,
-          region: process.env.STORAGE_S3_TEST_REGION,
-          endpoint: process.env.STORAGE_S3_TEST_ENDPOINT,
-          forcePathStyle: true,
-        }),
-      );
+      const provider = yield* Layer.build(providerLayer);
       const storage = Context.get(provider, S3Storage);
       const endpoint = Context.get(provider, TransferDriver);
       const mpu = endpoint.multipart;

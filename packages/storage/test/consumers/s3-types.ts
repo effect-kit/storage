@@ -37,3 +37,21 @@ void [preserved, missing, multipart, missingPartError, base, S3Signing.layer, S3
 void UploadSessions.make({ configurationId: "consumer" });
 
 export { SupabaseS3Storage } from "@effect-kit/storage/supabase/s3";
+
+import { B2Storage } from "@effect-kit/storage/b2";
+import { HetznerStorage } from "@effect-kit/storage/hetzner";
+import { MinioStorage } from "@effect-kit/storage/minio";
+import { R2Storage } from "@effect-kit/storage/r2";
+import { ScalewayStorage } from "@effect-kit/storage/scaleway";
+import { SpacesStorage } from "@effect-kit/storage/spaces";
+import { TigrisStorage } from "@effect-kit/storage/tigris";
+import { WasabiStorage } from "@effect-kit/storage/wasabi";
+
+void R2Storage.layer;
+void MinioStorage.layer;
+void TigrisStorage.layer;
+void SpacesStorage.layer;
+void B2Storage.layer;
+void WasabiStorage.layer;
+void ScalewayStorage.layer;
+void HetznerStorage.layer;
