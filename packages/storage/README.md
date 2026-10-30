@@ -11,7 +11,7 @@ Published-package installation instructions will accompany the first release.
 ## Use storage
 
 Requires Effect 4.1 within the declared peer range. Workspace tooling uses Node
-24.22+. Runtime helpers have separately measured [support boundaries](../../docs/runtimes.md).
+24.22+. Runtime helpers have separate qualification checks.
 
 ```ts
 import { Effect } from "effect";
@@ -52,9 +52,6 @@ Core and `/testing` depend only on Effect. Provider SDKs, database integrations,
 HTTP helpers and browser clients use separate entry points alongside their
 implementations and tests. Core does not load provider clients.
 
-See the [portable API](../../docs/core.md), [testing tools](../../docs/testing.md),
-[architecture decisions](../../architecture/README.md),
-[feature catalog](../../docs/features.json) and [phase 2 evidence](../../docs/evidence/phase-2.md).
 Memory is process-local, with configurable quotas and current references rather
 than retained history. It cannot qualify cloud races, checksums, durability or
 native cancellation. Its five primitives have Node 24.22.0 runtime evidence;
@@ -67,8 +64,8 @@ Import S3Storage from `@effect-kit/storage/s3` and provide
 optional official `@aws-sdk/client-s3` peer. Signing and POST policies use
 `/s3/signing` and `/s3/post`, with their respective official optional peers.
 
-See [S3 setup, ownership and limits](../../docs/s3.md). Known-length streams use
-backpressure; unknown-length streams stage within an explicit per-operation limit.
+Known-length streams use backpressure; unknown-length streams stage within an
+explicit per-operation limit.
 `pnpm test:s3:local` runs owned RustFS protocol acceptance without an AWS account.
 
 ## Managed transfers
@@ -79,9 +76,8 @@ transfer driver automatically; policy contains execution choices.
 `yield* UploadSource.file(path)` captures filesystem/hash services.
 The engine owns shared memory/request budgets, retained-part retries, pinned download
 continuation, verified native/streamed copy, explicit move outcomes and lazy batches.
-See [the transfer API and resource policy](../../docs/transfers.md) and
-[measured local evidence](../../docs/evidence/phase-4.md). The engine is in-process;
-persistent restart and required events use the optional sessions entry point.
+The engine is in-process; persistent restart and required events use the optional
+sessions entry point.
 
 ## Durable sessions
 
@@ -90,26 +86,22 @@ Runtime `/node`, `/bun` and `/deno` add AES-GCM, an atomic filesystem backing an
 restartable file targets. Compose `UploadSessions.layer(options)` with the managed
 layer and `StorageNode.sessionStore(options)` (or your Effect KVS/protection).
 PostgreSQL is not required. Base sessions require exclusive application ownership across
-processes; no generic distributed CAS/lease guarantee is claimed. See
-[session APIs and limits](../../docs/sessions.md), [restart evidence](../../docs/evidence/phase-5.md),
-[current runtime evidence](../../docs/evidence/pre-phase-6.md),
-and the repository example in `examples/durable-upload.mjs`.
+processes; no generic distributed CAS/lease guarantee is claimed. See the repository
+example in `examples/durable-upload.mjs`.
 
 ## Filesystem storage
 
 `/filesystem` exports FilesystemStorage.make/layer({ root, storeId }). Supply a
 Node/Bun runtime layer; the provider supplies Storage and a primitive transfer driver.
 Streamed envelopes publish bytes/metadata together, with atomic create-only and
-scoped reads. See [layout, trust and limits](../../docs/filesystem.md) and
-[local Node/Bun crash evidence](../../docs/evidence/phase-6-filesystem.md).
+scoped reads.
 
 ## Native R2 Workers
 
 `/r2-workers` exports R2WorkersStorage.make/layer({ bucket: env.BUCKET, storeId }).
 It uses the binding directly, supplies its transfer driver and imports no cloud SDK.
 Native multipart lacks inventory and conditional completion; durable multipart upload
-sessions fail closed. See [setup and supported workflows](../../docs/r2-workers.md)
-and [actual local workerd evidence](../../docs/evidence/phase-6-r2-workers.md).
+sessions fail closed.
 Hosted R2 acceptance is pending; local tests need no Cloudflare account.
 
 ## License
@@ -125,9 +117,7 @@ managed Transfers and protected UploadSessions composition. Native strategy rece
 require pinned SHA-256 readback; durable restart never adopts remote state by key alone.
 
 Signing is explicit through `/gcs/signing`, `/gcs/post`, or `/azure/signing`.
-`/azure/identity` alone requires the optional identity SDK. See the [GCS](../../docs/gcs.md),
-[Azure](../../docs/azure.md) and [phase 7 evidence](../../docs/evidence/phase-7.md) guides
-for authority, protocol, cleanup, runtime and hosted-qualification limits.
+`/azure/identity` alone requires the optional identity SDK.
 `pnpm test:native:local` needs Docker and no cloud account.
 
 ## Supabase and Vercel
@@ -143,6 +133,6 @@ constrained upload grants, browser SDK uploads and authenticated server callback
 have focused `/vercel/signing`, `/vercel/client` and `/vercel/uploads` entry points.
 Multipart inventory/abort is unavailable; durable Vercel uploads fail before initiation.
 
-See [Supabase setup](../../docs/supabase.md), [Vercel setup](../../docs/vercel.md),
-[examples](../../docs/app-storage-examples.md) and [phase 8 evidence](../../docs/evidence/phase-8.md).
 These adapters have local protocol evidence; hosted RLS/CDN/OIDC qualification remains pending.
+
+Product documentation will be published on the separate landing site after implementation.

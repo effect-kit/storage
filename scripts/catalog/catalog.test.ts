@@ -8,11 +8,11 @@ import { decodeFeatures, decodeProviders, validateCatalogs } from "./validate.ts
 
 const features = () =>
   structuredClone(
-    decodeFeatures(JSON.parse(readFileSync("docs/features.json", "utf8"))),
+    decodeFeatures(JSON.parse(readFileSync("catalogs/features.json", "utf8"))),
   ) as Types.DeepMutable<ReturnType<typeof decodeFeatures>>;
 const providers = () =>
   structuredClone(
-    decodeProviders(JSON.parse(readFileSync("docs/providers.json", "utf8"))),
+    decodeProviders(JSON.parse(readFileSync("catalogs/providers.json", "utf8"))),
   ) as Types.DeepMutable<ReturnType<typeof decodeProviders>>;
 function firstFixture<A>(values: readonly A[]): A {
   const value = values[0];
@@ -62,7 +62,7 @@ test("local protocol evidence cannot certify a cloud provider", () => {
     {
       kind: "local-protocol",
       date: "2026-10-28",
-      source: "docs/evidence/phase-1.md",
+      source: "scripts/artifacts/check.ts",
       sdkVersion: "3.1158.0",
       apiVersion: "S3",
       runtime: operation.runtime,

@@ -27,7 +27,7 @@ debt, and preserve the original error/cause. Completion interruption remains unk
 Best-effort final observers execute beyond the work deadline with their own bounded
 timeout. Durable side effects and persistent restart are phase 5 responsibilities.
 
-See [the public contract](../../docs/transfers.md) and
-[local/resource evidence](../../docs/evidence/phase-4.md). Hosted S3 evidence remains
+See [the public contract](../../packages/storage/src/transfers.ts) and
+[local/resource tests](../../packages/storage/test/provider/transfers.acceptance.ts). Hosted S3 evidence remains
 pending at the owner's request. Other native protocols and runtime qualification
 retain their original phases.

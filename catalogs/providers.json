@@ -11,14 +11,14 @@
       "runtimes": ["node-24.22.0"],
       "sources": [
         "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html",
-        "docs/s3.md",
-        "docs/evidence/phase-3.md",
-        "docs/transfers.md",
-        "docs/evidence/phase-4.md",
-        "docs/sessions.md",
-        "docs/evidence/phase-5.md",
-        "docs/runtimes.md",
-        "docs/evidence/pre-phase-6.md"
+        "packages/storage/src/s3.ts",
+        "packages/storage/test/provider/s3.acceptance.ts",
+        "packages/storage/src/transfers.ts",
+        "packages/storage/test/provider/transfers.acceptance.ts",
+        "packages/storage/src/sessions.ts",
+        "packages/storage/test/provider/sessions.acceptance.ts",
+        "packages/storage/src/node.ts",
+        "scripts/runtime/check.ts"
       ],
       "notes": [
         "Official AWS SDK 3.1159.0; general-purpose bucket adapter and isolated signing/POST peers.",
@@ -40,7 +40,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "General-purpose bucket scope; hosted AWS acceptance pending.",
-            "Stream, authority, checksum and configuration limits documented in docs/s3.md."
+            "Stream, authority, checksum and configuration limits documented in packages/storage/src/s3.ts."
           ],
           "implementations": ["packages/storage/src/s3/primitives.ts"],
           "tests": [
@@ -51,7 +51,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-29",
-              "source": "docs/evidence/phase-3.md",
+              "source": "packages/storage/test/s3/primitives.test.ts",
               "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
               "apiVersion": "2006-03-01",
               "runtime": "node-24.22.0",
@@ -64,7 +64,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-29",
-              "source": "docs/evidence/phase-3.md",
+              "source": "packages/storage/test/provider/s3.acceptance.ts",
               "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
               "apiVersion": "2006-03-01",
               "runtime": "node-24.22.0",
@@ -86,7 +86,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "General-purpose bucket scope; hosted AWS acceptance pending.",
-            "Stream, authority, checksum and configuration limits documented in docs/s3.md."
+            "Stream, authority, checksum and configuration limits documented in packages/storage/src/s3.ts."
           ],
           "implementations": [
             "packages/storage/src/s3/primitives.ts",
@@ -101,7 +101,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-29",
-              "source": "docs/evidence/phase-3.md",
+              "source": "packages/storage/test/s3/primitives.test.ts",
               "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
               "apiVersion": "2006-03-01",
               "runtime": "node-24.22.0",
@@ -114,7 +114,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-29",
-              "source": "docs/evidence/phase-3.md",
+              "source": "packages/storage/test/provider/s3.acceptance.ts",
               "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
               "apiVersion": "2006-03-01",
               "runtime": "node-24.22.0",
@@ -127,7 +127,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-29",
-              "source": "docs/evidence/phase-4.md",
+              "source": "packages/storage/test/provider/transfers.acceptance.ts",
               "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
               "apiVersion": "2006-03-01",
               "runtime": "node-24.22.0",
@@ -149,7 +149,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "General-purpose bucket scope; hosted AWS acceptance pending.",
-            "Stream, authority, checksum and configuration limits documented in docs/s3.md."
+            "Stream, authority, checksum and configuration limits documented in packages/storage/src/s3.ts."
           ],
           "implementations": ["packages/storage/src/s3/primitives.ts"],
           "tests": [
@@ -160,7 +160,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-29",
-              "source": "docs/evidence/phase-3.md",
+              "source": "packages/storage/test/s3/primitives.test.ts",
               "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
               "apiVersion": "2006-03-01",
               "runtime": "node-24.22.0",
@@ -173,7 +173,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-29",
-              "source": "docs/evidence/phase-3.md",
+              "source": "packages/storage/test/provider/s3.acceptance.ts",
               "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
               "apiVersion": "2006-03-01",
               "runtime": "node-24.22.0",
@@ -195,7 +195,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "General-purpose bucket scope; hosted AWS acceptance pending.",
-            "Stream, authority, checksum and configuration limits documented in docs/s3.md."
+            "Stream, authority, checksum and configuration limits documented in packages/storage/src/s3.ts."
           ],
           "implementations": ["packages/storage/src/s3/primitives.ts"],
           "tests": [
@@ -206,7 +206,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-29",
-              "source": "docs/evidence/phase-3.md",
+              "source": "packages/storage/test/s3/primitives.test.ts",
               "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
               "apiVersion": "2006-03-01",
               "runtime": "node-24.22.0",
@@ -219,7 +219,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-29",
-              "source": "docs/evidence/phase-3.md",
+              "source": "packages/storage/test/provider/s3.acceptance.ts",
               "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
               "apiVersion": "2006-03-01",
               "runtime": "node-24.22.0",
@@ -241,7 +241,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "General-purpose bucket scope; hosted AWS acceptance pending.",
-            "Stream, authority, checksum and configuration limits documented in docs/s3.md."
+            "Stream, authority, checksum and configuration limits documented in packages/storage/src/s3.ts."
           ],
           "implementations": ["packages/storage/src/s3/listing.ts"],
           "tests": [
@@ -252,7 +252,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-29",
-              "source": "docs/evidence/phase-3.md",
+              "source": "packages/storage/test/s3/primitives.test.ts",
               "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
               "apiVersion": "2006-03-01",
               "runtime": "node-24.22.0",
@@ -265,7 +265,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-29",
-              "source": "docs/evidence/phase-3.md",
+              "source": "packages/storage/test/provider/s3.acceptance.ts",
               "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
               "apiVersion": "2006-03-01",
               "runtime": "node-24.22.0",
@@ -286,7 +286,7 @@
           "support": "native",
           "status": "implemented-not-live-verified",
           "constraints": [
-            "Unconditional 1\u20131000 distinct targets; per-key Result and unknown receipts.",
+            "Unconditional 1–1000 distinct targets; per-key Result and unknown receipts.",
             "Hosted AWS qualification pending."
           ],
           "implementations": ["packages/storage/src/s3/bulk-delete.ts"],
@@ -295,7 +295,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-29",
-              "source": "docs/evidence/phase-3.md",
+              "source": "packages/storage/test/s3/native.test.ts",
               "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
               "apiVersion": "2006-03-01",
               "runtime": "node-24.22.0",
@@ -331,7 +331,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-29",
-              "source": "docs/evidence/phase-3.md",
+              "source": "packages/storage/test/s3/native.test.ts",
               "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
               "apiVersion": "2006-03-01",
               "runtime": "node-24.22.0",
@@ -344,7 +344,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-29",
-              "source": "docs/evidence/phase-4.md",
+              "source": "packages/storage/test/provider/transfers.acceptance.ts",
               "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
               "apiVersion": "2006-03-01",
               "runtime": "node-24.22.0",
@@ -381,7 +381,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-29",
-              "source": "docs/evidence/phase-3.md",
+              "source": "packages/storage/test/s3/native.test.ts",
               "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
               "apiVersion": "2006-03-01",
               "runtime": "node-24.22.0",
@@ -394,7 +394,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-29",
-              "source": "docs/evidence/phase-4.md",
+              "source": "packages/storage/test/provider/transfers.acceptance.ts",
               "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
               "apiVersion": "2006-03-01",
               "runtime": "node-24.22.0",
@@ -407,7 +407,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-5.md",
+              "source": "packages/storage/test/provider/sessions.acceptance.ts",
               "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
               "apiVersion": "2006-03-01",
               "runtime": "node-24.22.0",
@@ -420,7 +420,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/pre-phase-6.md",
+              "source": "packages/storage/test/provider/sessions.acceptance.ts",
               "sdkVersion": "@aws-sdk/client-s3@3.1159.0 / effect@4.1.0",
               "apiVersion": "2006-03-01",
               "runtime": "node-24.22.0",
@@ -450,7 +450,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-29",
-              "source": "docs/evidence/phase-3.md",
+              "source": "packages/storage/test/s3/signing.test.ts",
               "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
               "apiVersion": "2006-03-01",
               "runtime": "node-24.22.0",
@@ -480,7 +480,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-29",
-              "source": "docs/evidence/phase-3.md",
+              "source": "packages/storage/test/s3/signing.test.ts",
               "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
               "apiVersion": "2006-03-01",
               "runtime": "node-24.22.0",
@@ -510,7 +510,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-29",
-              "source": "docs/evidence/phase-3.md",
+              "source": "packages/storage/test/s3/signing.test.ts",
               "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
               "apiVersion": "2006-03-01",
               "runtime": "node-24.22.0",
@@ -611,8 +611,8 @@
       "runtimes": ["workerd-1.20260730.1"],
       "sources": [
         "https://developers.cloudflare.com/r2/api/workers/workers-api-reference/",
-        "docs/r2-workers.md",
-        "docs/evidence/phase-6-r2-workers.md",
+        "packages/storage/src/r2-workers.ts",
+        "scripts/r2-workers/check.ts",
         "https://developers.cloudflare.com/r2/api/error-codes/"
       ],
       "notes": [
@@ -644,7 +644,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-6-r2-workers.md",
+              "source": "scripts/r2-workers/check.ts",
               "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
               "apiVersion": "2026-07-30",
               "runtime": "workerd-1.20260730.1",
@@ -679,7 +679,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-6-r2-workers.md",
+              "source": "scripts/r2-workers/check.ts",
               "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
               "apiVersion": "2026-07-30",
               "runtime": "workerd-1.20260730.1",
@@ -714,7 +714,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-6-r2-workers.md",
+              "source": "scripts/r2-workers/check.ts",
               "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
               "apiVersion": "2026-07-30",
               "runtime": "workerd-1.20260730.1",
@@ -749,7 +749,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-6-r2-workers.md",
+              "source": "scripts/r2-workers/check.ts",
               "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
               "apiVersion": "2026-07-30",
               "runtime": "workerd-1.20260730.1",
@@ -784,7 +784,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-6-r2-workers.md",
+              "source": "scripts/r2-workers/check.ts",
               "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
               "apiVersion": "2026-07-30",
               "runtime": "workerd-1.20260730.1",
@@ -813,7 +813,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-6-r2-workers.md",
+              "source": "scripts/r2-workers/check.ts",
               "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
               "apiVersion": "2026-07-30",
               "runtime": "workerd-1.20260730.1",
@@ -1049,10 +1049,10 @@
       "runtimes": ["node-24.22.0"],
       "sources": [
         "https://docs.cloud.google.com/storage/docs/request-preconditions",
-        "docs/gcs.md",
-        "docs/evidence/phase-7.md",
-        "docs/transfers.md",
-        "docs/sessions.md"
+        "packages/storage/src/gcs.ts",
+        "scripts/native/check.ts",
+        "packages/storage/src/transfers.ts",
+        "packages/storage/src/sessions.ts"
       ],
       "notes": [
         "Official Google SDK 8.4.0 public authorization hook; lossless JSON API generation strings and abortable single-attempt Node HTTP exchanges.",
@@ -1070,7 +1070,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/gcs.md."
+            "Exact supported behavior and limits: packages/storage/src/gcs.ts."
           ],
           "implementations": ["packages/storage/src/gcs/primitives.ts"],
           "tests": ["packages/storage/test/gcs/storage.test.ts"],
@@ -1078,7 +1078,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/gcs/storage.test.ts",
               "sdkVersion": "@google-cloud/storage@8.4.0",
               "apiVersion": "JSON v1",
               "runtime": "node-24.22.0",
@@ -1100,7 +1100,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/gcs.md."
+            "Exact supported behavior and limits: packages/storage/src/gcs.ts."
           ],
           "implementations": ["packages/storage/src/gcs/primitives.ts"],
           "tests": ["packages/storage/test/gcs/storage.test.ts"],
@@ -1108,7 +1108,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/gcs/storage.test.ts",
               "sdkVersion": "@google-cloud/storage@8.4.0",
               "apiVersion": "JSON v1",
               "runtime": "node-24.22.0",
@@ -1130,7 +1130,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/gcs.md."
+            "Exact supported behavior and limits: packages/storage/src/gcs.ts."
           ],
           "implementations": ["packages/storage/src/gcs/primitives.ts"],
           "tests": ["packages/storage/test/gcs/storage.test.ts"],
@@ -1138,7 +1138,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/gcs/storage.test.ts",
               "sdkVersion": "@google-cloud/storage@8.4.0",
               "apiVersion": "JSON v1",
               "runtime": "node-24.22.0",
@@ -1160,7 +1160,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/gcs.md."
+            "Exact supported behavior and limits: packages/storage/src/gcs.ts."
           ],
           "implementations": ["packages/storage/src/gcs/primitives.ts"],
           "tests": ["packages/storage/test/gcs/storage.test.ts"],
@@ -1168,7 +1168,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/gcs/storage.test.ts",
               "sdkVersion": "@google-cloud/storage@8.4.0",
               "apiVersion": "JSON v1",
               "runtime": "node-24.22.0",
@@ -1190,7 +1190,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/gcs.md."
+            "Exact supported behavior and limits: packages/storage/src/gcs.ts."
           ],
           "implementations": ["packages/storage/src/gcs/primitives.ts"],
           "tests": ["packages/storage/test/gcs/storage.test.ts"],
@@ -1198,7 +1198,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/gcs/storage.test.ts",
               "sdkVersion": "@google-cloud/storage@8.4.0",
               "apiVersion": "JSON v1",
               "runtime": "node-24.22.0",
@@ -1220,7 +1220,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/gcs.md."
+            "Exact supported behavior and limits: packages/storage/src/gcs.ts."
           ],
           "implementations": ["packages/storage/src/gcs/native.ts"],
           "tests": ["packages/storage/test/gcs/native.test.ts"],
@@ -1228,7 +1228,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/gcs/native.test.ts",
               "sdkVersion": "@google-cloud/storage@8.4.0",
               "apiVersion": "JSON v1",
               "runtime": "node-24.22.0",
@@ -1250,7 +1250,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/gcs.md.",
+            "Exact supported behavior and limits: packages/storage/src/gcs.ts.",
             "Portable ETag retrieval conditions and atomic create-only; mutation CAS uses native generation/metageneration, not ETag headers."
           ],
           "implementations": ["packages/storage/src/gcs/primitives.ts"],
@@ -1259,7 +1259,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/gcs/storage.test.ts",
               "sdkVersion": "@google-cloud/storage@8.4.0",
               "apiVersion": "JSON v1",
               "runtime": "node-24.22.0",
@@ -1281,7 +1281,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/gcs.md."
+            "Exact supported behavior and limits: packages/storage/src/gcs.ts."
           ],
           "implementations": ["packages/storage/src/gcs/primitives.ts"],
           "tests": ["packages/storage/test/gcs/storage.test.ts"],
@@ -1289,7 +1289,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/gcs/storage.test.ts",
               "sdkVersion": "@google-cloud/storage@8.4.0",
               "apiVersion": "JSON v1",
               "runtime": "node-24.22.0",
@@ -1311,7 +1311,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/gcs.md."
+            "Exact supported behavior and limits: packages/storage/src/gcs.ts."
           ],
           "implementations": ["packages/storage/src/gcs/mapping.ts"],
           "tests": ["packages/storage/test/gcs/storage.test.ts"],
@@ -1319,7 +1319,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/gcs/storage.test.ts",
               "sdkVersion": "@google-cloud/storage@8.4.0",
               "apiVersion": "JSON v1",
               "runtime": "node-24.22.0",
@@ -1341,7 +1341,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/gcs.md."
+            "Exact supported behavior and limits: packages/storage/src/gcs.ts."
           ],
           "implementations": ["packages/storage/src/gcs/signing.ts"],
           "tests": ["packages/storage/test/gcs/signing.test.ts"],
@@ -1349,7 +1349,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/gcs/signing.test.ts",
               "sdkVersion": "@google-cloud/storage@8.4.0",
               "apiVersion": "JSON v1",
               "runtime": "node-24.22.0",
@@ -1371,7 +1371,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/gcs.md."
+            "Exact supported behavior and limits: packages/storage/src/gcs.ts."
           ],
           "implementations": ["packages/storage/src/gcs/post.ts"],
           "tests": ["packages/storage/test/gcs/signing.test.ts"],
@@ -1379,7 +1379,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/gcs/signing.test.ts",
               "sdkVersion": "@google-cloud/storage@8.4.0",
               "apiVersion": "JSON v1",
               "runtime": "node-24.22.0",
@@ -1401,7 +1401,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/gcs.md."
+            "Exact supported behavior and limits: packages/storage/src/gcs.ts."
           ],
           "implementations": ["packages/storage/src/gcs.ts"],
           "tests": ["packages/storage/test/native-urls.test.ts"],
@@ -1409,7 +1409,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/native-urls.test.ts",
               "sdkVersion": "@google-cloud/storage@8.4.0",
               "apiVersion": "JSON v1",
               "runtime": "node-24.22.0",
@@ -1431,7 +1431,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/gcs.md.",
+            "Exact supported behavior and limits: packages/storage/src/gcs.ts.",
             "Sequential native protocol chunks; workspace admission and requests share the existing engine. Full pinned SHA-256 readback follows native publication."
           ],
           "implementations": ["packages/storage/src/gcs/resumable.ts"],
@@ -1440,7 +1440,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/gcs/storage.test.ts",
               "sdkVersion": "@google-cloud/storage@8.4.0",
               "apiVersion": "JSON v1",
               "runtime": "node-24.22.0",
@@ -1462,7 +1462,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/gcs.md.",
+            "Exact supported behavior and limits: packages/storage/src/gcs.ts.",
             "Sequential native protocol chunks; workspace admission and requests share the existing engine. Full pinned SHA-256 readback follows native publication."
           ],
           "implementations": ["packages/storage/src/gcs/resumable.ts"],
@@ -1471,7 +1471,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/gcs/storage.test.ts",
               "sdkVersion": "@google-cloud/storage@8.4.0",
               "apiVersion": "JSON v1",
               "runtime": "node-24.22.0",
@@ -1493,7 +1493,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/gcs.md.",
+            "Exact supported behavior and limits: packages/storage/src/gcs.ts.",
             "Sequential native protocol chunks; workspace admission and requests share the existing engine. Full pinned SHA-256 readback follows native publication."
           ],
           "implementations": ["packages/storage/src/gcs/resumable.ts"],
@@ -1502,7 +1502,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/provider/native-worker/run.mjs",
               "sdkVersion": "@google-cloud/storage@8.4.0",
               "apiVersion": "JSON v1",
               "runtime": "node-24.22.0",
@@ -1524,7 +1524,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/gcs.md."
+            "Exact supported behavior and limits: packages/storage/src/gcs.ts."
           ],
           "implementations": ["packages/storage/src/gcs/primitives.ts"],
           "tests": ["packages/storage/test/gcs/storage.test.ts"],
@@ -1532,7 +1532,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/gcs/storage.test.ts",
               "sdkVersion": "@google-cloud/storage@8.4.0",
               "apiVersion": "JSON v1",
               "runtime": "node-24.22.0",
@@ -1554,7 +1554,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/gcs.md."
+            "Exact supported behavior and limits: packages/storage/src/gcs.ts."
           ],
           "implementations": ["packages/storage/src/gcs/primitives.ts"],
           "tests": ["packages/storage/test/gcs/storage.test.ts"],
@@ -1562,7 +1562,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/gcs/storage.test.ts",
               "sdkVersion": "@google-cloud/storage@8.4.0",
               "apiVersion": "JSON v1",
               "runtime": "node-24.22.0",
@@ -1584,7 +1584,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/gcs.md."
+            "Exact supported behavior and limits: packages/storage/src/gcs.ts."
           ],
           "implementations": ["packages/storage/src/gcs/config.ts"],
           "tests": ["packages/storage/test/gcs/storage.test.ts"],
@@ -1592,7 +1592,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/gcs/storage.test.ts",
               "sdkVersion": "@google-cloud/storage@8.4.0",
               "apiVersion": "JSON v1",
               "runtime": "node-24.22.0",
@@ -1614,7 +1614,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/gcs.md."
+            "Exact supported behavior and limits: packages/storage/src/gcs.ts."
           ],
           "implementations": ["packages/storage/src/gcs/config.ts"],
           "tests": ["packages/storage/test/gcs/storage.test.ts"],
@@ -1622,7 +1622,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/gcs/storage.test.ts",
               "sdkVersion": "@google-cloud/storage@8.4.0",
               "apiVersion": "JSON v1",
               "runtime": "node-24.22.0",
@@ -1646,10 +1646,10 @@
       "runtimes": ["node-24.22.0"],
       "sources": [
         "https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-upload-javascript",
-        "docs/azure.md",
-        "docs/evidence/phase-7.md",
-        "docs/transfers.md",
-        "docs/sessions.md"
+        "packages/storage/src/azure.ts",
+        "scripts/native/check.ts",
+        "packages/storage/src/transfers.ts",
+        "packages/storage/src/sessions.ts"
       ],
       "notes": [
         "Official Azure SDK 12.34.0; optional identity 4.14.0; block blobs, explicit borrowed-client retry attestation, leases and async copy.",
@@ -1669,7 +1669,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/azure.md."
+            "Exact supported behavior and limits: packages/storage/src/azure.ts."
           ],
           "implementations": ["packages/storage/src/azure/primitives.ts"],
           "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
@@ -1677,7 +1677,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/azure/storage.acceptance.ts",
               "sdkVersion": "@azure/storage-blob@12.34.0",
               "apiVersion": "2026-10-06",
               "runtime": "node-24.22.0",
@@ -1699,7 +1699,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/azure.md."
+            "Exact supported behavior and limits: packages/storage/src/azure.ts."
           ],
           "implementations": ["packages/storage/src/azure/primitives.ts"],
           "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
@@ -1707,7 +1707,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/azure/storage.acceptance.ts",
               "sdkVersion": "@azure/storage-blob@12.34.0",
               "apiVersion": "2026-10-06",
               "runtime": "node-24.22.0",
@@ -1729,7 +1729,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/azure.md."
+            "Exact supported behavior and limits: packages/storage/src/azure.ts."
           ],
           "implementations": ["packages/storage/src/azure/primitives.ts"],
           "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
@@ -1737,7 +1737,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/azure/storage.acceptance.ts",
               "sdkVersion": "@azure/storage-blob@12.34.0",
               "apiVersion": "2026-10-06",
               "runtime": "node-24.22.0",
@@ -1759,7 +1759,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/azure.md."
+            "Exact supported behavior and limits: packages/storage/src/azure.ts."
           ],
           "implementations": ["packages/storage/src/azure/primitives.ts"],
           "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
@@ -1767,7 +1767,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/azure/storage.acceptance.ts",
               "sdkVersion": "@azure/storage-blob@12.34.0",
               "apiVersion": "2026-10-06",
               "runtime": "node-24.22.0",
@@ -1789,7 +1789,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/azure.md."
+            "Exact supported behavior and limits: packages/storage/src/azure.ts."
           ],
           "implementations": ["packages/storage/src/azure/primitives.ts"],
           "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
@@ -1797,7 +1797,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/azure/storage.acceptance.ts",
               "sdkVersion": "@azure/storage-blob@12.34.0",
               "apiVersion": "2026-10-06",
               "runtime": "node-24.22.0",
@@ -1819,7 +1819,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/azure.md."
+            "Exact supported behavior and limits: packages/storage/src/azure.ts."
           ],
           "implementations": ["packages/storage/src/azure/native.ts"],
           "tests": ["packages/storage/test/azure/copy.test.ts"],
@@ -1827,7 +1827,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/azure/copy.test.ts",
               "sdkVersion": "@azure/storage-blob@12.34.0",
               "apiVersion": "2026-10-06",
               "runtime": "node-24.22.0",
@@ -1849,7 +1849,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/azure.md."
+            "Exact supported behavior and limits: packages/storage/src/azure.ts."
           ],
           "implementations": ["packages/storage/src/azure/primitives.ts"],
           "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
@@ -1857,7 +1857,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/azure/storage.acceptance.ts",
               "sdkVersion": "@azure/storage-blob@12.34.0",
               "apiVersion": "2026-10-06",
               "runtime": "node-24.22.0",
@@ -1879,7 +1879,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/azure.md."
+            "Exact supported behavior and limits: packages/storage/src/azure.ts."
           ],
           "implementations": ["packages/storage/src/azure/primitives.ts"],
           "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
@@ -1887,7 +1887,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/azure/storage.acceptance.ts",
               "sdkVersion": "@azure/storage-blob@12.34.0",
               "apiVersion": "2026-10-06",
               "runtime": "node-24.22.0",
@@ -1909,7 +1909,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/azure.md."
+            "Exact supported behavior and limits: packages/storage/src/azure.ts."
           ],
           "implementations": ["packages/storage/src/azure/mapping.ts"],
           "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
@@ -1917,7 +1917,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/azure/storage.acceptance.ts",
               "sdkVersion": "@azure/storage-blob@12.34.0",
               "apiVersion": "2026-10-06",
               "runtime": "node-24.22.0",
@@ -1939,7 +1939,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/azure.md."
+            "Exact supported behavior and limits: packages/storage/src/azure.ts."
           ],
           "implementations": ["packages/storage/src/azure/signing.ts"],
           "tests": ["packages/storage/test/azure/signing.test.ts"],
@@ -1947,7 +1947,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/azure/signing.test.ts",
               "sdkVersion": "@azure/storage-blob@12.34.0",
               "apiVersion": "2026-10-06",
               "runtime": "node-24.22.0",
@@ -1969,7 +1969,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/azure.md."
+            "Exact supported behavior and limits: packages/storage/src/azure.ts."
           ],
           "implementations": ["packages/storage/src/azure/signing.ts"],
           "tests": ["packages/storage/test/azure/signing.test.ts"],
@@ -1977,7 +1977,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/azure/signing.test.ts",
               "sdkVersion": "@azure/storage-blob@12.34.0",
               "apiVersion": "2026-10-06",
               "runtime": "node-24.22.0",
@@ -1999,7 +1999,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/azure.md."
+            "Exact supported behavior and limits: packages/storage/src/azure.ts."
           ],
           "implementations": ["packages/storage/src/azure.ts"],
           "tests": ["packages/storage/test/native-urls.test.ts"],
@@ -2007,7 +2007,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/native-urls.test.ts",
               "sdkVersion": "@azure/storage-blob@12.34.0",
               "apiVersion": "2026-10-06",
               "runtime": "node-24.22.0",
@@ -2029,7 +2029,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/azure.md.",
+            "Exact supported behavior and limits: packages/storage/src/azure.ts.",
             "Sequential native protocol chunks; workspace admission and requests share the existing engine. Full pinned SHA-256 readback follows native publication."
           ],
           "implementations": ["packages/storage/src/azure/blocks.ts"],
@@ -2038,7 +2038,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/azure/storage.acceptance.ts",
               "sdkVersion": "@azure/storage-blob@12.34.0",
               "apiVersion": "2026-10-06",
               "runtime": "node-24.22.0",
@@ -2060,7 +2060,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/azure.md.",
+            "Exact supported behavior and limits: packages/storage/src/azure.ts.",
             "Sequential native protocol chunks; workspace admission and requests share the existing engine. Full pinned SHA-256 readback follows native publication.",
             "Aborting named blocks does not remove uncommitted bytes; provider expiry owns cleanup."
           ],
@@ -2070,7 +2070,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/azure/storage.acceptance.ts",
               "sdkVersion": "@azure/storage-blob@12.34.0",
               "apiVersion": "2026-10-06",
               "runtime": "node-24.22.0",
@@ -2092,7 +2092,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/azure.md.",
+            "Exact supported behavior and limits: packages/storage/src/azure.ts.",
             "Sequential native protocol chunks; workspace admission and requests share the existing engine. Full pinned SHA-256 readback follows native publication.",
             "Aborting named blocks does not remove uncommitted bytes; provider expiry owns cleanup."
           ],
@@ -2102,7 +2102,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/provider/native-worker/run.mjs",
               "sdkVersion": "@azure/storage-blob@12.34.0",
               "apiVersion": "2026-10-06",
               "runtime": "node-24.22.0",
@@ -2124,7 +2124,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/azure.md."
+            "Exact supported behavior and limits: packages/storage/src/azure.ts."
           ],
           "implementations": ["packages/storage/src/azure/primitives.ts"],
           "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
@@ -2132,7 +2132,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/azure/storage.acceptance.ts",
               "sdkVersion": "@azure/storage-blob@12.34.0",
               "apiVersion": "2026-10-06",
               "runtime": "node-24.22.0",
@@ -2154,7 +2154,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/azure.md."
+            "Exact supported behavior and limits: packages/storage/src/azure.ts."
           ],
           "implementations": ["packages/storage/src/azure/primitives.ts"],
           "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
@@ -2162,7 +2162,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/azure/storage.acceptance.ts",
               "sdkVersion": "@azure/storage-blob@12.34.0",
               "apiVersion": "2026-10-06",
               "runtime": "node-24.22.0",
@@ -2184,7 +2184,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/azure.md."
+            "Exact supported behavior and limits: packages/storage/src/azure.ts."
           ],
           "implementations": ["packages/storage/src/azure/config.ts"],
           "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
@@ -2192,7 +2192,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/azure/storage.acceptance.ts",
               "sdkVersion": "@azure/storage-blob@12.34.0",
               "apiVersion": "2026-10-06",
               "runtime": "node-24.22.0",
@@ -2214,7 +2214,7 @@
           "status": "implemented-not-live-verified",
           "constraints": [
             "Hosted GCS/Azure acceptance has not run; local tests do not qualify cloud identity or account semantics.",
-            "Exact supported behavior and limits: docs/azure.md."
+            "Exact supported behavior and limits: packages/storage/src/azure.ts."
           ],
           "implementations": ["packages/storage/src/azure/config.ts"],
           "tests": ["packages/storage/test/azure/storage.acceptance.ts"],
@@ -2222,7 +2222,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-7.md",
+              "source": "packages/storage/test/azure/storage.acceptance.ts",
               "sdkVersion": "@azure/storage-blob@12.34.0",
               "apiVersion": "2026-10-06",
               "runtime": "node-24.22.0",
@@ -2246,8 +2246,8 @@
       "runtimes": ["node-24.22.0", "bun-1.4.4"],
       "sources": [
         "https://effect.website/docs/v4/platform/file-system",
-        "docs/filesystem.md",
-        "docs/evidence/phase-6-filesystem.md"
+        "packages/storage/src/filesystem.ts",
+        "scripts/filesystem/check.ts"
       ],
       "notes": [
         "Trusted root; hostile local writers are outside the selected threat model.",
@@ -2274,7 +2274,7 @@
             {
               "kind": "runtime",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-6-filesystem.md",
+              "source": "scripts/filesystem/check.ts",
               "sdkVersion": "effect@4.1.0",
               "apiVersion": null,
               "runtime": "node-24.22.0",
@@ -2306,7 +2306,7 @@
             {
               "kind": "runtime",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-6-filesystem.md",
+              "source": "scripts/filesystem/check.ts",
               "sdkVersion": "effect@4.1.0",
               "apiVersion": null,
               "runtime": "bun-1.4.4",
@@ -2338,7 +2338,7 @@
             {
               "kind": "runtime",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-6-filesystem.md",
+              "source": "scripts/filesystem/check.ts",
               "sdkVersion": "effect@4.1.0",
               "apiVersion": null,
               "runtime": "node-24.22.0",
@@ -2370,7 +2370,7 @@
             {
               "kind": "runtime",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-6-filesystem.md",
+              "source": "scripts/filesystem/check.ts",
               "sdkVersion": "effect@4.1.0",
               "apiVersion": null,
               "runtime": "bun-1.4.4",
@@ -2402,7 +2402,7 @@
             {
               "kind": "runtime",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-6-filesystem.md",
+              "source": "scripts/filesystem/check.ts",
               "sdkVersion": "effect@4.1.0",
               "apiVersion": null,
               "runtime": "node-24.22.0",
@@ -2434,7 +2434,7 @@
             {
               "kind": "runtime",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-6-filesystem.md",
+              "source": "scripts/filesystem/check.ts",
               "sdkVersion": "effect@4.1.0",
               "apiVersion": null,
               "runtime": "bun-1.4.4",
@@ -2466,7 +2466,7 @@
             {
               "kind": "runtime",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-6-filesystem.md",
+              "source": "scripts/filesystem/check.ts",
               "sdkVersion": "effect@4.1.0",
               "apiVersion": null,
               "runtime": "node-24.22.0",
@@ -2498,7 +2498,7 @@
             {
               "kind": "runtime",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-6-filesystem.md",
+              "source": "scripts/filesystem/check.ts",
               "sdkVersion": "effect@4.1.0",
               "apiVersion": null,
               "runtime": "bun-1.4.4",
@@ -2530,7 +2530,7 @@
             {
               "kind": "runtime",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-6-filesystem.md",
+              "source": "scripts/filesystem/check.ts",
               "sdkVersion": "effect@4.1.0",
               "apiVersion": null,
               "runtime": "node-24.22.0",
@@ -2562,7 +2562,7 @@
             {
               "kind": "runtime",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-6-filesystem.md",
+              "source": "scripts/filesystem/check.ts",
               "sdkVersion": "effect@4.1.0",
               "apiVersion": null,
               "runtime": "bun-1.4.4",
@@ -2584,7 +2584,11 @@
       "implementationPhase": 2,
       "implementation": "implemented",
       "runtimes": ["node-24.22.0"],
-      "sources": ["https://effect.website/docs/v4/", "docs/testing.md", "docs/evidence/phase-2.md"],
+      "sources": [
+        "https://effect.website/docs/v4/",
+        "packages/storage/src/testing.ts",
+        "packages/storage/test/conformance.test.ts"
+      ],
       "notes": [
         "Process-local reference storage with configurable object, total, pending and read byte quotas.",
         "Atomic conditional publication; copied input buffers and metadata; scoped single-use downloads.",
@@ -2601,7 +2605,7 @@
           "support": "native",
           "status": "verified",
           "constraints": [
-            "Memory reference semantics; default quotas documented in docs/testing.md.",
+            "Memory reference semantics; default quotas documented in packages/storage/src/testing.ts.",
             "No history, content digests, cross-process state or durability."
           ],
           "implementations": [
@@ -2616,7 +2620,7 @@
             {
               "kind": "runtime",
               "date": "2026-10-28",
-              "source": "docs/evidence/phase-2.md",
+              "source": "packages/storage/test/conformance.test.ts",
               "sdkVersion": "effect@4.0.6",
               "apiVersion": null,
               "runtime": "node-24.22.0",
@@ -2637,7 +2641,7 @@
           "support": "native",
           "status": "verified",
           "constraints": [
-            "Memory reference semantics; default quotas documented in docs/testing.md.",
+            "Memory reference semantics; default quotas documented in packages/storage/src/testing.ts.",
             "No history, content digests, cross-process state or durability."
           ],
           "implementations": ["packages/storage/src/testing/memory.ts"],
@@ -2649,7 +2653,7 @@
             {
               "kind": "runtime",
               "date": "2026-10-28",
-              "source": "docs/evidence/phase-2.md",
+              "source": "packages/storage/test/conformance.test.ts",
               "sdkVersion": "effect@4.0.6",
               "apiVersion": null,
               "runtime": "node-24.22.0",
@@ -2670,7 +2674,7 @@
           "support": "native",
           "status": "verified",
           "constraints": [
-            "Memory reference semantics; default quotas documented in docs/testing.md.",
+            "Memory reference semantics; default quotas documented in packages/storage/src/testing.ts.",
             "No history, content digests, cross-process state or durability."
           ],
           "implementations": ["packages/storage/src/testing/memory.ts"],
@@ -2682,7 +2686,7 @@
             {
               "kind": "runtime",
               "date": "2026-10-28",
-              "source": "docs/evidence/phase-2.md",
+              "source": "packages/storage/test/conformance.test.ts",
               "sdkVersion": "effect@4.0.6",
               "apiVersion": null,
               "runtime": "node-24.22.0",
@@ -2703,7 +2707,7 @@
           "support": "native",
           "status": "verified",
           "constraints": [
-            "Memory reference semantics; default quotas documented in docs/testing.md.",
+            "Memory reference semantics; default quotas documented in packages/storage/src/testing.ts.",
             "No history, content digests, cross-process state or durability."
           ],
           "implementations": ["packages/storage/src/testing/memory.ts"],
@@ -2715,7 +2719,7 @@
             {
               "kind": "runtime",
               "date": "2026-10-28",
-              "source": "docs/evidence/phase-2.md",
+              "source": "packages/storage/test/conformance.test.ts",
               "sdkVersion": "effect@4.0.6",
               "apiVersion": null,
               "runtime": "node-24.22.0",
@@ -2736,7 +2740,7 @@
           "support": "native",
           "status": "verified",
           "constraints": [
-            "Memory reference semantics; default quotas documented in docs/testing.md.",
+            "Memory reference semantics; default quotas documented in packages/storage/src/testing.ts.",
             "No history, content digests, cross-process state or durability."
           ],
           "implementations": [
@@ -2751,7 +2755,7 @@
             {
               "kind": "runtime",
               "date": "2026-10-28",
-              "source": "docs/evidence/phase-2.md",
+              "source": "packages/storage/test/conformance.test.ts",
               "sdkVersion": "effect@4.0.6",
               "apiVersion": null,
               "runtime": "node-24.22.0",
@@ -2775,8 +2779,8 @@
       "runtimes": ["node-24.22.0"],
       "sources": [
         "https://supabase.com/docs/guides/storage/security/access-control",
-        "docs/supabase.md",
-        "docs/evidence/phase-8.md"
+        "packages/storage/src/supabase.ts",
+        "scripts/app-storage/check.ts"
       ],
       "notes": [
         "JWT/RLS and privileged S3/service credentials are explicit separate authority paths.",
@@ -2792,7 +2796,7 @@
           "support": "native",
           "status": "implemented-not-live-verified",
           "constraints": [
-            "Exact behavior and limitations: docs/supabase.md.",
+            "Exact behavior and limitations: packages/storage/src/supabase.ts.",
             "Hosted qualification pending; loopback fixtures do not establish provider guarantees."
           ],
           "implementations": ["packages/storage/src/supabase/primitives.ts"],
@@ -2801,7 +2805,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-8.md",
+              "source": "packages/storage/test/supabase/storage.test.ts",
               "sdkVersion": null,
               "apiVersion": "Storage REST v1",
               "runtime": "node-24.22.0",
@@ -2820,7 +2824,7 @@
           "support": "native",
           "status": "implemented-not-live-verified",
           "constraints": [
-            "Exact behavior and limitations: docs/supabase.md.",
+            "Exact behavior and limitations: packages/storage/src/supabase.ts.",
             "Hosted qualification pending; loopback fixtures do not establish provider guarantees."
           ],
           "implementations": ["packages/storage/src/supabase/primitives.ts"],
@@ -2829,7 +2833,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-8.md",
+              "source": "packages/storage/test/supabase/storage.test.ts",
               "sdkVersion": null,
               "apiVersion": "Storage REST v1",
               "runtime": "node-24.22.0",
@@ -2848,7 +2852,7 @@
           "support": "native",
           "status": "implemented-not-live-verified",
           "constraints": [
-            "Exact behavior and limitations: docs/supabase.md.",
+            "Exact behavior and limitations: packages/storage/src/supabase.ts.",
             "Hosted qualification pending; loopback fixtures do not establish provider guarantees."
           ],
           "implementations": ["packages/storage/src/supabase/primitives.ts"],
@@ -2857,7 +2861,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-8.md",
+              "source": "packages/storage/test/supabase/storage.test.ts",
               "sdkVersion": null,
               "apiVersion": "Storage REST v1",
               "runtime": "node-24.22.0",
@@ -2876,7 +2880,7 @@
           "support": "native",
           "status": "implemented-not-live-verified",
           "constraints": [
-            "Exact behavior and limitations: docs/supabase.md.",
+            "Exact behavior and limitations: packages/storage/src/supabase.ts.",
             "Hosted qualification pending; loopback fixtures do not establish provider guarantees."
           ],
           "implementations": ["packages/storage/src/supabase/primitives.ts"],
@@ -2885,7 +2889,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-8.md",
+              "source": "packages/storage/test/supabase/storage.test.ts",
               "sdkVersion": null,
               "apiVersion": "Storage REST v1",
               "runtime": "node-24.22.0",
@@ -2904,7 +2908,7 @@
           "support": "native",
           "status": "implemented-not-live-verified",
           "constraints": [
-            "Exact behavior and limitations: docs/supabase.md.",
+            "Exact behavior and limitations: packages/storage/src/supabase.ts.",
             "Hosted qualification pending; loopback fixtures do not establish provider guarantees."
           ],
           "implementations": ["packages/storage/src/supabase/primitives.ts"],
@@ -2913,7 +2917,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-8.md",
+              "source": "packages/storage/test/supabase/storage.test.ts",
               "sdkVersion": null,
               "apiVersion": "Storage REST v1",
               "runtime": "node-24.22.0",
@@ -2932,7 +2936,7 @@
           "support": "native",
           "status": "implemented-not-live-verified",
           "constraints": [
-            "Exact provider constraints: docs/supabase.md.",
+            "Exact provider constraints: packages/storage/src/supabase.ts.",
             "Hosted semantics remain unqualified."
           ],
           "implementations": ["packages/storage/src/supabase/signing.ts"],
@@ -2948,7 +2952,7 @@
           "support": "native",
           "status": "implemented-not-live-verified",
           "constraints": [
-            "Exact provider constraints: docs/supabase.md.",
+            "Exact provider constraints: packages/storage/src/supabase.ts.",
             "Hosted semantics remain unqualified."
           ],
           "implementations": ["packages/storage/src/supabase/signing.ts"],
@@ -2964,7 +2968,7 @@
           "support": "native",
           "status": "implemented-not-live-verified",
           "constraints": [
-            "Exact provider constraints: docs/supabase.md.",
+            "Exact provider constraints: packages/storage/src/supabase.ts.",
             "Hosted semantics remain unqualified."
           ],
           "implementations": ["packages/storage/src/supabase/tus.ts"],
@@ -2980,7 +2984,7 @@
           "support": "native",
           "status": "implemented-not-live-verified",
           "constraints": [
-            "Exact provider constraints: docs/supabase.md.",
+            "Exact provider constraints: packages/storage/src/supabase.ts.",
             "Hosted semantics remain unqualified."
           ],
           "implementations": ["packages/storage/src/supabase/tus.ts"],
@@ -2999,8 +3003,8 @@
       "runtimes": ["node-24.22.0"],
       "sources": [
         "https://vercel.com/docs/vercel-blob/using-blob-sdk",
-        "docs/vercel.md",
-        "docs/evidence/phase-8.md"
+        "packages/storage/src/vercel.ts",
+        "scripts/app-storage/check.ts"
       ],
       "notes": [
         "SDK normalizes 206 to 200; range handling must inspect Content-Range.",
@@ -3016,7 +3020,7 @@
           "support": "native",
           "status": "implemented-not-live-verified",
           "constraints": [
-            "Exact behavior and limitations: docs/vercel.md.",
+            "Exact behavior and limitations: packages/storage/src/vercel.ts.",
             "Hosted qualification pending; loopback fixtures do not establish provider guarantees."
           ],
           "implementations": ["packages/storage/src/vercel/primitives.ts"],
@@ -3025,7 +3029,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-8.md",
+              "source": "packages/storage/test/vercel/storage.test.ts",
               "sdkVersion": "@vercel/blob@2.8.2",
               "apiVersion": "Blob API 13",
               "runtime": "node-24.22.0",
@@ -3044,7 +3048,7 @@
           "support": "native",
           "status": "implemented-not-live-verified",
           "constraints": [
-            "Exact behavior and limitations: docs/vercel.md.",
+            "Exact behavior and limitations: packages/storage/src/vercel.ts.",
             "Hosted qualification pending; loopback fixtures do not establish provider guarantees."
           ],
           "implementations": ["packages/storage/src/vercel/primitives.ts"],
@@ -3053,7 +3057,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-8.md",
+              "source": "packages/storage/test/vercel/storage.test.ts",
               "sdkVersion": "@vercel/blob@2.8.2",
               "apiVersion": "Blob API 13",
               "runtime": "node-24.22.0",
@@ -3072,7 +3076,7 @@
           "support": "native",
           "status": "implemented-not-live-verified",
           "constraints": [
-            "Exact behavior and limitations: docs/vercel.md.",
+            "Exact behavior and limitations: packages/storage/src/vercel.ts.",
             "Hosted qualification pending; loopback fixtures do not establish provider guarantees."
           ],
           "implementations": ["packages/storage/src/vercel/primitives.ts"],
@@ -3081,7 +3085,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-8.md",
+              "source": "packages/storage/test/vercel/storage.test.ts",
               "sdkVersion": "@vercel/blob@2.8.2",
               "apiVersion": "Blob API 13",
               "runtime": "node-24.22.0",
@@ -3100,7 +3104,7 @@
           "support": "native",
           "status": "implemented-not-live-verified",
           "constraints": [
-            "Exact behavior and limitations: docs/vercel.md.",
+            "Exact behavior and limitations: packages/storage/src/vercel.ts.",
             "Hosted qualification pending; loopback fixtures do not establish provider guarantees."
           ],
           "implementations": ["packages/storage/src/vercel/primitives.ts"],
@@ -3109,7 +3113,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-8.md",
+              "source": "packages/storage/test/vercel/storage.test.ts",
               "sdkVersion": "@vercel/blob@2.8.2",
               "apiVersion": "Blob API 13",
               "runtime": "node-24.22.0",
@@ -3128,7 +3132,7 @@
           "support": "native",
           "status": "implemented-not-live-verified",
           "constraints": [
-            "Exact behavior and limitations: docs/vercel.md.",
+            "Exact behavior and limitations: packages/storage/src/vercel.ts.",
             "Hosted qualification pending; loopback fixtures do not establish provider guarantees."
           ],
           "implementations": ["packages/storage/src/vercel/primitives.ts"],
@@ -3137,7 +3141,7 @@
             {
               "kind": "local-protocol",
               "date": "2026-10-30",
-              "source": "docs/evidence/phase-8.md",
+              "source": "packages/storage/test/vercel/storage.test.ts",
               "sdkVersion": "@vercel/blob@2.8.2",
               "apiVersion": "Blob API 13",
               "runtime": "node-24.22.0",
@@ -3156,7 +3160,7 @@
           "support": "native",
           "status": "implemented-not-live-verified",
           "constraints": [
-            "Exact provider constraints: docs/vercel.md.",
+            "Exact provider constraints: packages/storage/src/vercel.ts.",
             "Hosted semantics remain unqualified."
           ],
           "implementations": ["packages/storage/src/vercel/signing.ts"],
@@ -3172,7 +3176,7 @@
           "support": "native",
           "status": "implemented-not-live-verified",
           "constraints": [
-            "Exact provider constraints: docs/vercel.md.",
+            "Exact provider constraints: packages/storage/src/vercel.ts.",
             "Hosted semantics remain unqualified."
           ],
           "implementations": ["packages/storage/src/vercel/signing.ts"],

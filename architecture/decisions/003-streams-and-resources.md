@@ -35,15 +35,16 @@ transfer/session phases.
 
 ## Evidence and consequences
 
-The [probe](../../docs/evidence/phase-1.md) compiles preserved source E/R and scoped
-SDK acquisition, exercises request interruption and finalizes a partially consumed
-S3 response. Supabase REST exposes body/headers together; its SDK result does not.
+[S3 resource tests](../../packages/storage/test/s3/resources.test.ts) exercise request
+interruption and partially consumed response cleanup. Supabase REST exposes
+body/headers together; its SDK result does not.
 Native SDK streams require resource bridges at adapter boundaries.
 
 This establishes the ownership contract, not production memory bounds or every
 SDK's cancellation semantics. Measure buffers/handles and test native source
 failure/cleanup in the implementing phase before advertising those guarantees.
 
-[Phase 2 evidence](../../docs/evidence/phase-2.md) covers source E/R, scoped and
-single-use bodies, partial reads, memory reservations and bounded collection.
+[Core conformance tests](../../packages/storage/test/conformance.test.ts) cover the
+portable adapter contract. [Storage tests](../../packages/storage/test/storage.test.ts)
+cover scoped single-use bodies, partial reads and bounded collection.
 The memory limits describe logical retained bytes, not process RSS.

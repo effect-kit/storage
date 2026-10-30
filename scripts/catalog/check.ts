@@ -2,8 +2,8 @@ import { readFile } from "node:fs/promises";
 
 import { validateCatalogs } from "./validate.ts";
 
-const features: unknown = JSON.parse(await readFile("docs/features.json", "utf8"));
-const providers: unknown = JSON.parse(await readFile("docs/providers.json", "utf8"));
+const features: unknown = JSON.parse(await readFile("catalogs/features.json", "utf8"));
+const providers: unknown = JSON.parse(await readFile("catalogs/providers.json", "utf8"));
 const issues = validateCatalogs(features, providers, process.cwd());
 
 if (issues.length) {

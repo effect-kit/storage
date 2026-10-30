@@ -49,6 +49,6 @@ GCS offsets, Azure blocks, S3 parts and tus offsets remain distinct low-level
 protocols with shared higher-level workflows. TypeScript interfaces alone do not
 complete a feature; dynamic selection needs a typed unsupported outcome.
 
-The [portable API](../../docs/core.md) specifies implemented conditions, reference
+The [portable API](../../packages/storage/src/storage.ts) specifies implemented conditions, reference
 variants, codecs and helpers. Advanced protocol/lifecycle interfaces establish
 boundaries; they do not imply implemented native capabilities.

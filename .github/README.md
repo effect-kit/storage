@@ -234,8 +234,8 @@ on its branch because token-created PRs do not trigger ordinary PR workflows.
 `workflows/s3-local.yml` is a manual lane running `pnpm test:s3:local`. It creates
 and removes its own pinned RustFS container with generated disposable credentials.
 It needs Docker and no AWS account. The automatic CI and artifact lanes remain
-independent of services. The [S3 guide](../docs/s3.md) documents a separate explicit
-`test:s3:aws` lane for an authorized existing versioned bucket/prefix. Real AWS
+independent of services. The separate explicit `pnpm test:s3:aws` lane requires an
+authorized existing versioned bucket/prefix. Real AWS
 acceptance is pending at the owner's request; local evidence cannot certify it.
 
 The manually dispatched local S3 lane also runs managed native/multipart copy and a
@@ -260,8 +260,8 @@ Reports are written to `.artifacts/runtime/<runtime>.json`.
 
 This workflow has not been dispatched as part of local development. Local Darwin
 runtime results do not establish its Ubuntu/remote success. Chromium installation
-and alternate engines stay outside automatic PR CI. See [runtime commands and
-limits](../docs/runtimes.md); real provider acceptance remains in its own lanes.
+and alternate engines stay outside automatic PR CI. The [runtime runner](../scripts/runtime/check.ts)
+owns these checks; real provider acceptance remains in its own lanes.
 
 ## Phase 6 local provider acceptance
 
@@ -291,4 +291,5 @@ Chromium, verifies packed Supabase/Vercel browser imports and exercises owned tu
 SIGKILL/restarts and runnable examples. It needs no hosted credentials. Only the
 whitelisted `.artifacts/app-storage-local.json` summary is uploaded; bundles,
 checkpoints, source files and environment values remain local. Hosted tests are a
-separate explicit command documented in `docs/app-storage-examples.md`.
+separate explicit command: `pnpm test:app:hosted`. Its configuration is checked in
+`packages/storage/test/provider/app.hosted.ts`.

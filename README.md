@@ -61,23 +61,18 @@ Default CI is offline and deterministic after dependency installation. Hosted pr
 database, browser, OS and long-running resource tests belong to explicit manual lanes.
 Local investigations stay in ignored `research/` and are never required by CI.
 
-## Architecture and support evidence
+## Project metadata
 
 - [Architecture decisions](architecture/README.md)
-- [Feature catalog](docs/features.json): 47 stable feature IDs and delivery ownership.
-- [Provider catalog](docs/providers.json): 16 distinct targets, configuration-specific operations and evidence.
-- [Catalog conventions](docs/catalogs.md)
-- [Portable API](docs/core.md), [memory/testing tools](docs/testing.md), [S3 adapter](docs/s3.md), and [managed transfers](docs/transfers.md), and [durable sessions](docs/sessions.md)
-- [Native R2 Workers](docs/r2-workers.md) and [local binding evidence](docs/evidence/phase-6-r2-workers.md)
-- [Filesystem provider](docs/filesystem.md) and [filesystem evidence](docs/evidence/phase-6-filesystem.md)
-- [Runtime setup](docs/runtimes.md) and [current runtime evidence](docs/evidence/pre-phase-6.md)
-- [Effect 4.1 baseline upgrade evidence](docs/evidence/effect-4-1.md)
-- [Phase 5 persistence/restart evidence](docs/evidence/phase-5.md)
-- [Phase 4 transfer/resource evidence](docs/evidence/phase-4.md)
-- [Phase 1 evidence](docs/evidence/phase-1.md), [phase 2 evidence](docs/evidence/phase-2.md), and [phase 3 evidence](docs/evidence/phase-3.md)
+- [Feature catalog](catalogs/features.json): 47 stable feature IDs and delivery ownership.
+- [Provider catalog](catalogs/providers.json): 16 distinct targets, configuration-specific operations and evidence.
+- [Catalog schema](scripts/catalog/schema.ts)
 
 A documented native capability, local fixture result and real-provider acceptance are
 different evidence. Unknown support is never treated as a pass.
+
+Product documentation will live on the separate landing site after implementation.
+This repository keeps source, runnable examples, internal decisions and CI metadata.
 
 ## Contributing and releases
 
@@ -96,10 +91,6 @@ by this work.
 
 Apache-2.0. Each published package includes its own LICENSE.
 
-Native provider guides: [Google Cloud Storage](docs/gcs.md), [Azure Blob](docs/azure.md),
-and [phase 7 evidence](docs/evidence/phase-7.md).
-
-Supabase and Vercel adapters: [Supabase](docs/supabase.md), [Vercel Blob](docs/vercel.md),
-[runnable examples](docs/app-storage-examples.md), and [phase 8 evidence](docs/evidence/phase-8.md).
+Provider examples live in [packages/storage/examples](packages/storage/examples).
 Use `pnpm test:app:local` for packed browser module probes and tus process restarts;
 `pnpm test:app:hosted` requires explicit existing provider resources and test authority.

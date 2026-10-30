@@ -36,4 +36,4 @@ Workflow outcomes, source/callback E/R, scopes, uncertainty and explicit ownersh
 The four runtime helper smoke lanes use exact archives, isolated peers/declarations and
 actual engines. Qualification is specific: provider transports, OS crash/power-cut
 behavior, browser reload/selection and distributed fencing require their own evidence.
-See [runtime contracts](../../docs/runtimes.md) and [verification](../../docs/evidence/pre-phase-6.md).
+See [runtime contracts](../../packages/storage/src/node.ts) and [runtime checks](../../scripts/runtime/check.ts).

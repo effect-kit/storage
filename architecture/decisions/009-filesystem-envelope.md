@@ -35,4 +35,5 @@ preservation and real Bun crash recovery. Revisit this adapter with upstream fix
 Hostile concurrent local writers, ancestor replacement, external in-place changes,
 power loss, network filesystems and unexecuted OS profiles remain outside evidence.
 No-follow checks are final-component defenses under the trusted-root assumption.
-See [provider contract](../../docs/filesystem.md) and phase 6 evidence.
+See the [provider contract](../../packages/storage/src/filesystem.ts) and
+[local acceptance checks](../../scripts/filesystem/check.ts).

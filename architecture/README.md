@@ -13,30 +13,32 @@ These decisions guide native adapters and transfer workflows in subsequent phase
 | [005 — Persistence and fixtures](decisions/005-persistence-and-fixtures.md)     | Session store, filesystem threat model, local services      |
 | [006 — Qualification and releases](decisions/006-qualification-and-releases.md) | Evidence, runtimes, CI and artifact/release boundaries      |
 
-Use the [catalogs](../docs/catalogs.md) to track delivery. Each feature has a target
+Use the [feature](../catalogs/features.json) and [provider](../catalogs/providers.json)
+catalogs to track delivery. Each feature has a target
 and implementation phase; planned contracts and documented vendor support are not
-completed implementations. [Phase 1 evidence](../docs/evidence/phase-1.md) records
-what the local probes actually establish. [Phase 2 evidence](../docs/evidence/phase-2.md)
-records core/memory behavior, types and packed custom-adapter checks.
+completed implementations. [Artifact checks](../scripts/artifacts/check.ts) validate
+packed consumers; [core conformance tests](../packages/storage/test/conformance.test.ts)
+exercise the portable memory contract.
 
 Create modules/exports when their behavior exists. No production code, CI check or
 required documentation input may depend on ignored research.
 
-[Phase 3 evidence](../docs/evidence/phase-3.md) separates the implemented S3 adapter,
-controlled HTTP results, owned RustFS acceptance and the open AWS hosted gate.
+[S3 acceptance tests](../packages/storage/test/provider/s3.acceptance.ts) run against
+the owned RustFS fixture or explicitly configured AWS resources. Hosted AWS
+qualification remains pending.
 
 [007 — Managed transfer ownership](decisions/007-managed-transfers.md) records shared
 admission, protocol attempts, verified copy/move, uncertainty and observer boundaries.
 
-Phase 5 adds [Effect-backed durable sessions](../docs/sessions.md) and
-[separate-process recovery evidence](../docs/evidence/phase-5.md). ADR 005 now records
+Phase 5 adds [Effect-backed durable sessions](../packages/storage/src/sessions.ts) and
+[separate-process recovery tests](../packages/storage/test/provider/sessions.acceptance.ts). ADR 005 now records
 the owner-approved exclusive-ownership base; PostgreSQL/distributed leases are optional
 backend work rather than required infrastructure.
 
 [008 — Workflow and runtime layers](decisions/008-workflow-runtime-layers.md) records
 provider-owned drivers, policy-only constructors, shared managed/session admission
-and the canonical four runtime paths. [Current evidence](../docs/evidence/pre-phase-6.md)
-separates actual helper runtimes from provider/OS/release qualification.
+and the canonical four runtime paths. [Runtime checks](../scripts/runtime/check.ts)
+exercise the helpers separately from provider/OS/release qualification.
 
 [009 — Filesystem envelopes](decisions/009-filesystem-envelope.md) records atomic
 single-generation publication, opaque key mapping, explicit staging ownership and

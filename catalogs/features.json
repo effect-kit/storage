@@ -9,11 +9,11 @@
       "completionPhase": 4,
       "status": "implemented",
       "specifications": [
-        "docs/core.md",
-        "docs/testing.md",
-        "docs/s3.md",
-        "docs/transfers.md",
-        "docs/r2-workers.md"
+        "packages/storage/src/storage.ts",
+        "packages/storage/src/testing.ts",
+        "packages/storage/src/s3.ts",
+        "packages/storage/src/transfers.ts",
+        "packages/storage/src/r2-workers.ts"
       ],
       "implementations": [
         "packages/storage/src/requests.ts",
@@ -31,12 +31,12 @@
         "packages/storage/test/s3/resources.test.ts",
         "packages/storage/test/transfers/upload.test.ts"
       ],
-      "examples": ["packages/storage/README.md", "docs/transfers.md"],
+      "examples": ["packages/storage/README.md", "packages/storage/examples/durable-upload.mjs"],
       "evidence": [
         {
           "kind": "runtime",
           "date": "2026-10-28",
-          "source": "docs/evidence/phase-2.md",
+          "source": "packages/storage/test/conformance.test.ts",
           "sdkVersion": "effect@4.0.6",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -49,7 +49,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-3.md",
+          "source": "packages/storage/test/s3/primitives.test.ts",
           "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
           "apiVersion": "2006-03-01",
           "runtime": "node-24.22.0",
@@ -62,7 +62,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-4.md",
+          "source": "packages/storage/test/transfers/upload.test.ts",
           "sdkVersion": "effect@4.0.6",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -75,7 +75,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-30",
-          "source": "docs/evidence/phase-6-r2-workers.md",
+          "source": "scripts/r2-workers/check.ts",
           "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
           "apiVersion": "2026-07-30",
           "runtime": "workerd-1.20260730.1",
@@ -95,11 +95,11 @@
       "completionPhase": 4,
       "status": "implemented",
       "specifications": [
-        "docs/core.md",
-        "docs/testing.md",
-        "docs/s3.md",
-        "docs/transfers.md",
-        "docs/r2-workers.md"
+        "packages/storage/src/storage.ts",
+        "packages/storage/src/testing.ts",
+        "packages/storage/src/s3.ts",
+        "packages/storage/src/transfers.ts",
+        "packages/storage/src/r2-workers.ts"
       ],
       "implementations": [
         "packages/storage/src/storage.ts",
@@ -116,12 +116,12 @@
         "packages/storage/test/transfers/download-copy.test.ts",
         "packages/storage/test/transfers/files.test.ts"
       ],
-      "examples": ["packages/storage/README.md", "docs/transfers.md"],
+      "examples": ["packages/storage/README.md", "packages/storage/examples/durable-upload.mjs"],
       "evidence": [
         {
           "kind": "runtime",
           "date": "2026-10-28",
-          "source": "docs/evidence/phase-2.md",
+          "source": "packages/storage/test/memory.test.ts",
           "sdkVersion": "effect@4.0.6",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -134,7 +134,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-3.md",
+          "source": "packages/storage/test/s3/primitives.test.ts",
           "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
           "apiVersion": "2006-03-01",
           "runtime": "node-24.22.0",
@@ -147,7 +147,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-4.md",
+          "source": "packages/storage/test/transfers/download-copy.test.ts",
           "sdkVersion": "effect@4.0.6",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -160,7 +160,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-30",
-          "source": "docs/evidence/phase-6-r2-workers.md",
+          "source": "scripts/r2-workers/check.ts",
           "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
           "apiVersion": "2026-07-30",
           "runtime": "workerd-1.20260730.1",
@@ -179,7 +179,12 @@
       "target": "Head, existence helper, MIME/cache/disposition fields, custom metadata, explicit update semantics",
       "completionPhase": 10,
       "status": "in-progress",
-      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md", "docs/r2-workers.md"],
+      "specifications": [
+        "packages/storage/src/storage.ts",
+        "packages/storage/src/testing.ts",
+        "packages/storage/src/s3.ts",
+        "packages/storage/src/r2-workers.ts"
+      ],
       "implementations": [
         "packages/storage/src/object.ts",
         "packages/storage/src/storage.ts",
@@ -197,7 +202,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-28",
-          "source": "docs/evidence/phase-2.md",
+          "source": "packages/storage/test/conformance.test.ts",
           "sdkVersion": "effect@4.0.6",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -210,7 +215,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-3.md",
+          "source": "packages/storage/test/s3/primitives.test.ts",
           "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
           "apiVersion": "2006-03-01",
           "runtime": "node-24.22.0",
@@ -223,7 +228,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-30",
-          "source": "docs/evidence/phase-6-r2-workers.md",
+          "source": "scripts/r2-workers/check.ts",
           "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
           "apiVersion": "2026-07-30",
           "runtime": "workerd-1.20260730.1",
@@ -243,11 +248,11 @@
       "completionPhase": 4,
       "status": "implemented",
       "specifications": [
-        "docs/core.md",
-        "docs/testing.md",
-        "docs/s3.md",
-        "docs/transfers.md",
-        "docs/r2-workers.md"
+        "packages/storage/src/storage.ts",
+        "packages/storage/src/testing.ts",
+        "packages/storage/src/s3.ts",
+        "packages/storage/src/transfers.ts",
+        "packages/storage/src/r2-workers.ts"
       ],
       "implementations": [
         "packages/storage/src/storage.ts",
@@ -263,12 +268,12 @@
         "packages/storage/test/s3/native.test.ts",
         "packages/storage/test/transfers/download-copy.test.ts"
       ],
-      "examples": ["packages/storage/README.md", "docs/transfers.md"],
+      "examples": ["packages/storage/README.md", "packages/storage/examples/durable-upload.mjs"],
       "evidence": [
         {
           "kind": "runtime",
           "date": "2026-10-28",
-          "source": "docs/evidence/phase-2.md",
+          "source": "packages/storage/test/conformance.test.ts",
           "sdkVersion": "effect@4.0.6",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -281,7 +286,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-3.md",
+          "source": "packages/storage/test/s3/native.test.ts",
           "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
           "apiVersion": "2006-03-01",
           "runtime": "node-24.22.0",
@@ -294,7 +299,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-4.md",
+          "source": "packages/storage/test/transfers/download-copy.test.ts",
           "sdkVersion": "effect@4.0.6",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -307,7 +312,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-30",
-          "source": "docs/evidence/phase-6-r2-workers.md",
+          "source": "scripts/r2-workers/check.ts",
           "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
           "apiVersion": "2026-07-30",
           "runtime": "workerd-1.20260730.1",
@@ -326,7 +331,12 @@
       "target": "Prefix, delimiter/common prefixes, pages and lazy streams, limits, opaque cursors, cancellation",
       "completionPhase": 2,
       "status": "implemented",
-      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md", "docs/r2-workers.md"],
+      "specifications": [
+        "packages/storage/src/storage.ts",
+        "packages/storage/src/testing.ts",
+        "packages/storage/src/s3.ts",
+        "packages/storage/src/r2-workers.ts"
+      ],
       "implementations": [
         "packages/storage/src/storage.ts",
         "packages/storage/src/testing/memory-list.ts",
@@ -342,7 +352,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-28",
-          "source": "docs/evidence/phase-2.md",
+          "source": "packages/storage/test/conformance.test.ts",
           "sdkVersion": "effect@4.0.6",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -355,7 +365,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-3.md",
+          "source": "packages/storage/test/s3/primitives.test.ts",
           "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
           "apiVersion": "2006-03-01",
           "runtime": "node-24.22.0",
@@ -368,7 +378,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-30",
-          "source": "docs/evidence/phase-6-r2-workers.md",
+          "source": "scripts/r2-workers/check.ts",
           "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
           "apiVersion": "2026-07-30",
           "runtime": "workerd-1.20260730.1",
@@ -387,7 +397,7 @@
       "target": "Native copy when valid, streamed cross-store copy, conditional source, explicit non-atomic move",
       "completionPhase": 4,
       "status": "implemented",
-      "specifications": ["docs/s3.md", "docs/transfers.md"],
+      "specifications": ["packages/storage/src/s3.ts", "packages/storage/src/transfers.ts"],
       "implementations": [
         "packages/storage/src/s3/copy.ts",
         "packages/storage/src/transfers.ts",
@@ -397,12 +407,12 @@
         "packages/storage/test/s3/native.test.ts",
         "packages/storage/test/transfers/download-copy.test.ts"
       ],
-      "examples": ["packages/storage/README.md", "docs/transfers.md"],
+      "examples": ["packages/storage/README.md", "packages/storage/examples/durable-upload.mjs"],
       "evidence": [
         {
           "kind": "local-protocol",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-3.md",
+          "source": "packages/storage/test/s3/native.test.ts",
           "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
           "apiVersion": "2006-03-01",
           "runtime": "node-24.22.0",
@@ -415,7 +425,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-4.md",
+          "source": "packages/storage/test/transfers/download-copy.test.ts",
           "sdkVersion": "effect@4.0.6",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -434,7 +444,12 @@
       "target": "Create-only, match-current, not-modified reads, source/destination conditions where supported",
       "completionPhase": 3,
       "status": "implemented",
-      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md", "docs/r2-workers.md"],
+      "specifications": [
+        "packages/storage/src/storage.ts",
+        "packages/storage/src/testing.ts",
+        "packages/storage/src/s3.ts",
+        "packages/storage/src/r2-workers.ts"
+      ],
       "implementations": [
         "packages/storage/src/requests.ts",
         "packages/storage/src/testing/memory-upload.ts",
@@ -454,7 +469,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-28",
-          "source": "docs/evidence/phase-2.md",
+          "source": "packages/storage/test/models.test.ts",
           "sdkVersion": "effect@4.0.6",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -467,7 +482,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-3.md",
+          "source": "packages/storage/test/s3/primitives.test.ts",
           "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
           "apiVersion": "2006-03-01",
           "runtime": "node-24.22.0",
@@ -480,7 +495,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-30",
-          "source": "docs/evidence/phase-6-r2-workers.md",
+          "source": "scripts/r2-workers/check.ts",
           "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
           "apiVersion": "2026-07-30",
           "runtime": "workerd-1.20260730.1",
@@ -500,11 +515,11 @@
       "completionPhase": 4,
       "status": "implemented",
       "specifications": [
-        "docs/core.md",
-        "docs/testing.md",
-        "docs/s3.md",
-        "docs/transfers.md",
-        "docs/r2-workers.md"
+        "packages/storage/src/storage.ts",
+        "packages/storage/src/testing.ts",
+        "packages/storage/src/s3.ts",
+        "packages/storage/src/transfers.ts",
+        "packages/storage/src/r2-workers.ts"
       ],
       "implementations": [
         "packages/storage/src/ranges.ts",
@@ -519,12 +534,12 @@
         "packages/storage/test/s3/primitives.test.ts",
         "packages/storage/test/transfers/download-copy.test.ts"
       ],
-      "examples": ["packages/storage/README.md", "docs/transfers.md"],
+      "examples": ["packages/storage/README.md", "packages/storage/examples/durable-upload.mjs"],
       "evidence": [
         {
           "kind": "runtime",
           "date": "2026-10-28",
-          "source": "docs/evidence/phase-2.md",
+          "source": "packages/storage/test/conformance.test.ts",
           "sdkVersion": "effect@4.0.6",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -537,7 +552,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-3.md",
+          "source": "packages/storage/test/s3/primitives.test.ts",
           "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
           "apiVersion": "2006-03-01",
           "runtime": "node-24.22.0",
@@ -550,7 +565,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-4.md",
+          "source": "packages/storage/test/transfers/download-copy.test.ts",
           "sdkVersion": "effect@4.0.6",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -563,7 +578,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-30",
-          "source": "docs/evidence/phase-6-r2-workers.md",
+          "source": "scripts/r2-workers/check.ts",
           "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
           "apiVersion": "2026-07-30",
           "runtime": "workerd-1.20260730.1",
@@ -582,7 +597,11 @@
       "target": "Opaque ETags, native version IDs/generations, object references, canonical key handling",
       "completionPhase": 2,
       "status": "implemented",
-      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md"],
+      "specifications": [
+        "packages/storage/src/storage.ts",
+        "packages/storage/src/testing.ts",
+        "packages/storage/src/s3.ts"
+      ],
       "implementations": [
         "packages/storage/src/object.ts",
         "packages/storage/src/testing/memory-state.ts",
@@ -599,7 +618,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-28",
-          "source": "docs/evidence/phase-2.md",
+          "source": "packages/storage/test/memory.test.ts",
           "sdkVersion": "effect@4.0.6",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -612,7 +631,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-3.md",
+          "source": "packages/storage/test/s3/primitives.test.ts",
           "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
           "apiVersion": "2006-03-01",
           "runtime": "node-24.22.0",
@@ -631,7 +650,7 @@
       "target": "GET/HEAD/PUT where supported, required headers, expiry and credential lifetime",
       "completionPhase": 3,
       "status": "implemented",
-      "specifications": ["docs/s3.md"],
+      "specifications": ["packages/storage/src/s3.ts"],
       "implementations": ["packages/storage/src/s3/signing.ts"],
       "tests": ["packages/storage/test/s3/signing.test.ts"],
       "examples": ["packages/storage/README.md"],
@@ -639,7 +658,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-3.md",
+          "source": "packages/storage/test/s3/signing.test.ts",
           "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
           "apiVersion": "2006-03-01",
           "runtime": "node-24.22.0",
@@ -658,7 +677,7 @@
       "target": "POST policy forms/provider upload tokens where available, explicit constraints and enforcement",
       "completionPhase": 11,
       "status": "in-progress",
-      "specifications": ["docs/s3.md"],
+      "specifications": ["packages/storage/src/s3.ts"],
       "implementations": ["packages/storage/src/s3/post.ts"],
       "tests": ["packages/storage/test/s3/signing.test.ts"],
       "examples": ["packages/storage/README.md"],
@@ -666,7 +685,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-3.md",
+          "source": "packages/storage/test/s3/signing.test.ts",
           "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
           "apiVersion": "2006-03-01",
           "runtime": "node-24.22.0",
@@ -685,7 +704,7 @@
       "target": "Explicit public URL resolver/custom domains; no implied change to object visibility",
       "completionPhase": 11,
       "status": "in-progress",
-      "specifications": ["docs/s3.md"],
+      "specifications": ["packages/storage/src/s3.ts"],
       "implementations": ["packages/storage/src/s3.ts"],
       "tests": ["packages/storage/test/s3/signing.test.ts"],
       "examples": ["packages/storage/README.md"],
@@ -693,7 +712,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-3.md",
+          "source": "packages/storage/test/s3/signing.test.ts",
           "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
           "apiVersion": "2006-03-01",
           "runtime": "node-24.22.0",
@@ -713,10 +732,10 @@
       "completionPhase": 4,
       "status": "implemented",
       "specifications": [
-        "docs/transfers.md",
-        "docs/runtimes.md",
+        "packages/storage/src/transfers.ts",
+        "packages/storage/src/node.ts",
         "architecture/decisions/008-workflow-runtime-layers.md",
-        "docs/r2-workers.md"
+        "packages/storage/src/r2-workers.ts"
       ],
       "implementations": [
         "packages/storage/src/transfers.ts",
@@ -731,12 +750,12 @@
         "packages/storage/test/transfers/s3.test.ts",
         "packages/storage/test/transfers/composition.test.ts"
       ],
-      "examples": ["docs/transfers.md"],
+      "examples": ["packages/storage/examples/durable-upload.mjs"],
       "evidence": [
         {
           "kind": "runtime",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-4.md",
+          "source": "packages/storage/test/transfers/resources.test.ts",
           "sdkVersion": "effect@4.0.6",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -749,7 +768,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/pre-phase-6.md",
+          "source": "packages/storage/test/transfers/composition.test.ts",
           "sdkVersion": "effect@4.1.0",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -762,7 +781,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/pre-phase-6.md",
+          "source": "packages/storage/test/runtime/program.mjs",
           "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -775,7 +794,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/pre-phase-6.md",
+          "source": "packages/storage/test/runtime/program.mjs",
           "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
           "apiVersion": null,
           "runtime": "bun-1.4.4",
@@ -788,7 +807,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/pre-phase-6.md",
+          "source": "packages/storage/test/runtime/program.mjs",
           "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
           "apiVersion": null,
           "runtime": "deno-2.9.6",
@@ -801,7 +820,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/pre-phase-6.md",
+          "source": "packages/storage/test/runtime/program.mjs",
           "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
           "apiVersion": null,
           "runtime": "chromium-156.0.8078.4",
@@ -814,7 +833,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-30",
-          "source": "docs/evidence/phase-6-r2-workers.md",
+          "source": "scripts/r2-workers/check.ts",
           "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
           "apiVersion": "2026-07-30",
           "runtime": "workerd-1.20260730.1",
@@ -833,7 +852,11 @@
       "target": "Initiate, parts, list, complete, abort, signing parts, native constraints, orphan cleanup",
       "completionPhase": 4,
       "status": "implemented",
-      "specifications": ["docs/s3.md", "docs/transfers.md", "docs/r2-workers.md"],
+      "specifications": [
+        "packages/storage/src/s3.ts",
+        "packages/storage/src/transfers.ts",
+        "packages/storage/src/r2-workers.ts"
+      ],
       "implementations": [
         "packages/storage/src/s3/multipart.ts",
         "packages/storage/src/s3/copy.ts",
@@ -846,12 +869,12 @@
         "packages/storage/test/transfers/upload.test.ts",
         "packages/storage/test/transfers/s3.test.ts"
       ],
-      "examples": ["packages/storage/README.md", "docs/transfers.md"],
+      "examples": ["packages/storage/README.md", "packages/storage/examples/durable-upload.mjs"],
       "evidence": [
         {
           "kind": "local-protocol",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-3.md",
+          "source": "packages/storage/test/s3/native.test.ts",
           "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
           "apiVersion": "2006-03-01",
           "runtime": "node-24.22.0",
@@ -864,7 +887,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-4.md",
+          "source": "packages/storage/test/transfers/upload.test.ts",
           "sdkVersion": "effect@4.0.6",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -877,7 +900,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-30",
-          "source": "docs/evidence/phase-6-r2-workers.md",
+          "source": "scripts/r2-workers/check.ts",
           "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
           "apiVersion": "2026-07-30",
           "runtime": "workerd-1.20260730.1",
@@ -896,7 +919,11 @@
       "target": "GCS/Azure/tus/native protocols, checkpointing, offset/part reconciliation, source fingerprint",
       "completionPhase": 8,
       "status": "in-progress",
-      "specifications": ["docs/transfers.md", "docs/supabase.md", "docs/vercel.md"],
+      "specifications": [
+        "packages/storage/src/transfers.ts",
+        "packages/storage/src/supabase.ts",
+        "packages/storage/src/vercel.ts"
+      ],
       "implementations": [
         "packages/storage/src/gcs/resumable.ts",
         "packages/storage/src/azure/blocks.ts",
@@ -918,9 +945,9 @@
       "completionPhase": 5,
       "status": "in-progress",
       "specifications": [
-        "docs/sessions.md",
+        "packages/storage/src/sessions.ts",
         "architecture/decisions/005-persistence-and-fixtures.md",
-        "docs/runtimes.md",
+        "packages/storage/src/node.ts",
         "architecture/decisions/008-workflow-runtime-layers.md"
       ],
       "implementations": [
@@ -941,7 +968,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/phase-5.md",
+          "source": "packages/storage/test/provider/sessions.acceptance.ts",
           "sdkVersion": "effect@4.0.6 / @aws-sdk/client-s3@3.1159.0",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -955,7 +982,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/pre-phase-6.md",
+          "source": "packages/storage/test/transfers/composition.test.ts",
           "sdkVersion": "effect@4.1.0",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -968,7 +995,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/pre-phase-6.md",
+          "source": "packages/storage/test/runtime/program.mjs",
           "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -981,7 +1008,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/pre-phase-6.md",
+          "source": "packages/storage/test/runtime/program.mjs",
           "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
           "apiVersion": null,
           "runtime": "bun-1.4.4",
@@ -994,7 +1021,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/pre-phase-6.md",
+          "source": "packages/storage/test/runtime/program.mjs",
           "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
           "apiVersion": null,
           "runtime": "deno-2.9.6",
@@ -1007,7 +1034,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/pre-phase-6.md",
+          "source": "packages/storage/test/runtime/program.mjs",
           "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
           "apiVersion": null,
           "runtime": "chromium-156.0.8078.4",
@@ -1027,12 +1054,12 @@
       "completionPhase": 5,
       "status": "implemented",
       "specifications": [
-        "docs/transfers.md",
-        "docs/sessions.md",
+        "packages/storage/src/transfers.ts",
+        "packages/storage/src/sessions.ts",
         "architecture/decisions/005-persistence-and-fixtures.md",
-        "docs/runtimes.md",
+        "packages/storage/src/node.ts",
         "architecture/decisions/008-workflow-runtime-layers.md",
-        "docs/r2-workers.md"
+        "packages/storage/src/r2-workers.ts"
       ],
       "implementations": [
         "packages/storage/src/transfers.ts",
@@ -1050,12 +1077,12 @@
         "packages/storage/test/provider/sessions.acceptance.ts",
         "packages/storage/test/transfers/composition.test.ts"
       ],
-      "examples": ["docs/transfers.md", "packages/storage/examples/durable-upload.mjs"],
+      "examples": ["packages/storage/examples/durable-upload.mjs"],
       "evidence": [
         {
           "kind": "runtime",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-4.md",
+          "source": "packages/storage/test/transfers/download-copy.test.ts",
           "sdkVersion": "effect@4.0.6",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -1068,7 +1095,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/phase-5.md",
+          "source": "packages/storage/test/provider/sessions.acceptance.ts",
           "sdkVersion": "effect@4.0.6 / @aws-sdk/client-s3@3.1159.0",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -1082,7 +1109,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/pre-phase-6.md",
+          "source": "packages/storage/test/transfers/composition.test.ts",
           "sdkVersion": "effect@4.1.0",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -1095,7 +1122,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/pre-phase-6.md",
+          "source": "packages/storage/test/runtime/program.mjs",
           "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -1108,7 +1135,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/pre-phase-6.md",
+          "source": "packages/storage/test/runtime/program.mjs",
           "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
           "apiVersion": null,
           "runtime": "bun-1.4.4",
@@ -1121,7 +1148,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/pre-phase-6.md",
+          "source": "packages/storage/test/runtime/program.mjs",
           "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
           "apiVersion": null,
           "runtime": "deno-2.9.6",
@@ -1134,7 +1161,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/pre-phase-6.md",
+          "source": "packages/storage/test/runtime/program.mjs",
           "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
           "apiVersion": null,
           "runtime": "chromium-156.0.8078.4",
@@ -1147,7 +1174,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-30",
-          "source": "docs/evidence/phase-6-r2-workers.md",
+          "source": "scripts/r2-workers/check.ts",
           "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
           "apiVersion": "2026-07-30",
           "runtime": "workerd-1.20260730.1",
@@ -1167,8 +1194,8 @@
       "completionPhase": 4,
       "status": "implemented",
       "specifications": [
-        "docs/transfers.md",
-        "docs/sessions.md",
+        "packages/storage/src/transfers.ts",
+        "packages/storage/src/sessions.ts",
         "architecture/decisions/005-persistence-and-fixtures.md"
       ],
       "implementations": [
@@ -1185,12 +1212,12 @@
         "packages/storage/test/sessions/store.test.ts",
         "packages/storage/test/provider/sessions.acceptance.ts"
       ],
-      "examples": ["docs/transfers.md", "packages/storage/examples/durable-upload.mjs"],
+      "examples": ["packages/storage/examples/durable-upload.mjs"],
       "evidence": [
         {
           "kind": "runtime",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-4.md",
+          "source": "packages/storage/test/transfers/download-copy.test.ts",
           "sdkVersion": "effect@4.0.6",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -1203,7 +1230,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/phase-5.md",
+          "source": "packages/storage/test/provider/sessions.acceptance.ts",
           "sdkVersion": "effect@4.0.6 / @aws-sdk/client-s3@3.1159.0",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -1224,11 +1251,11 @@
       "completionPhase": 4,
       "status": "implemented",
       "specifications": [
-        "docs/s3.md",
-        "docs/transfers.md",
-        "docs/runtimes.md",
+        "packages/storage/src/s3.ts",
+        "packages/storage/src/transfers.ts",
+        "packages/storage/src/node.ts",
         "architecture/decisions/008-workflow-runtime-layers.md",
-        "docs/r2-workers.md"
+        "packages/storage/src/r2-workers.ts"
       ],
       "implementations": [
         "packages/storage/src/s3/object-mapping.ts",
@@ -1247,12 +1274,12 @@
         "packages/storage/test/transfers/composition.test.ts",
         "packages/storage/test/runtime/crypto.test.ts"
       ],
-      "examples": ["packages/storage/README.md", "docs/transfers.md"],
+      "examples": ["packages/storage/README.md", "packages/storage/examples/durable-upload.mjs"],
       "evidence": [
         {
           "kind": "local-protocol",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-3.md",
+          "source": "packages/storage/test/s3/primitives.test.ts",
           "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
           "apiVersion": "2006-03-01",
           "runtime": "node-24.22.0",
@@ -1265,7 +1292,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-4.md",
+          "source": "packages/storage/test/transfers/upload.test.ts",
           "sdkVersion": "effect@4.0.6",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -1278,7 +1305,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/pre-phase-6.md",
+          "source": "packages/storage/test/transfers/composition.test.ts",
           "sdkVersion": "effect@4.1.0",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -1291,7 +1318,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/pre-phase-6.md",
+          "source": "packages/storage/test/runtime/program.mjs",
           "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -1304,7 +1331,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/pre-phase-6.md",
+          "source": "packages/storage/test/runtime/program.mjs",
           "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
           "apiVersion": null,
           "runtime": "bun-1.4.4",
@@ -1317,7 +1344,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/pre-phase-6.md",
+          "source": "packages/storage/test/runtime/program.mjs",
           "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
           "apiVersion": null,
           "runtime": "deno-2.9.6",
@@ -1330,7 +1357,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/pre-phase-6.md",
+          "source": "packages/storage/test/runtime/program.mjs",
           "sdkVersion": "effect@4.1.0 / @noble/hashes@2.4.0",
           "apiVersion": null,
           "runtime": "chromium-156.0.8078.4",
@@ -1343,7 +1370,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-30",
-          "source": "docs/evidence/phase-6-r2-workers.md",
+          "source": "scripts/r2-workers/check.ts",
           "sdkVersion": "effect@4.1.0 / miniflare@4.20260730.0",
           "apiVersion": "2026-07-30",
           "runtime": "workerd-1.20260730.1",
@@ -1362,7 +1389,12 @@
       "target": "Byte limits, metadata rules, declared/sniffed MIME distinction, source length verification",
       "completionPhase": 4,
       "status": "implemented",
-      "specifications": ["docs/core.md", "docs/testing.md", "docs/s3.md", "docs/transfers.md"],
+      "specifications": [
+        "packages/storage/src/storage.ts",
+        "packages/storage/src/testing.ts",
+        "packages/storage/src/s3.ts",
+        "packages/storage/src/transfers.ts"
+      ],
       "implementations": [
         "packages/storage/src/object.ts",
         "packages/storage/src/requests.ts",
@@ -1381,12 +1413,12 @@
         "packages/storage/test/transfers/upload.test.ts",
         "packages/storage/test/transfers/files.test.ts"
       ],
-      "examples": ["packages/storage/README.md", "docs/transfers.md"],
+      "examples": ["packages/storage/README.md", "packages/storage/examples/durable-upload.mjs"],
       "evidence": [
         {
           "kind": "runtime",
           "date": "2026-10-28",
-          "source": "docs/evidence/phase-2.md",
+          "source": "packages/storage/test/memory.test.ts",
           "sdkVersion": "effect@4.0.6",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -1399,7 +1431,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-3.md",
+          "source": "packages/storage/test/s3/primitives.test.ts",
           "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
           "apiVersion": "2006-03-01",
           "runtime": "node-24.22.0",
@@ -1412,7 +1444,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-4.md",
+          "source": "packages/storage/test/transfers/upload.test.ts",
           "sdkVersion": "effect@4.0.6",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -1444,7 +1476,7 @@
       "target": "Static and refreshed credentials, roles/workload identities, secret redaction, scoped clients",
       "completionPhase": 3,
       "status": "in-progress",
-      "specifications": ["docs/s3.md"],
+      "specifications": ["packages/storage/src/s3.ts"],
       "implementations": [
         "packages/storage/src/s3.ts",
         "packages/storage/src/s3/config.ts",
@@ -1459,7 +1491,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-3.md",
+          "source": "packages/storage/test/s3/resources.test.ts",
           "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
           "apiVersion": "2006-03-01",
           "runtime": "node-24.22.0",
@@ -1478,7 +1510,7 @@
       "target": "Native server-side encryption/KMS options; optional versioned client-encryption integration",
       "completionPhase": 12,
       "status": "in-progress",
-      "specifications": ["docs/s3.md"],
+      "specifications": ["packages/storage/src/s3.ts"],
       "implementations": ["packages/storage/src/s3/config.ts", "packages/storage/src/s3/copy.ts"],
       "tests": ["packages/storage/test/s3/signing.test.ts"],
       "examples": ["packages/storage/README.md"],
@@ -1486,7 +1518,7 @@
         {
           "kind": "local-protocol",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-3.md",
+          "source": "packages/storage/test/s3/signing.test.ts",
           "sdkVersion": "@aws-sdk/client-s3@3.1159.0",
           "apiVersion": "2006-03-01",
           "runtime": "node-24.22.0",
@@ -1518,7 +1550,10 @@
       "target": "Path confinement, symlink policy, atomic publication, temp-file cleanup, permission behavior",
       "completionPhase": 6,
       "status": "implemented",
-      "specifications": ["docs/filesystem.md", "architecture/decisions/009-filesystem-envelope.md"],
+      "specifications": [
+        "packages/storage/src/filesystem.ts",
+        "architecture/decisions/009-filesystem-envelope.md"
+      ],
       "implementations": [
         "packages/storage/src/filesystem.ts",
         "packages/storage/src/filesystem/layout.ts",
@@ -1531,7 +1566,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/phase-6-filesystem.md",
+          "source": "scripts/filesystem/check.ts",
           "sdkVersion": "effect@4.1.0",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -1544,7 +1579,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/phase-6-filesystem.md",
+          "source": "scripts/filesystem/check.ts",
           "sdkVersion": "effect@4.1.0",
           "apiVersion": null,
           "runtime": "bun-1.4.4",
@@ -1694,7 +1729,7 @@
       "completionPhase": 5,
       "status": "implemented",
       "specifications": [
-        "docs/sessions.md",
+        "packages/storage/src/sessions.ts",
         "architecture/decisions/005-persistence-and-fixtures.md"
       ],
       "implementations": [
@@ -1713,7 +1748,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/phase-5.md",
+          "source": "packages/storage/test/provider/sessions.acceptance.ts",
           "sdkVersion": "effect@4.0.6 / @aws-sdk/client-s3@3.1159.0",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -1747,7 +1782,7 @@
       "completionPhase": 12,
       "status": "planned",
       "specifications": [
-        "docs/runtimes.md",
+        "packages/storage/src/node.ts",
         "architecture/decisions/008-workflow-runtime-layers.md"
       ],
       "implementations": [],
@@ -1757,7 +1792,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-30",
-          "source": "docs/evidence/pre-phase-6.md",
+          "source": "packages/storage/test/transfers/composition.test.ts",
           "sdkVersion": "effect@4.1.0",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -1841,7 +1876,7 @@
       "target": "Public service constructors, capability contracts, provider helpers, conformance suite",
       "completionPhase": 2,
       "status": "implemented",
-      "specifications": ["docs/core.md", "docs/testing.md"],
+      "specifications": ["packages/storage/src/storage.ts", "packages/storage/src/testing.ts"],
       "implementations": [
         "packages/storage/src/storage.ts",
         "packages/storage/src/capabilities.ts",
@@ -1860,7 +1895,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-28",
-          "source": "docs/evidence/phase-2.md",
+          "source": "packages/storage/test/consumers/custom-adapter.ts",
           "sdkVersion": "effect@4.0.6",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -1873,7 +1908,7 @@
         {
           "kind": "artifact",
           "date": "2026-10-28",
-          "source": "docs/evidence/phase-2.md",
+          "source": "scripts/artifacts/check.ts",
           "sdkVersion": "effect@4.0.6",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -1892,7 +1927,7 @@
       "target": "In-memory Layer, fault injection, deterministic clock, fixture ownership, runtime/provider suites",
       "completionPhase": 2,
       "status": "implemented",
-      "specifications": ["docs/core.md", "docs/testing.md"],
+      "specifications": ["packages/storage/src/storage.ts", "packages/storage/src/testing.ts"],
       "implementations": [
         "packages/storage/src/testing/memory.ts",
         "packages/storage/src/testing/faults.ts",
@@ -1908,7 +1943,7 @@
         {
           "kind": "runtime",
           "date": "2026-10-28",
-          "source": "docs/evidence/phase-2.md",
+          "source": "packages/storage/test/conformance.test.ts",
           "sdkVersion": "effect@4.0.6",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -1927,7 +1962,7 @@
       "target": "Tracing, metrics, structured errors, request IDs, bounded labels and secret-safe diagnostics",
       "completionPhase": 4,
       "status": "implemented",
-      "specifications": ["docs/transfers.md"],
+      "specifications": ["packages/storage/src/transfers.ts"],
       "implementations": [
         "packages/storage/src/transfers.ts",
         "packages/storage/src/transfers/runtime.ts"
@@ -1936,12 +1971,12 @@
         "packages/storage/test/transfers/resources.test.ts",
         "packages/storage/test/transfers/upload.test.ts"
       ],
-      "examples": ["docs/transfers.md"],
+      "examples": ["packages/storage/examples/durable-upload.mjs"],
       "evidence": [
         {
           "kind": "runtime",
           "date": "2026-10-29",
-          "source": "docs/evidence/phase-4.md",
+          "source": "packages/storage/test/transfers/resources.test.ts",
           "sdkVersion": "effect@4.0.6",
           "apiVersion": null,
           "runtime": "node-24.22.0",
@@ -1968,7 +2003,7 @@
         {
           "kind": "artifact",
           "date": "2026-10-28",
-          "source": "docs/evidence/phase-1.md",
+          "source": "scripts/artifacts/check.ts",
           "sdkVersion": null,
           "apiVersion": null,
           "runtime": "node-24.22.0",

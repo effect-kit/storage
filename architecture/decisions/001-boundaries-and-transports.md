@@ -26,8 +26,8 @@ Node Buffer versus browser Blob boundary and disabled/coordinated internal retri
 
 ## Evidence and alternatives
 
-[Local SDK probes](../../docs/evidence/phase-1.md) demonstrate stream/metadata and
-public protocol surfaces. They do not qualify hosted services or all runtimes.
+[S3 resource tests](../../packages/storage/test/s3/resources.test.ts) exercise stream
+ownership and request interruption. They do not qualify hosted services or all runtimes.
 Use SDK credential/signature/XML implementations rather than reproducing them.
 An extra Effect AWS wrapper is unnecessary for the chosen narrow adapter and
 retry/resource ownership; its current peer metadata does allow Effect 4.
@@ -44,7 +44,7 @@ Keep the existing pinned toolchain. Introduce CLI/React packages only for actual
 independent dependency/runtime needs. A raw-client escape hatch carries native
 ownership and does not count as an implemented portable capability.
 
-The [S3 implementation](../../docs/s3.md) pins official SDK 3.1159.0, preserves
+The [S3 implementation](../../packages/storage/src/s3.ts) pins official SDK 3.1159.0, preserves
 WHEN_SUPPORTED data-plane checksums and uses one transport attempt. Unknown-length
 single-request sources stage under an explicit adapter limit; managed streaming
 strategies and total byte/retry budgets remain phase 4. Node built-ins are external
