@@ -14,6 +14,8 @@ export const storageLayer = <E, R>(make: Effect.Effect<StorageService, E, R>) =>
 
       return Context.add(context, TransferDriver, {
         storage,
+        underlyingStoreId: previous.underlyingStoreId ?? previous.storage.storeId,
+        ...(previous.underlyingStoreIds ? { underlyingStoreIds: previous.underlyingStoreIds } : {}),
         maximumObjectBytes: previous.maximumObjectBytes,
         maximumSingleUploadBytes: previous.maximumSingleUploadBytes,
         transportOverheadBytes: previous.transportOverheadBytes,

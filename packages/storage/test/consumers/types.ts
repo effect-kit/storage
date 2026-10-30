@@ -1,8 +1,8 @@
 import { Context, Effect, Schema, Stream } from "effect";
 import type { Scope } from "effect";
 
-import { ObjectKey, ObjectSize, StorageSigning } from "@effect-kit/storage";
-import type { ObjectMetadata, StorageError, StorageService, Storage } from "@effect-kit/storage";
+import { ObjectKey, ObjectSize, StorageSigning, Storage } from "@effect-kit/storage";
+import type { ObjectMetadata, StorageError, StorageService } from "@effect-kit/storage";
 import { UploadSessions } from "@effect-kit/storage/sessions";
 import type { SessionsService } from "@effect-kit/storage/sessions";
 import { Faults, MemoryStorage } from "@effect-kit/storage/testing";
@@ -145,3 +145,99 @@ const streamContent: Effect.Effect<
   uploads.content({ actor: { subject: "user" }, uploadId: "id", body }),
 );
 void [authenticatedClient, streamContent, makeStorageUploadApi(), StorageHttp.routes];
+
+import { Layer, type FileSystem, type Path } from "effect";
+import type { SecureRandom } from "effect/crypto";
+import { KeyValueStore } from "effect/persistence";
+
+import { StorageCache } from "@effect-kit/storage/cache";
+import { StoragePrefix, StorageReadOnly } from "@effect-kit/storage/composition";
+import { StorageCompression } from "@effect-kit/storage/compression";
+import { ContentStore, ContentReferenceStore } from "@effect-kit/storage/content";
+import { StorageEncryption, StorageEncryptionCodec } from "@effect-kit/storage/encryption";
+import { StorageMigrations, MigrationStore } from "@effect-kit/storage/migrations";
+import type { MigrationPlan } from "@effect-kit/storage/migrations";
+import { StorageMirror, MirrorStore } from "@effect-kit/storage/mirror";
+import type { MirrorOperation } from "@effect-kit/storage/mirror";
+import type { CheckpointProtection } from "@effect-kit/storage/sessions";
+import type { TransferHash } from "@effect-kit/storage/transfers";
+
+declare const protection: CheckpointProtection;
+declare const infrastructure: Layer.Layer<
+  FileSystem.FileSystem | Path.Path | TransferHash | SecureRandom.SecureRandom
+>;
+const sourceLive = MemoryStorage.layer({ storeId: "source" });
+const destinationLive = MemoryStorage.layer({ storeId: "destination" });
+const scopedLive = StorageCache.layer({ capacity: 10, timeToLive: "1 minute" }).pipe(
+  Layer.provide(StoragePrefix.layer({ prefix: "tenant/" }).pipe(Layer.provide(sourceLive))),
+);
+const readOnlyLive = StorageReadOnly.layer.pipe(Layer.provide(scopedLive));
+const readOnlyProgram: Effect.Effect<ObjectMetadata, StorageError> = Effect.flatMap(
+  Storage,
+  (storage) => storage.head({ key: "x" }),
+).pipe(Effect.provide(readOnlyLive));
+const journals = { namespace: "packed", ownership: "exclusive" as const, protection };
+const migrationsLive = StorageMigrations.layer({
+  configurationId: "packed",
+  source: sourceLive,
+  destination: destinationLive,
+}).pipe(
+  Layer.provide(MigrationStore.layer(journals).pipe(Layer.provide(KeyValueStore.layerMemory))),
+  Layer.provide(infrastructure),
+);
+const migrationProgram: Effect.Effect<MigrationPlan, StorageError> = Effect.flatMap(
+  StorageMigrations,
+  (migrations) => migrations.plan({ prefix: "", conflict: "fail", deleteSource: false }),
+).pipe(Effect.provide(migrationsLive));
+const mirrorsLive = StorageMirror.layer({
+  configurationId: "packed",
+  primary: sourceLive,
+  replicas: [{ storage: destinationLive, required: true }],
+  maxBytes: 1024,
+}).pipe(
+  Layer.provide(MirrorStore.layer(journals).pipe(Layer.provide(KeyValueStore.layerMemory))),
+  Layer.provide(infrastructure),
+);
+const mirroredProgram: Effect.Effect<ObjectMetadata, StorageError | SourceError, Source> =
+  Effect.flatMap(Storage, (storage) => storage.put({ key: "x", body })).pipe(
+    Effect.provide(mirrorsLive),
+  );
+const contentLive = ContentStore.layer({
+  configurationId: "packed",
+  namespace: "tenant",
+  maxBytes: 1024,
+}).pipe(
+  Layer.provide(
+    ContentReferenceStore.layer(journals).pipe(Layer.provide(KeyValueStore.layerMemory)),
+  ),
+  Layer.provide(sourceLive),
+  Layer.provide(infrastructure),
+);
+const contentProgram: Effect.Effect<
+  { id: string; metadata: ObjectMetadata },
+  StorageError | SourceError,
+  Source
+> = Effect.flatMap(ContentStore, (content) =>
+  content.put({ source: UploadSource.stream(body) }),
+).pipe(Effect.provide(contentLive));
+const mirrorWrite: Effect.Effect<
+  { operation: MirrorOperation },
+  StorageError | SourceError,
+  StorageMirror | Source
+> = Effect.flatMap(StorageMirror, (mirror) => mirror.write({ key: "x", body }));
+// @ts-expect-error content sources retain their required environment
+const contentMissingSource: Effect.Effect<
+  { id: string; metadata: ObjectMetadata },
+  StorageError | SourceError
+> = contentProgram;
+void [
+  readOnlyProgram,
+  migrationProgram,
+  mirroredProgram,
+  contentProgram,
+  mirrorWrite,
+  contentMissingSource,
+  StorageCompression.layer,
+  StorageEncryption.layer,
+  StorageEncryptionCodec,
+];

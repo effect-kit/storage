@@ -23,3 +23,9 @@ export const sha256: TransferDigest = {
     };
   },
 };
+
+export const digestText = (text: string) => {
+  const state = sha256.create();
+  state.update(new TextEncoder().encode(text));
+  return state.finish().value;
+};

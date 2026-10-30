@@ -75,33 +75,27 @@ export const StorageCache = {
                       capability: "cache-fill",
                     });
                   let size = 0;
-                  const chunks = yield* Stream.runCollect(
-                    result.body.pipe(
-                      Stream.mapEffect((chunk) => {
-                        size += chunk.length;
-                        return size > objects.maxObjectBytes
-                          ? Effect.fail(
-                              storageError("cache", source.provider, {
-                                _tag: "LimitExceeded",
-                                limit: objects.maxObjectBytes,
-                              }),
-                            )
-                          : Effect.succeed(Uint8Array.from(chunk));
-                      }),
-                    ),
+                  const joined = new Uint8Array(result.metadata.size);
+                  yield* Stream.runForEach(result.body, (chunk) =>
+                    Effect.suspend(() => {
+                      if (chunk.length > joined.length - size)
+                        return Effect.fail(
+                          storageError("cache", source.provider, {
+                            _tag: "LimitExceeded",
+                            limit: joined.length,
+                          }),
+                        );
+                      joined.set(chunk, size);
+                      size += chunk.length;
+                      return Effect.void;
+                    }),
                   );
-                  if (size !== result.metadata.size)
+                  if (size !== joined.length)
                     return yield* storageError("cache", source.provider, {
                       _tag: "LengthMismatch",
-                      expected: result.metadata.size,
+                      expected: joined.length,
                       actual: size,
                     });
-                  const joined = new Uint8Array(size);
-                  let offset = 0;
-                  for (const chunk of chunks) {
-                    joined.set(chunk, offset);
-                    offset += chunk.length;
-                  }
                   return { metadata: result.metadata, bytes: joined };
                 }),
               ),
@@ -115,6 +109,10 @@ export const StorageCache = {
         Effect.andThen(bytes ? Cache.invalidateAll(bytes) : Effect.void),
       );
     });
+    const rejectDenied = (error: StorageError) =>
+      error.reason._tag === "AccessDenied" ? invalidate : Effect.void;
+    const getNative = (request: GetRequest) =>
+      source.get(request).pipe(Effect.tapError(rejectDenied));
     return Storage.make({
       ...source,
       head: (target) =>
@@ -126,19 +124,31 @@ export const StorageCache = {
       delete: (request) => source.delete(request).pipe(Effect.ensuring(invalidate)),
       get: Effect.fnUntraced(function* (request) {
         if (!bytes || !objects || request.range || request.condition)
-          return yield* source.get(request);
-        const observed = yield* source.head(request);
+          return yield* getNative(request);
+        const observed = yield* source.head(request).pipe(Effect.tapError(rejectDenied));
         if (observed.size === undefined || observed.size > objects.maxObjectBytes)
-          return yield* source.get(request);
+          return yield* getNative(request);
+        if (!observed.ref.version && !observed.etag) return yield* getNative(request);
+        const pinned: GetRequest = observed.ref.version
+          ? { ref: observed.ref }
+          : { ref: observed.ref, condition: { _tag: "IfMatch", etag: observed.etag ?? "" } };
         const cached = yield* Cache.get(
           bytes,
-          new ObjectKey({ epoch, target: JSON.stringify(request) }),
+          new ObjectKey({ epoch, target: JSON.stringify(pinned) }),
         );
         return {
           _tag: "Object",
           metadata: clone(cached.metadata),
           contentLength: cached.bytes.length,
-          body: Stream.suspend(() => Stream.succeed(Uint8Array.from(cached.bytes))),
+          body: Stream.suspend(() =>
+            Stream.fromIterable(
+              (function* () {
+                for (let offset = 0; offset < cached.bytes.length; offset += 65536)
+                  yield cached.bytes.slice(offset, offset + 65536);
+              })(),
+              { chunkSize: 1 },
+            ),
+          ),
         } satisfies ObjectDownload;
       }),
     });

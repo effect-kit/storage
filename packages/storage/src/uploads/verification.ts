@@ -7,11 +7,7 @@ import { failUpload } from "./schema.js";
 import type { UploadRecord } from "./schema.js";
 
 export const operationMetadata = (record: UploadRecord) => ({ "effect-storage-upload": record.id });
-export const digestText = (text: string) => {
-  const hash = sha256.create();
-  hash.update(new TextEncoder().encode(text));
-  return hash.finish().value;
-};
+export { digestText } from "../runtime/portable-hash.js";
 export const pinned = (object: ObjectMetadata) => {
   if (!object.ref.version && !object.etag) return Effect.fail(failUpload("Unsupported"));
   return Effect.succeed({

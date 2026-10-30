@@ -1,5 +1,5 @@
 import { assert, it } from "@effect/vitest";
-import { Context, Effect, Layer, Option, Stream } from "effect";
+import { Context, Deferred, Effect, Fiber, Layer, Option, Stream } from "effect";
 import { TestClock } from "effect/testing";
 
 import { StorageCache } from "../../src/cache.js";
@@ -168,6 +168,106 @@ it.effect("object cache returns fresh byte streams and preserves metadata timest
         "hello",
       );
       assert.strictEqual(reads, 1);
+    }),
+  ),
+);
+
+it.effect("byte cache validates external versions and emits bounded fresh chunks", () =>
+  Effect.scoped(
+    Effect.gen(function* () {
+      const source = yield* MemoryStorage.make();
+      yield* source.put({ key: "x", body: new Uint8Array(150000).fill(1) });
+      const cached = yield* StorageCache.make({
+        capacity: 4,
+        timeToLive: "1 hour",
+        objects: { capacity: 2, maxObjectBytes: 200000 },
+      }).pipe(Effect.provideService(Storage, source));
+      const first = yield* cached.get({ key: "x" });
+      if (first._tag !== "Object") return assert.fail("Missing object");
+      const chunks = yield* Stream.runCollect(first.body);
+      assert.isTrue(chunks.every((chunk) => chunk.length <= 65536));
+      yield* source.put({ key: "x", body: bytes("external change") });
+      const changed = yield* cached.get({ key: "x" });
+      if (changed._tag !== "Object") return assert.fail("Missing changed object");
+      assert.strictEqual(
+        new TextDecoder().decode((yield* Stream.runCollect(changed.body))[0]),
+        "external change",
+      );
+    }),
+  ),
+);
+
+it.effect("observed access denial evicts protected metadata and bytes", () =>
+  Effect.scoped(
+    Effect.gen(function* () {
+      const source = yield* MemoryStorage.make();
+      yield* source.put({ key: "x", body: bytes("private") });
+      let denied = false;
+      const guarded = Storage.make({
+        ...source,
+        head: (request) =>
+          denied
+            ? Effect.fail(storageError("head", "test", { _tag: "AccessDenied" }))
+            : source.head(request),
+      });
+      const cached = yield* StorageCache.make({
+        capacity: 4,
+        timeToLive: "1 hour",
+        objects: { capacity: 2, maxObjectBytes: 100 },
+      }).pipe(Effect.provideService(Storage, guarded));
+      yield* cached.head({ key: "x" });
+      const first = yield* cached.get({ key: "x" });
+      if (first._tag === "Object") yield* Stream.runDrain(first.body);
+      denied = true;
+      assert.strictEqual((yield* Effect.result(cached.get({ key: "x" })))._tag, "Failure");
+      assert.strictEqual((yield* Effect.result(cached.head({ key: "x" })))._tag, "Failure");
+    }),
+  ),
+);
+
+it.live("cancelled byte-cache fills release their producer and cannot become cache hits", () =>
+  Effect.scoped(
+    Effect.gen(function* () {
+      const source = yield* MemoryStorage.make();
+      yield* source.put({ key: "x", body: bytes("hello") });
+      const started = yield* Deferred.make<void>();
+      const released = yield* Deferred.make<void>();
+      let blocking = true;
+      let reads = 0;
+      const guarded = Storage.make({
+        ...source,
+        get: (request) =>
+          source.get(request).pipe(
+            Effect.map((result) => {
+              reads++;
+              if (result._tag !== "Object" || !blocking) return result;
+              return {
+                ...result,
+                body: Stream.concat(result.body, Stream.never).pipe(
+                  Stream.tap(() => Deferred.succeed(started, undefined)),
+                  Stream.ensuring(Deferred.succeed(released, undefined)),
+                ),
+              };
+            }),
+          ),
+      });
+      const cached = yield* StorageCache.make({
+        capacity: 4,
+        timeToLive: "1 minute",
+        objects: { capacity: 2, maxObjectBytes: 100 },
+      }).pipe(Effect.provideService(Storage, guarded));
+      const fiber = yield* Effect.forkChild(cached.get({ key: "x" }));
+      yield* Deferred.await(started);
+      yield* Fiber.interrupt(fiber);
+      yield* Deferred.await(released).pipe(Effect.timeout("2 seconds"));
+      blocking = false;
+      const result = yield* cached.get({ key: "x" });
+      if (result._tag !== "Object") return assert.fail("Missing object");
+      assert.strictEqual(
+        new TextDecoder().decode((yield* Stream.runCollect(result.body))[0]),
+        "hello",
+      );
+      assert.strictEqual(reads, 2);
     }),
   ),
 );

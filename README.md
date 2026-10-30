@@ -117,3 +117,11 @@ pinned RustFS container and local GCS/Supabase protocol fixtures with Chromium a
 actual cross-origin requests. Requires Docker and Playwright Chromium; uses no cloud
 account. The runnable proxy example is
 `node packages/storage/examples/authorized-upload.mjs` after `pnpm build`.
+
+Phase 12 adds optional `/composition`, `/cache`, `/compression`, `/encryption`,
+`/migrations`, `/mirror` and `/content` entry points. Native Effect caching, protected
+KVS manifests, qualified native copy and explicit reference/cleanup state preserve the
+existing Storage/Layer API. Run `pnpm test:composition:local` for owned RustFS/filesystem
+acceptance and seven real SIGKILL/restart cases. After building, run
+`node packages/storage/examples/composition.mjs` or
+`node packages/storage/examples/workflows.mjs` for account-free examples.

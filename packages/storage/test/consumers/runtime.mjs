@@ -23,6 +23,7 @@ assert.equal(Schema.decodeUnknownSync(ObjectSize)(0), 0);
 assert.throws(() => Schema.decodeUnknownSync(ObjectSize)(Number.MAX_SAFE_INTEGER + 1));
 const require = createRequire(import.meta.url);
 for (const peer of [
+  "age-encryption",
   "@aws-sdk/client-s3",
   "@aws-sdk/s3-request-presigner",
   "@aws-sdk/s3-presigned-post",
@@ -211,6 +212,9 @@ await Promise.all(
     "http",
     "http/schema",
     "client",
+    "migrations",
+    "mirror",
+    "content",
     "composition",
     "cache",
     "representation",
@@ -219,4 +223,42 @@ await Promise.all(
   ].map(async (path) => {
     assert(Object.keys(await import(`@effect-kit/storage/${path}`)).length > 0);
   }),
+);
+
+const { StorageMigrations, MigrationStore } = await import("@effect-kit/storage/migrations");
+await Effect.runPromise(
+  Effect.scoped(
+    Effect.gen(function* () {
+      const source = Context.get(
+        yield* Layer.build(MemoryStorage.layer({ storeId: "packed-source" })),
+        TransferDriver,
+      );
+      const destination = Context.get(
+        yield* Layer.build(MemoryStorage.layer({ storeId: "packed-destination" })),
+        TransferDriver,
+      );
+      yield* source.storage.put({ key: "packed/a", body: new Uint8Array([1, 2]) });
+      const journal = yield* MigrationStore.make({
+        namespace: "packed",
+        ownership: "exclusive",
+        protection,
+      }).pipe(Effect.provide(KeyValueStore.layerMemory));
+      const migrations = yield* StorageMigrations.make({
+        configurationId: "packed",
+        source,
+        destination,
+      }).pipe(
+        Effect.provideService(MigrationStore, journal),
+        Effect.provideService(TransferHash, hash),
+        Effect.provide(SecureRandom.layerWebCrypto),
+      );
+      const plan = yield* migrations.plan({
+        prefix: "packed/",
+        conflict: "fail",
+        deleteSource: false,
+      });
+      assert.equal((yield* migrations.apply(plan.id)).state, "completed");
+      assert.equal((yield* destination.storage.head({ key: "packed/a" })).size, 2);
+    }),
+  ),
 );

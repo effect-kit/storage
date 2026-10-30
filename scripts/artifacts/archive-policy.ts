@@ -1,6 +1,9 @@
 import { Schema } from "effect";
 
 export const advancedSubpaths = [
+  "migrations",
+  "mirror",
+  "content",
   "representation",
   "compression",
   "encryption",
@@ -56,6 +59,7 @@ const Manifest = Schema.Struct({
   main: Schema.Literal("./dist/index.js"),
   types: Schema.Literal("./dist/index.d.ts"),
   peerDependencies: Schema.Struct({
+    "age-encryption": Schema.NonEmptyString,
     "@vercel/blob": Schema.String,
     "@tigrisdata/storage": Schema.NonEmptyString,
     "fast-xml-parser": Schema.NonEmptyString,
@@ -72,6 +76,7 @@ const Manifest = Schema.Struct({
     "@aws-sdk/s3-presigned-post": Schema.NonEmptyString,
   }),
   peerDependenciesMeta: Schema.Struct({
+    "age-encryption": Schema.Struct({ optional: Schema.Literal(true) }),
     "@vercel/blob": Schema.Struct({ optional: Schema.Literal(true) }),
     "@tigrisdata/storage": Schema.Struct({ optional: Schema.Literal(true) }),
     "fast-xml-parser": Schema.Struct({ optional: Schema.Literal(true) }),

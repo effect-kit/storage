@@ -5,8 +5,8 @@ import type { StorageError } from "./errors.js";
 import { storageError } from "./errors.js";
 import type { ObjectMetadata, ObjectRef } from "./object.js";
 import type { ListEntry, ObjectTarget } from "./requests.js";
+import { digestText } from "./runtime/portable-hash.js";
 import { Storage } from "./storage.js";
-import { digestText } from "./uploads/verification.js";
 
 const PrefixOptions = Schema.Struct({
   prefix: Schema.NonEmptyString.check(Schema.isPattern(/^[^\0]+\/$/u)),

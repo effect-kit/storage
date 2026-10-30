@@ -10,6 +10,7 @@ const manifest = {
   main: "./dist/index.js",
   types: "./dist/index.d.ts",
   peerDependencies: {
+    "age-encryption": "^0.3.1",
     "@vercel/blob": "^2.8.2",
     "@tigrisdata/storage": "^3.23.0",
     "fast-xml-parser": "^5.11.2",
@@ -26,6 +27,7 @@ const manifest = {
     "@aws-sdk/s3-presigned-post": "^3.1159.0",
   },
   peerDependenciesMeta: {
+    "age-encryption": { optional: true },
     "@vercel/blob": { optional: true },
     "@tigrisdata/storage": { optional: true },
     "fast-xml-parser": { optional: true },

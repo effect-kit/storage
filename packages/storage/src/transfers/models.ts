@@ -28,6 +28,8 @@ export interface TransferDigest {
 export interface TransferEndpoint {
   /** Original backend identity retained by facades to reject false cross-store isolation. */
   readonly underlyingStoreId?: string;
+  /** Physical backends touched by a composite endpoint, including every mirror replica. */
+  readonly underlyingStoreIds?: ReadonlyArray<string>;
   readonly storage: StorageService;
   readonly maximumObjectBytes: number;
   readonly maximumSingleUploadBytes: number;
@@ -128,6 +130,8 @@ export interface DownloadRequest<E = never, R = never> {
 }
 
 export interface CopyRequest {
+  /** Destination header overrides; unspecified source headers are preserved. */
+  readonly headers?: ObjectHeaders;
   readonly source: TransferEndpoint;
   readonly ref: ObjectRef;
   readonly destinationKey: string;

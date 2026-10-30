@@ -51,7 +51,8 @@
     "test:app:local": "pnpm test:artifacts && node scripts/app-storage/check.ts",
     "test:app:hosted": "pnpm --filter @effect-kit/storage exec vitest run --config vitest.app-hosted.config.ts",
     "test:compatible:hosted": "pnpm --filter @effect-kit/storage exec vitest run --config vitest.compatible.config.ts",
-    "test:uploads:local": "pnpm build && node scripts/uploads/check.mjs"
+    "test:uploads:local": "pnpm build && node scripts/uploads/check.mjs",
+    "test:composition:local": "pnpm build && node scripts/composition/check.mjs"
   },
   "dependencies": {
     "effect": "catalog:"

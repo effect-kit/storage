@@ -3,6 +3,8 @@ import { Clock, Effect, Exit, Queue, Stream } from "effect";
 
 import type { StorageError } from "../errors.js";
 import { storageError } from "../errors.js";
+import { decodeRequest } from "../internal/request-validation.js";
+import { ObjectHeaders } from "../object.js";
 import type { Checksum, ObjectMetadata } from "../object.js";
 import { download, pinnedRequest } from "./download.js";
 import type { CopyIntent, CopyRequest, MoveReceipt, TransferReceipt } from "./models.js";
@@ -72,7 +74,21 @@ const copy = Effect.fnUntraced(function* (
     storageClass: _class,
     ...headers
   } = metadata;
-  const cleanHeaders = { ...headers, customMetadata: { ...headers.customMetadata } };
+  const overrides = request.headers
+    ? yield* decodeRequest(ObjectHeaders, request.headers, "copy", provider)
+    : {};
+  if (overrides.customMetadata?.[operationMetadataKey] !== undefined)
+    return yield* storageError(
+      "copy",
+      provider,
+      { _tag: "InvalidInput", field: `headers.customMetadata.${operationMetadataKey}` },
+      "not-started",
+    );
+  const cleanHeaders = {
+    ...headers,
+    ...overrides,
+    customMetadata: { ...headers.customMetadata, ...overrides.customMetadata },
+  };
   delete cleanHeaders.customMetadata[operationMetadataKey];
   yield* validateUpload(runtime, {
     key: request.destinationKey,

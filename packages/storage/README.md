@@ -415,3 +415,84 @@ Conditions use physical validators. Interruption releases scoped staging; retry 
 verified logical bytes and creates a new representation. Compressed/encrypted objects
 must not be mixed with unmarked raw objects in the same facade view. Temporary plaintext
 requires a trusted local filesystem and appropriate disk/lifecycle policy.
+
+## Durable migration, mirrors and content addressing
+
+`/migrations` exports `StorageMigrations.make/layer` and `MigrationStore`. The layer
+accepts `configurationId`, source/destination provider layers and optional transfer
+policy/deadline. `make` accepts explicit TransferEndpoints. Source and destination are
+acquired independently, and overlapping physical backend identities are rejected,
+including every replica of a mirrored endpoint through additional facades.
+`MigrationStore.layer({ namespace, ownership, protection })` uses application Effect
+KVS. No SQL backend is required. Shared workflow stores require settled, linearizable
+KVS operations and exclusive ownership through cancellation; generic network KVS
+clients with late/replayed writes need a stronger qualified coordinator/backend.
+The existing protected atomic file store is the local restart-qualified backing.
+
+`plan({ id?, prefix, destinationPrefix?, conflict, deleteSource, deleteExtraneous?, inventory?, inventoryId? })`
+writes bounded encrypted per-object records. `inspect(id, { offset?, limit? })` is paged;
+`apply/resume/reconcile(id, { limit? })` process at most 1,000 entries by default.
+Planning hashes pinned source objects and performs no object writes/deletes. Listing
+is not a snapshot. An optional streamed inventory supplies pinned ObjectMetadata and
+requires a stable inventoryId; planning rejects changed or out-of-scope entries and
+duplicate destinations. Its stream errors and service requirements remain in the Effect.
+Planning interruptions retain an incomplete, non-applicable manifest;
+use a new plan ID to restart discovery. Conflict policies are per entry. Sync deletion
+requires `deleteExtraneous: true`, and apply rechecks source absence and destination
+identity. Safe moves require a native version delete or conditional deletion. Unsupported
+profiles retain the verified destination and explicit source cleanup error.
+
+Transfers.copy/move accept optional destination `headers` overrides, preserving source
+headers otherwise. Migration ownership markers use these overrides without changing the
+provider endpoint identity, so qualified native copy remains available. Unknown writes
+are adopted only after the exact marker plus pinned size/full SHA-256 prove the result;
+missing observations remain unknown. Apply never silently overwrites an unowned result.
+
+`/mirror` exports `StorageMirror.make/layer` and `MirrorStore`. Supply a configuration ID,
+primary provider layer, `{ storage, required }` replicas, maxBytes and persistence.
+The layer provides Storage, StorageMirror and a narrowed TransferDriver. `write` returns
+an operation receipt with independent outcomes; ordinary Storage.put fails with a partial
+error/requestId if required replicas are incomplete. Reads remain unavailable until
+required publication succeeds. Best-effort debt remains visible through status/statusFor.
+`planRepair`, paged `inspectRepair` and bounded `applyRepair` persist recovery progress
+and distinguish unresolved outcomes from completed repair. Verified replicas can restore
+a missing primary. Tombstones suppress reads before deletion propagation and supersede
+older repair plans. Native history is not purged, and tombstones are retained indefinitely.
+
+Mirror keys must be private to this workflow; readers use the facade's published view.
+Unowned replica objects are never blindly overwritten or deleted. Updates and cleanup
+require the affected provider's native conditions. Filesystem supports create-only writes
+but lacks conditional deletion/update, so it can retain physical repair/cleanup debt;
+tombstones still suppress logical resurrection. No atomic multi-provider commit is claimed.
+
+`/content` exports `ContentStore.make/layer` and `ContentReferenceStore`. Supply
+configurationId, namespace, maxBytes, optional transfer policy and minimumRetentionMillis
+(default 24 hours). ContentStore captures Storage/TransferDriver plus platform staging,
+hash/random and protected persistence. `put({ source, reference? })` hashes logical input,
+uses managed transfers, verifies existing bytes before deduplication and returns a stable
+SHA-256 content ID. Physical generations prevent reusing a collected object's location.
+`attach`, `detach`, paged `references` and `reconcileReference` coordinate durable references.
+Putting with a reference publishes it under the same exclusive workflow; separate puts
+renew a publication grace period. Application database/outbox publication remains separate.
+
+`planGarbageCollection({ olderThan })`, paged `inspectGarbageCollection` and bounded
+`applyGarbageCollection` require native pinned/conditional deletion and recheck reachability,
+generation and retention before every mutation. Prepared/unknown reference publications
+conservatively block collection and reference reuse. Unobserved outcomes and missing edge
+records retain debt; absence is never guessed to prove non-publication. Deletion is persisted
+before I/O, and reconcile/GC resume can finish uncertain deletion without accepting new
+references. Collection proves deletion of the owned observed identity, not termination of
+every possible native in-flight request or erasure of unrelated provider history.
+
+Run `pnpm test:composition:local` for the owned RustFS/filesystem/native-copy and seven
+SIGKILL restart scenarios over the production protected file journal. Local evidence does
+not qualify hosted IAM/RLS, distributed coordination or independent cryptographic audits.
+
+Mirror transfer budgets are per endpoint and are additional to an outer managed-transfer
+budget; replicas run sequentially. Whole-process/aggregate memory qualification remains
+separate. Create-only and conditional-update capabilities reflect all required endpoints;
+the primary primitive size limit also bounds the mirrored facade.
+
+Age recipient encryption does not authenticate a sender or prevent replay of an older
+valid object. Applications needing those guarantees must bind trusted references/versions
+and apply their own publication policy. Format integration tests do not replace an audit.

@@ -7,10 +7,9 @@ import { ObjectHeaders, type ObjectMetadata } from "../object.js";
 import { StorageRepresentation } from "../representation.js";
 import type { RepresentationCodec, RepresentationOptions } from "../representation.js";
 import type { GetResult, HeadRequest, ListEntry, PutRequest } from "../requests.js";
-import { sha256 } from "../runtime/portable-hash.js";
+import { sha256, digestText } from "../runtime/portable-hash.js";
 import { Storage } from "../storage.js";
 import { TransferDriver } from "../transfers/dependencies.js";
-import { digestText } from "../uploads/verification.js";
 import { makeStaging } from "./staging.js";
 
 const maximumHeaderBytes = 16384;
@@ -248,6 +247,9 @@ export const representationLayer = (codec: RepresentationCodec, options: Represe
         Context.add(TransferDriver, {
           storage: representation.storage,
           underlyingStoreId: endpoint.underlyingStoreId ?? endpoint.storage.storeId,
+          ...(endpoint.underlyingStoreIds
+            ? { underlyingStoreIds: endpoint.underlyingStoreIds }
+            : {}),
           maximumObjectBytes: options.maxDecodedBytes,
           maximumSingleUploadBytes: Math.min(
             options.maxDecodedBytes,

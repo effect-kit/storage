@@ -428,6 +428,21 @@
       "workspace-source": "./src/encryption/age.ts",
       "types": "./dist/encryption/age.d.ts",
       "default": "./dist/encryption/age.js"
+    },
+    "./migrations": {
+      "workspace-source": "./src/migrations.ts",
+      "types": "./dist/migrations.d.ts",
+      "default": "./dist/migrations.js"
+    },
+    "./mirror": {
+      "workspace-source": "./src/mirror.ts",
+      "types": "./dist/mirror.d.ts",
+      "default": "./dist/mirror.js"
+    },
+    "./content": {
+      "workspace-source": "./src/content.ts",
+      "types": "./dist/content.d.ts",
+      "default": "./dist/content.js"
     }
   },
   "publishConfig": {
@@ -752,6 +767,18 @@
       "./encryption/age": {
         "types": "./dist/encryption/age.d.ts",
         "import": "./dist/encryption/age.js"
+      },
+      "./migrations": {
+        "types": "./dist/migrations.d.ts",
+        "import": "./dist/migrations.js"
+      },
+      "./mirror": {
+        "types": "./dist/mirror.d.ts",
+        "import": "./dist/mirror.js"
+      },
+      "./content": {
+        "types": "./dist/content.d.ts",
+        "import": "./dist/content.js"
       }
     },
     "access": "public",

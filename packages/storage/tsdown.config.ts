@@ -2,6 +2,9 @@ import defineConfig from "klarity/tsdown/library";
 
 export default defineConfig({
   entry: [
+    "src/migrations.ts",
+    "src/mirror.ts",
+    "src/content.ts",
     "src/representation.ts",
     "src/compression.ts",
     "src/encryption.ts",
