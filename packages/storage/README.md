@@ -318,3 +318,51 @@ request-body bytes (including form overhead). Temporary grants never enter resum
 records. Persist only the schema-checked upload ticket in an application-owned store;
 filenames and application context can still be sensitive. Interrupting an Effect
 cancels local fetch/XHR work; use explicit abort to abandon the server-side intent.
+
+```ts
+import { Effect } from "effect";
+
+import { UploadClient, UploadClientStore } from "@effect-kit/storage/client";
+
+const client = UploadClient.make({
+  baseUrl: "/storage",
+  transport: "xhr",
+  store: UploadClientStore.webStorage(localStorage, "attachments"),
+});
+const upload = (file: File) =>
+  Effect.flatMap(client, (uploads) =>
+    uploads.upload({
+      file,
+      purpose: "attachment",
+      context: {},
+      onProgress: (progress) => console.log(progress.phase, progress.bytesAccepted),
+    }),
+  );
+```
+
+Authentication uses same-origin cookies by default; bearer applications supply a fresh
+`headers` Effect. Both server routes (`requestTimeoutMillis`) and client operations
+(`deadlineMillis`) default to a 30-minute deadline. API requests retry temporary
+unavailability twice within that deadline; native data requests use explicit source-
+checked resume and authoritative part/offset queries after an uncertain outcome.
+`Uploads.maximumContentBytes` returns the authorized file bound for streaming adapters.
+HTTP form uploads allow one `file` part, bounded framing and a 1 KiB field limit;
+raw/file bytes remain bounded by the intent. `makeStorageUploadApi` describes the JSON
+control routes, including their HTTP error statuses; streaming content and private
+file responses use `StorageHttp.routes` directly.
+
+S3 multipart browser uploads require the selected profile to support SHA-256 composite
+checksums and create-only multipart completion. Unsupported profiles fail explicitly;
+use a qualified single-request or proxy path. Native fixed lifetimes are reported
+separately from intent expiry. A refresh never extends an existing resumable URI's
+native lifetime. Native cleanup can remain pending after deletion because an earlier
+request may still be in flight. Call reconcile from an application-owned scheduler.
+
+Run the account-free end-to-end proxy example after `pnpm build`:
+`node packages/storage/examples/authorized-upload.mjs`. It starts an ephemeral local
+Effect HTTP server, uploads through UploadClient, verifies/publishes and downloads.
+The memory store and demo authentication are replaced by application services in a
+real deployment. For cross-origin Chromium/native-protocol checks, run
+`pnpm test:uploads:local` with Docker and Playwright Chromium installed. This lane
+qualifies local transport behavior; hosted IAM, RLS, callbacks and CORS still require
+an explicitly authorized provider environment.

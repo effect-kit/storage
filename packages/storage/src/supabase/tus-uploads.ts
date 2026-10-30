@@ -6,12 +6,12 @@ import { UploadGrantDriver } from "../uploads/driver.js";
 import { failUpload } from "../uploads/schema.js";
 import type { UploadActor } from "../uploads/schema.js";
 import { operationMetadata } from "../uploads/verification.js";
-import { tusUploads } from "./tus.js";
+import { negotiateTus, tusUploads } from "./tus.js";
 
 const decode = (value: unknown) =>
-  Schema.decodeUnknownEffect(Schema.Struct({ url: Schema.String, total: Schema.Natural }))(
-    value,
-  ).pipe(Effect.mapError(() => failUpload("Conflict")));
+  Schema.decodeUnknownEffect(
+    Schema.Struct({ url: Schema.String, total: Schema.Natural, expiresAt: Schema.Number }),
+  )(value).pipe(Effect.mapError(() => failUpload("Conflict")));
 
 export const SupabaseTusUploadGrants = {
   layer<R>(options: {
@@ -26,6 +26,7 @@ export const SupabaseTusUploadGrants = {
         const storage = yield* SupabaseStorage;
         const context = yield* Effect.context<R>();
         if (!storage.offsets) return yield* failUpload("Unsupported");
+        const extensions = yield* negotiateTus(storage);
         const credentials = Effect.fnUntraced(function* (actor: UploadActor) {
           const token = yield* Effect.provide(options.userToken(actor), context);
           const payload = yield* Effect.fromResult(
@@ -50,7 +51,7 @@ export const SupabaseTusUploadGrants = {
                 auth: { mode: "user" as const, token, apiKey: options.publicApiKey },
               },
             },
-            ["creation", "termination"],
+            extensions,
           );
           return { token, native, expiresAt: claims.exp * 1000 };
         });
@@ -67,9 +68,10 @@ export const SupabaseTusUploadGrants = {
               customMetadata: operationMetadata(record),
               condition: { _tag: "CreateOnly" },
             });
-            return yield* Schema.decodeUnknownEffect(
+            const handle = yield* Schema.decodeUnknownEffect(
               Schema.fromJsonString(Schema.Struct({ url: Schema.String, total: Schema.Natural })),
             )(Redacted.value(upload.handle)).pipe(Effect.mapError(() => failUpload("Unavailable")));
+            return { ...handle, expiresAt: (yield* Clock.currentTimeMillis) + 1 * 86400000 };
           }),
           grant: Effect.fnUntraced(function* (record, expiresAt) {
             const user = yield* credentials(record.actor);
@@ -91,7 +93,7 @@ export const SupabaseTusUploadGrants = {
               },
               offset: state._tag === "Completed" ? record.input.file.size : state.committedOffset,
               chunkBytes: 6 * 1024 ** 2,
-              expiresAt: Math.min(expiresAt, user.expiresAt),
+              expiresAt: Math.min(expiresAt, user.expiresAt, remote.expiresAt),
             };
           }),
           abort: Effect.fnUntraced(function* (record) {

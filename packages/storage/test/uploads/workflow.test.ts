@@ -266,3 +266,62 @@ it.effect("uncertain initiation is not blindly retried", () =>
     );
   }).pipe(Effect.provide(KeyValueStore.layerMemory)),
 );
+
+it.effect("rejected inspection remains terminal across completion and grant refresh", () =>
+  Effect.gen(function* () {
+    const test = yield* setup({ inspect: () => Effect.fail(failUpload("VerificationFailed")) });
+    const created = yield* test.uploads.create({
+      actor,
+      input,
+      idempotencyKey: "terminal-inspection",
+    });
+    yield* test.uploads.content({
+      actor,
+      uploadId: created.id,
+      body: new TextEncoder().encode("hello"),
+    });
+    yield* Effect.result(test.uploads.complete({ actor, uploadId: created.id }));
+    assert.strictEqual(
+      (yield* test.uploads.status({ actor, uploadId: created.id })).state,
+      "rejected",
+    );
+    assert.isTrue(
+      Result.isFailure(yield* Effect.result(test.uploads.grant({ actor, uploadId: created.id }))),
+    );
+  }).pipe(Effect.provide(KeyValueStore.layerMemory)),
+);
+
+it.effect("reconciliation retries interrupted native abort and quota release", () =>
+  Effect.gen(function* () {
+    let aborts = 0;
+    let releases = 0;
+    const test = yield* setup(
+      {
+        quota: {
+          reserve: () => Effect.void,
+          settle: () => Effect.void,
+          release: () => {
+            releases++;
+            return releases === 1 ? Effect.fail(failUpload("Unavailable")) : Effect.void;
+          },
+        },
+      },
+      {
+        begin: () => Effect.succeed(null),
+        grant: (_record, expiresAt) => Effect.succeed({ _tag: "Proxy", expiresAt }),
+        abort: () => {
+          aborts++;
+          return aborts === 1 ? Effect.fail(failUpload("Unavailable")) : Effect.void;
+        },
+      },
+    );
+    const created = yield* test.uploads.create({ actor, input, idempotencyKey: "abort-recovery" });
+    const target = { actor, uploadId: created.id };
+    assert.isTrue(Result.isFailure(yield* Effect.result(test.uploads.abort(target))));
+    assert.strictEqual((yield* test.uploads.status(target)).state, "aborted");
+    assert.isTrue(Result.isFailure(yield* Effect.result(test.uploads.reconcile(target))));
+    assert.strictEqual((yield* test.uploads.reconcile(target)).state, "aborted");
+    assert.strictEqual(aborts, 3);
+    assert.strictEqual(releases, 2);
+  }).pipe(Effect.provide(KeyValueStore.layerMemory)),
+);

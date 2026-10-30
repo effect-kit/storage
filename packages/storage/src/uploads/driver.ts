@@ -16,6 +16,7 @@ export interface UploadGrantDriverService {
     record: UploadRecord,
     partNumber: number,
     expiresAt: number,
+    sha256?: string,
   ) => Effect.Effect<UploadGrant, UploadFailure>;
   readonly complete?: (
     record: UploadRecord,

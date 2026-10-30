@@ -1,13 +1,13 @@
-import { Effect, Layer, Redacted, Schema } from "effect";
+import { Clock, Effect, Layer, Redacted, Schema } from "effect";
 
 import { GcsStorage } from "../gcs.js";
 import { UploadGrantDriver } from "../uploads/driver.js";
 import { failUpload } from "../uploads/schema.js";
 import { operationMetadata } from "../uploads/verification.js";
 const decode = (remote: unknown) =>
-  Schema.decodeUnknownEffect(Schema.Struct({ url: Schema.String, total: Schema.Natural }))(
-    remote,
-  ).pipe(Effect.mapError(() => failUpload("Conflict")));
+  Schema.decodeUnknownEffect(
+    Schema.Struct({ url: Schema.String, total: Schema.Natural, expiresAt: Schema.Number }),
+  )(remote).pipe(Effect.mapError(() => failUpload("Conflict")));
 
 export const GcsUploadGrants = {
   layer(options: { readonly chunkBytes?: number } = {}) {
@@ -33,9 +33,10 @@ export const GcsUploadGrants = {
               customMetadata: operationMetadata(record),
               condition: { _tag: "CreateOnly" },
             });
-            return yield* Schema.decodeUnknownEffect(
+            const handle = yield* Schema.decodeUnknownEffect(
               Schema.fromJsonString(Schema.Struct({ url: Schema.String, total: Schema.Natural })),
             )(Redacted.value(upload.handle)).pipe(Effect.mapError(() => failUpload("Unavailable")));
+            return { ...handle, expiresAt: (yield* Clock.currentTimeMillis) + 7 * 86400000 };
           }),
           grant: Effect.fnUntraced(function* (record, expiresAt) {
             const remote = yield* decode(record.remote ? Redacted.value(record.remote) : undefined);
@@ -53,7 +54,7 @@ export const GcsUploadGrants = {
               headers: {},
               offset: state._tag === "Completed" ? record.input.file.size : state.committedOffset,
               chunkBytes,
-              expiresAt,
+              expiresAt: Math.min(expiresAt, remote.expiresAt),
             };
           }),
           abort: Effect.fnUntraced(function* (record) {

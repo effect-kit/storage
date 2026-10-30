@@ -19,6 +19,7 @@ export const httpFixture = Effect.acquireRelease(
         upsert: boolean;
       }
     >();
+    const uploadTokens = new Map<string, { key: string; expiresAt: number }>();
     const seen: { method: string; path: string; token: string; bytes: number }[] = [];
     let sequence = 0;
     let losePatch = false;
@@ -133,12 +134,37 @@ export const httpFixture = Effect.acquireRelease(
           JSON.stringify({ exp: Math.floor(Date.now() / 1000) + seconds }),
         ).toString("base64url");
         const token = `e30.${payload}.${sign[1] === "sign" ? "download-secret" : "upload-secret"}`;
+        if (sign[1] === "upload/sign")
+          uploadTokens.set(token, {
+            key: decodeURIComponent(sign[2] ?? ""),
+            expiresAt: Math.floor(Date.now() / 1000) + seconds,
+          });
         json(
           200,
           sign[1] === "sign"
             ? { signedURL: `/object/sign/bucket/${sign[2]}?token=${token}` }
             : { url: `/object/upload/sign/bucket/${sign[2]}?token=${token}` },
         );
+        return;
+      }
+      if (sign && incoming.method === "PUT" && sign[1] === "upload/sign") {
+        const authority = uploadTokens.get(url.searchParams.get("token") ?? "");
+        const key = decodeURIComponent(sign[2] ?? "");
+        if (!authority || authority.key !== key || authority.expiresAt <= Date.now() / 1000) {
+          json(403, {});
+          return;
+        }
+        if (objects.has(key)) {
+          json(409, {});
+          return;
+        }
+        objects.set(key, {
+          body,
+          etag: `"${++sequence}"`,
+          metadata: {},
+          contentType: String(incoming.headers["content-type"] ?? "application/octet-stream"),
+        });
+        json(200, { Key: `bucket/${key}` });
         return;
       }
       if (url.pathname === "/storage/v1/object/list-v2/bucket") {

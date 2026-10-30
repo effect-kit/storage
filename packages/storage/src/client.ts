@@ -1,10 +1,10 @@
-import { Context, Effect, Layer, Schema } from "effect";
+import { Context, Effect, Layer, Schedule, Schema } from "effect";
 
+import { hashFile } from "./client/fingerprint.js";
 import { UploadClientStore } from "./client/store.js";
 import type { ClientUploadStore, UploadTicket } from "./client/store.js";
 import { fetchTransfer, providerUrl, xhrTransfer } from "./client/transport.js";
 import type { Progress } from "./client/transport.js";
-import { sha256 } from "./runtime/portable-hash.js";
 import {
   GrantResponse,
   UploadErrorCode,
@@ -29,28 +29,6 @@ export interface UploadClientOptions<R = never> {
 }
 const decode = <S extends Schema.Constraint>(schema: S, value: unknown) =>
   Schema.decodeUnknownEffect(schema)(value).pipe(Effect.mapError(() => failUpload("BadRequest")));
-const hashFile = Effect.fnUntraced(function* (file: File, onProgress?: Progress) {
-  const hash = sha256.create();
-  for (let offset = 0; offset < file.size; offset += 1024 ** 2) {
-    const bytes = yield* Effect.tryPromise({
-      try: () => file.slice(offset, offset + 1024 ** 2).arrayBuffer(),
-      catch: () => failUpload("Unavailable"),
-    });
-    hash.update(new Uint8Array(bytes));
-    if (onProgress)
-      yield* Effect.try({
-        try: () =>
-          onProgress({
-            phase: "hashing",
-            bytesAccepted: 0,
-            totalBytes: file.size,
-            measurement: "indeterminate",
-          }),
-        catch: () => failUpload("Unavailable"),
-      });
-  }
-  return hash.finish().value;
-});
 const emit = (onProgress: Progress | undefined, value: Parameters<Progress>[0]) =>
   onProgress
     ? Effect.try({ try: () => onProgress(value), catch: () => failUpload("Unavailable") })
@@ -87,59 +65,80 @@ const make = Effect.fnUntraced(function* <R>(options: UploadClientOptions<R>) {
     return yield* failUpload("BadRequest");
   const deadline = options.deadlineMillis ?? 30 * 60 * 1000;
   if (!Number.isSafeInteger(deadline) || deadline <= 0) return yield* failUpload("BadRequest");
+  const bounded = <A, E, Requirements>(effect: Effect.Effect<A, E, Requirements>) =>
+    effect.pipe(
+      Effect.timeoutOrElse({
+        duration: deadline,
+        orElse: () => Effect.fail(failUpload("Unavailable")),
+      }),
+    );
   const store = options.store ?? UploadClientStore.memory();
-  const api = Effect.fnUntraced(function* <S extends Schema.Constraint>(
-    method: string,
-    resourcePath: string,
-    schema: S,
-    body?: unknown,
-  ) {
-    const headers = options.headers ? yield* Effect.provide(options.headers(), context) : {};
-    const response = yield* Effect.tryPromise({
-      try: (signal) =>
-        fetch(base + resourcePath, {
-          method,
-          credentials: options.credentials ?? "same-origin",
-          redirect: "error",
-          headers: {
-            ...headers,
-            ...(body !== undefined ? { "content-type": "application/json" } : {}),
-          },
-          ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
-          signal,
-        }),
-      catch: () => failUpload("Unavailable"),
-    });
-    const value = yield* Effect.tryPromise({
-      try: async () => {
-        const reader = response.body?.getReader();
-        if (!reader) throw new Error("Missing response");
-        let text = "";
-        const decoder = new TextDecoder();
-        let bytes = 0;
-        try {
-          while (true) {
-            // oxlint-disable-next-line no-await-in-loop -- Response bytes must be consumed in order under a size bound.
-            const next = await reader.read();
-            if (next.done) break;
-            bytes += next.value.length;
-            if (bytes > 1024 * 1024) throw new Error("Response limit");
-            text += decoder.decode(next.value, { stream: true });
+  const api = Effect.fnUntraced(
+    function* <S extends Schema.Constraint>(
+      method: string,
+      resourcePath: string,
+      schema: S,
+      body?: unknown,
+    ) {
+      const headers = options.headers ? yield* Effect.provide(options.headers(), context) : {};
+      const response = yield* Effect.tryPromise({
+        try: (signal) =>
+          fetch(base + resourcePath, {
+            method,
+            credentials: options.credentials ?? "same-origin",
+            redirect: "error",
+            headers: {
+              ...headers,
+              ...(body !== undefined ? { "content-type": "application/json" } : {}),
+            },
+            ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
+            signal,
+          }),
+        catch: () => failUpload("Unavailable"),
+      });
+      const value = yield* Effect.tryPromise({
+        try: async (signal) => {
+          const reader = response.body?.getReader();
+          if (!reader) throw new Error("Missing response");
+          const cancel = () => {
+            void reader.cancel().catch(() => undefined);
+          };
+          signal.addEventListener("abort", cancel, { once: true });
+          let text = "";
+          const decoder = new TextDecoder();
+          let bytes = 0;
+          try {
+            while (true) {
+              // oxlint-disable-next-line no-await-in-loop -- Response bytes must be consumed in order under a size bound.
+              const next = await reader.read();
+              if (next.done) break;
+              bytes += next.value.length;
+              if (bytes > 1024 * 1024) throw new Error("Response limit");
+              text += decoder.decode(next.value, { stream: true });
+            }
+            if (signal.aborted) throw new Error("Request interrupted");
+            return JSON.parse(text + decoder.decode()) as unknown;
+          } finally {
+            signal.removeEventListener("abort", cancel);
+            await reader.cancel();
+            reader.releaseLock();
           }
-          return JSON.parse(text + decoder.decode()) as unknown;
-        } finally {
-          await reader.cancel();
-          reader.releaseLock();
-        }
-      },
-      catch: () => failUpload("Unavailable"),
-    });
-    if (!response.ok) {
-      const error = yield* decode(Schema.Struct({ code: UploadErrorCode }), value);
-      return yield* failUpload(error.code);
-    }
-    return yield* decode(schema, value);
-  });
+        },
+        catch: () => failUpload("Unavailable"),
+      });
+      if (!response.ok) {
+        const error = yield* decode(Schema.Struct({ code: UploadErrorCode }), value);
+        return yield* failUpload(error.code);
+      }
+      return yield* decode(schema, value);
+    },
+    Effect.retry({
+      times: 2,
+      schedule: Schedule.exponential("100 millis"),
+      while: (error) => error.code === "Unavailable",
+    }),
+    bounded,
+  );
   const ticket = Effect.fnUntraced(function* (id: string, file: File, onProgress?: Progress) {
     const record = yield* store.read(id);
     if (!record || !record.id) return yield* failUpload("NotFound");
@@ -215,6 +214,12 @@ const make = Effect.fnUntraced(function* <R>(options: UploadClientOptions<R>) {
           }),
         catch: () => failUpload("Unavailable"),
       });
+      yield* Effect.tryPromise({
+        try: async () => {
+          await response.body?.cancel();
+        },
+        catch: () => failUpload("Unavailable"),
+      });
       yield* successful(response);
       accepted = input.file.size;
     } else if (grant._tag === "SignedRequest") {
@@ -243,6 +248,9 @@ const make = Effect.fnUntraced(function* <R>(options: UploadClientOptions<R>) {
         }
         const selected = (yield* api("POST", `${path(id)}/parts/sign`, GrantResponse, {
           partNumber,
+          ...(grant._tag === "Multipart" && grant.checksum === "sha256"
+            ? { sha256: yield* hashFile(input.file.slice(offset, offset + size)) }
+            : {}),
         })).grant;
         if (selected._tag !== "SignedRequest") return yield* failUpload("BadRequest");
         const response = yield* send(
@@ -295,7 +303,7 @@ const make = Effect.fnUntraced(function* <R>(options: UploadClientOptions<R>) {
     }
     yield* notify();
     return { uploadId: id, parts };
-  });
+  }, bounded);
   const complete = Effect.fnUntraced(function* (input: {
     readonly uploadId: string;
     readonly parts?: ReadonlyArray<{ readonly partNumber: number; readonly receipt: string }>;
@@ -308,11 +316,13 @@ const make = Effect.fnUntraced(function* <R>(options: UploadClientOptions<R>) {
       input.parts?.length ? { parts: input.parts } : {},
     );
     if (result.state === "published") {
+      const local = yield* store.read(input.uploadId);
       yield* store.remove(input.uploadId);
+      if (local) yield* store.remove(local.idempotencyKey);
       yield* emit(input.onProgress, {
         phase: "completed",
-        bytesAccepted: 0,
-        totalBytes: 0,
+        bytesAccepted: local?.input.file.size ?? 0,
+        totalBytes: local?.input.file.size ?? 0,
         measurement: "provider-accepted",
       });
     }
@@ -349,7 +359,7 @@ const make = Effect.fnUntraced(function* <R>(options: UploadClientOptions<R>) {
     yield* store.write(key, saved);
     yield* store.write(status.id, saved);
     return saved;
-  });
+  }, bounded);
   return {
     create,
     transfer,
@@ -411,7 +421,11 @@ const make = Effect.fnUntraced(function* <R>(options: UploadClientOptions<R>) {
         if (!saved?.id) return yield* failUpload("NotFound");
         yield* ticket(saved.id, input.file, input.onProgress);
         const status = yield* api("GET", path(saved.id), UploadStatus);
-        if (status.state === "published") return status;
+        if (status.state === "published")
+          return yield* complete({
+            uploadId: saved.id,
+            ...(input.onProgress ? { onProgress: input.onProgress } : {}),
+          });
         if (["uploading", "verifying", "publishing"].includes(status.state)) {
           const previous = yield* Effect.result(
             complete({

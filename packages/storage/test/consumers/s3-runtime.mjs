@@ -69,3 +69,5 @@ try {
   server.closeAllConnections();
   await new Promise((resolve) => server.close(resolve));
 }
+
+assert(Object.keys(await import("@effect-kit/storage/s3/uploads")).length > 0);

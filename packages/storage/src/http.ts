@@ -1,9 +1,10 @@
 import { Effect, Layer, Redacted, Schema, Stream } from "effect";
-import { HttpRouter, HttpServerResponse } from "effect/http";
+import { HttpRouter, HttpServerResponse, Multipart } from "effect/http";
 import type { HttpServerRequest } from "effect/http";
 
 import { StorageEventInbox } from "./events.js";
 import type { StorageEvent } from "./events.js";
+import { uploadErrorStatuses } from "./http/api.js";
 import { privateDownload } from "./http/download.js";
 import type { ObjectRef } from "./object.js";
 import { Storage } from "./storage.js";
@@ -18,6 +19,7 @@ import {
 import type { UploadError } from "./uploads/schema.js";
 export { makeStorageUploadApi } from "./http/api.js";
 export interface StorageHttpOptions<R = never> {
+  readonly requestTimeoutMillis?: number;
   readonly prefix?: `/${string}`;
   readonly allowedOrigins: ReadonlyArray<string>;
   readonly authentication: "cookie" | "bearer";
@@ -61,17 +63,6 @@ const jsonBody = Effect.fnUntraced(function* <S extends Schema.Constraint>(
   });
   return yield* decode(schema, value);
 });
-const statuses = {
-  BadRequest: 400,
-  Unauthorized: 401,
-  Forbidden: 403,
-  NotFound: 404,
-  Conflict: 409,
-  Expired: 410,
-  Unsupported: 422,
-  VerificationFailed: 422,
-  Unavailable: 503,
-} as const;
 export const StorageHttp = {
   callbacks<R>(options: {
     readonly path: `/${string}`;
@@ -119,8 +110,11 @@ export const StorageHttp = {
   },
   routes<R>(options: StorageHttpOptions<R>) {
     const prefix = options.prefix ?? "/storage";
+    const timeout = options.requestTimeoutMillis ?? 30 * 60 * 1000;
     const setup = Effect.gen(function* () {
       if (
+        !Number.isSafeInteger(timeout) ||
+        timeout <= 0 ||
         !/^\/[A-Za-z0-9/_-]+$/u.test(prefix) ||
         prefix.endsWith("/") ||
         options.allowedOrigins.some((origin) => {
@@ -191,12 +185,27 @@ export const StorageHttp = {
               );
             } else if (action === "form") {
               let count = 0;
+              const current = yield* uploads.status(target);
+              // The intent bounds file bytes; framing and non-file parts are bounded separately.
+              const maximum = yield* uploads.maximumContentBytes(target);
+              if (!["ready", "uploading"].includes(current.state))
+                return yield* failUpload("Conflict");
               yield* Stream.runForEach(request.multipartStream, (part) =>
                 Effect.gen(function* () {
                   if (part._tag !== "File" || part.key !== "file" || ++count > 1)
                     return yield* failUpload("BadRequest");
                   yield* uploads.content({ ...target, body: part.content });
                 }),
+              ).pipe(
+                Effect.provide(
+                  Multipart.limitsServices({
+                    maxParts: 1,
+                    maxFieldSize: 1024,
+                    maxFileSize: maximum + 64 * 1024,
+                    maxTotalSize: maximum + 64 * 1024,
+                  }),
+                ),
+                Effect.catchTag("MultipartError", () => Effect.fail(failUpload("BadRequest"))),
               );
               if (count !== 1) return yield* failUpload("BadRequest");
               response = yield* HttpServerResponse.json(yield* uploads.status(target));
@@ -226,6 +235,10 @@ export const StorageHttp = {
               }),
             );
           }).pipe(
+            Effect.timeoutOrElse({
+              duration: timeout,
+              orElse: () => Effect.fail(failUpload("Unavailable")),
+            }),
             Effect.catch((error) => {
               const code =
                 error &&
@@ -237,7 +250,7 @@ export const StorageHttp = {
               return HttpServerResponse.json(
                 { _tag: "UploadError", code },
                 {
-                  status: statuses[code],
+                  status: uploadErrorStatuses[code],
                   headers: {
                     "cache-control": "no-store",
                     ...(request.headers.origin &&

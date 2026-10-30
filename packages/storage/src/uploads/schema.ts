@@ -97,6 +97,7 @@ const MultipartGrant = Schema.Struct({
   _tag: Schema.Literal("Multipart"),
   constraints: Constraints,
   partBytes: Schema.Int.check(Schema.isGreaterThan(0)),
+  checksum: Schema.optional(Schema.Literal("sha256")),
   expiresAt: Schema.Number,
   completed: Schema.Array(Schema.Struct({ partNumber: Schema.Natural, etag: Schema.String })),
 });
@@ -136,6 +137,7 @@ export const GrantResponse = Schema.Struct({
   grant: UploadGrant,
 });
 export const PartRequest = Schema.Struct({
+  sha256: Schema.optional(Schema.String.check(Schema.isPattern(/^[a-f0-9]{64}$/u))),
   partNumber: Schema.Int.check(Schema.isBetween({ minimum: 1, maximum: 10000 })),
 });
 export const PartsRequest = Schema.Struct({

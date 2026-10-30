@@ -4,6 +4,8 @@ import { mkdtemp, readFile, rm, writeFile, mkdir, readdir, copyFile } from "node
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
+import { build } from "vite";
+
 import { checkArchive } from "./archive-policy.ts";
 import { checkNativeConsumers } from "./native-consumers.ts";
 import { checkS3Consumer } from "./s3-consumer.ts";
@@ -123,6 +125,55 @@ try {
     temporary,
   );
   run(process.execPath, ["consumer.mjs"], temporary);
+  const browserEntry = join(temporary, "browser-client.js");
+  await writeFile(
+    browserEntry,
+    'import { UploadClient, UploadClientStore } from "@effect-kit/storage/client"; import { makeStorageUploadApi } from "@effect-kit/storage/http/schema"; globalThis.storageBrowserProbe = [UploadClient.make, UploadClientStore.memory, makeStorageUploadApi];',
+  );
+  await build({
+    root: temporary,
+    configFile: false,
+    logLevel: "silent",
+    plugins: [
+      {
+        name: "verify-client-boundary",
+        generateBundle(_options, bundle) {
+          for (const chunk of Object.values(bundle)) {
+            if (chunk.type !== "chunk") continue;
+            for (const id of [
+              ...Object.keys(chunk.modules),
+              ...chunk.imports,
+              ...chunk.dynamicImports,
+            ])
+              assert(
+                !/node:|@aws-sdk|@google-cloud|@azure\/|@vercel\/blob/u.test(id),
+                `Server module in browser client: ${id}`,
+              );
+          }
+        },
+      },
+    ],
+    build: {
+      outDir: join(temporary, "browser"),
+      minify: false,
+      lib: {
+        entry: browserEntry,
+        formats: ["iife"],
+        name: "StorageBrowserProbe",
+        fileName: () => "client.js",
+      },
+    },
+  });
+  const clientBundle = await readFile(join(temporary, "browser/client.js"), "utf8");
+  assert(!clientBundle.includes("__vite-browser-external"));
+  // Effect contains a guarded getBuiltinModule("node:async_hooks") feature probe;
+  // it does not import or bundle Node code in browsers.
+  assert(
+    !/from ["']node:|require\(["']node:|@aws-sdk|@google-cloud|@azure\/|@vercel\/blob|service_role/u.test(
+      clientBundle,
+    ),
+  );
+  await writeFile(resolve(".artifacts/app-browser-client.js"), clientBundle);
   await checkS3Consumer(temporary);
   await checkNativeConsumers(archive);
   await writeFile(
@@ -151,6 +202,8 @@ try {
           "SDK-free managed transfer runtime and source/sink E/R declarations",
           "isolated core transfer construction and provider-supplied S3 driver",
           "SDK-free protected session runtime and source/event/batch E/R contracts",
+          "authorized workflow/client/HttpApi imports and E/R declarations without optional peers",
+          "browser client bundled from the exact packed archive without Node or cloud peers",
         ],
       },
       null,

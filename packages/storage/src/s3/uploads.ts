@@ -17,9 +17,9 @@ const Remote = Schema.Union([
   }),
 ]);
 const remote = (record: UploadRecord) =>
-  Schema.decodeUnknownEffect(Remote)(record.remote).pipe(
-    Effect.mapError(() => failUpload("Conflict")),
-  );
+  Schema.decodeUnknownEffect(Remote)(
+    record.remote ? Redacted.value(record.remote) : undefined,
+  ).pipe(Effect.mapError(() => failUpload("Conflict")));
 
 const seconds = (expiresAt: number) =>
   Effect.map(DateTime.now, (now) =>
@@ -47,6 +47,8 @@ export const S3UploadGrants = {
         const handle = (record: UploadRecord, uploadId: string) => ({
           ref: ref(record),
           uploadId: Redacted.make(uploadId),
+          checksumAlgorithm: "SHA256" as const,
+          checksumType: "COMPOSITE" as const,
         });
         const inventory = Effect.fnUntraced(function* (record: UploadRecord, uploadId: string) {
           const parts = [];
@@ -85,11 +87,13 @@ export const S3UploadGrants = {
               !record.input.file.size ||
               Math.ceil(record.input.file.size / partBytes) >
                 storage.multipart.limits.maximumParts ||
-              !storage.multipart.limits.completeConditions?.includes("create-only")
+              (storage.multipart.limits.completeConditions !== undefined &&
+                !storage.multipart.limits.completeConditions.includes("create-only"))
             )
               return yield* failUpload("Unsupported");
             const upload = yield* storage.multipart.initiate({
               key: record.stagingKey,
+              checksum: { ChecksumAlgorithm: "SHA256", ChecksumType: "COMPOSITE" },
               headers: {
                 contentType: record.input.file.contentType,
                 customMetadata: operationMetadata(record),
@@ -103,6 +107,7 @@ export const S3UploadGrants = {
             if (state.kind === "multipart")
               return {
                 _tag: "Multipart",
+                checksum: "sha256",
                 partBytes: state.partBytes,
                 completed: (yield* inventory(record, state.uploadId)).map(
                   ({ partNumber, etag }) => ({ partNumber, etag }),
@@ -149,14 +154,17 @@ export const S3UploadGrants = {
               expiresAt: DateTime.toEpochMillis(signed.expiresAt),
             };
           }),
-          part: Effect.fnUntraced(function* (record, partNumber, expiresAt) {
+          part: Effect.fnUntraced(function* (record, partNumber, expiresAt, checksum) {
             const state = yield* remote(record);
             if (
               state.kind !== "multipart" ||
               partNumber > Math.ceil(record.input.file.size / state.partBytes)
             )
               return yield* failUpload("BadRequest");
+            if (!checksum || !/^[a-f0-9]{64}$/u.test(checksum))
+              return yield* failUpload("BadRequest");
             const signed = yield* signing.signPart({
+              checksum: { ChecksumSHA256: Buffer.from(checksum, "hex").toString("base64") },
               upload: handle(record, state.uploadId),
               partNumber,
               expiresInSeconds: yield* seconds(expiresAt),

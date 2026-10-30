@@ -111,3 +111,9 @@ and `STORAGE_S3_TEST_BUCKET`, `STORAGE_S3_TEST_REGION`, `STORAGE_S3_TEST_PREFIX`
 The authorized prefix must be `effect-storage-acceptance/<run>/`. The suite creates
 unique children of that prefix and removes its own objects, versions and uploads.
 It never creates buckets, changes policies or configures retention.
+
+Authorized HTTP/browser upload acceptance: `pnpm test:uploads:local` uses an owned,
+pinned RustFS container and local GCS/Supabase protocol fixtures with Chromium and
+actual cross-origin requests. Requires Docker and Playwright Chromium; uses no cloud
+account. The runnable proxy example is
+`node packages/storage/examples/authorized-upload.mjs` after `pnpm build`.

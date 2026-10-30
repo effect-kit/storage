@@ -89,6 +89,7 @@ const make = Effect.fnUntraced(function* <R>(options: UploadOptions<R>) {
     readonly actor: UploadActor;
     readonly uploadId: string;
     readonly partNumber?: number;
+    readonly sha256?: string | undefined;
   }) {
     const record = yield* load(input, "grant");
     yield* active(record);
@@ -114,8 +115,12 @@ const make = Effect.fnUntraced(function* <R>(options: UploadOptions<R>) {
         ? yield* driver.part
             ? driver.part(
                 issuing,
-                (yield* decode(PartRequest, { partNumber: input.partNumber })).partNumber,
+                (yield* decode(PartRequest, {
+                  partNumber: input.partNumber,
+                  ...(input.sha256 ? { sha256: input.sha256 } : {}),
+                })).partNumber,
                 expiresAt,
+                input.sha256,
               )
             : Effect.fail(failUpload("Unsupported"))
         : yield* driver.grant(issuing, expiresAt);
@@ -179,8 +184,19 @@ const make = Effect.fnUntraced(function* <R>(options: UploadOptions<R>) {
     }
     const object = record.object;
     if (!object) return yield* failUpload("Unavailable");
-    if (record.state !== "publishing" && options.inspect)
-      yield* hook(options.inspect({ object, file: record.input.file }));
+    if (record.state !== "publishing" && options.inspect) {
+      const inspection = yield* Effect.result(
+        hook(options.inspect({ object, file: record.input.file })),
+      );
+      if (inspection._tag === "Failure") {
+        if (
+          inspection.failure._tag === "UploadError" &&
+          inspection.failure.code === "VerificationFailed"
+        )
+          yield* store.write({ ...record, state: "rejected" });
+        return yield* inspection.failure;
+      }
+    }
     record = { ...record, state: "publishing" };
     yield* store.write(record);
     if (options.quota) yield* hook(options.quota.settle(record));
@@ -202,6 +218,8 @@ const make = Effect.fnUntraced(function* <R>(options: UploadOptions<R>) {
     ) {
       record = { ...record, state: "aborted", cleanupPending: true };
       yield* store.write(record);
+    }
+    if (["aborted", "rejected"].includes(record.state)) {
       yield* driver.abort(record);
       if (options.quota) yield* hook(options.quota.release(record));
     }
@@ -288,6 +306,8 @@ const make = Effect.fnUntraced(function* <R>(options: UploadOptions<R>) {
           return status(record);
         }),
       ),
+    maximumContentBytes: (input: { readonly actor: UploadActor; readonly uploadId: string }) =>
+      store.exclusive(load(input, "content").pipe(Effect.map((record) => record.input.file.size))),
     status: (input: { readonly actor: UploadActor; readonly uploadId: string }) =>
       store.exclusive(load(input, "status").pipe(Effect.map(status))),
     grant: (input: { readonly actor: UploadActor; readonly uploadId: string }) =>
@@ -296,6 +316,7 @@ const make = Effect.fnUntraced(function* <R>(options: UploadOptions<R>) {
       readonly actor: UploadActor;
       readonly uploadId: string;
       readonly partNumber: number;
+      readonly sha256?: string | undefined;
     }) => store.exclusive(grant(input)),
     complete: (input: {
       readonly actor: UploadActor;

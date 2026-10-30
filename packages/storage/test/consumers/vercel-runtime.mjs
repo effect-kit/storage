@@ -28,3 +28,5 @@ assert.equal(storage.provider, "vercel");
 assert(VercelSigning.layer);
 assert(VercelClient.upload);
 assert(VercelUploadHandler.make);
+
+assert(Object.keys(await import("@effect-kit/storage/vercel/authorized-uploads")).length > 0);

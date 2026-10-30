@@ -34,6 +34,45 @@ export const UploadClientStore = {
         }),
     };
   },
+  webStorage(storage: globalThis.Storage, namespace: string): ClientUploadStore {
+    const key = (id: string) => `${namespace}:browser-upload:${encodeURIComponent(id)}`;
+    return {
+      read: (id) =>
+        Effect.try({
+          try: () => storage.getItem(key(id)),
+          catch: () => failUpload("Unavailable"),
+        }).pipe(
+          Effect.flatMap((raw) =>
+            raw === null
+              ? Effect.succeed(undefined)
+              : raw.length > 65536
+                ? Effect.fail(failUpload("BadRequest"))
+                : Schema.decodeUnknownEffect(Schema.fromJsonString(UploadTicket), {
+                    onExcessProperty: "error",
+                  })(raw).pipe(Effect.mapError(() => failUpload("BadRequest"))),
+          ),
+        ),
+      write: (id, ticket) =>
+        Schema.decodeUnknownEffect(UploadTicket, { onExcessProperty: "error" })(ticket).pipe(
+          Effect.mapError(() => failUpload("BadRequest")),
+          Effect.flatMap((value) =>
+            Effect.try({
+              try: () => {
+                const encoded = JSON.stringify(value);
+                if (encoded.length > 65536) throw new Error("Ticket limit");
+                storage.setItem(key(id), encoded);
+              },
+              catch: () => failUpload("Unavailable"),
+            }),
+          ),
+        ),
+      remove: (id) =>
+        Effect.try({
+          try: () => storage.removeItem(key(id)),
+          catch: () => failUpload("Unavailable"),
+        }),
+    };
+  },
   keyValueStore(kvs: KeyValueStore.KeyValueStore, namespace: string): ClientUploadStore {
     const key = (id: string) => `${namespace}:browser-upload:${encodeURIComponent(id)}`;
     return {

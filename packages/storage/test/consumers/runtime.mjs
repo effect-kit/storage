@@ -204,3 +204,9 @@ await Promise.all(
     "tigris/events",
   ].map(async (path) => assert(Object.keys(await import(`@effect-kit/storage/${path}`)).length)),
 );
+
+await Promise.all(
+  ["uploads", "http", "http/schema", "client"].map(async (path) => {
+    assert(Object.keys(await import(`@effect-kit/storage/${path}`)).length > 0);
+  }),
+);

@@ -27,3 +27,6 @@ const storage = await Effect.runPromise(
 assert.equal(storage.provider, "supabase");
 assert.equal(storage.offsets, undefined);
 assert(SupabaseSigning.layer);
+
+assert(Object.keys(await import("@effect-kit/storage/supabase/uploads")).length > 0);
+assert(Object.keys(await import("@effect-kit/storage/supabase/tus-uploads")).length > 0);

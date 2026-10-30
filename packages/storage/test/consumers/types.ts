@@ -119,3 +119,29 @@ export const advancedCore = [
   makeEventProcessor,
   sessionEventDelivery,
 ] as const;
+
+import { UploadClient, UploadClientStore } from "@effect-kit/storage/client";
+import { makeStorageUploadApi, StorageHttp } from "@effect-kit/storage/http";
+import type { UploadStatus } from "@effect-kit/storage/http/schema";
+import { Uploads, type UploadError } from "@effect-kit/storage/uploads";
+declare const file: File;
+const browserLayer = UploadClient.layer({
+  baseUrl: "/storage",
+  headers: () => Effect.map(Source, () => ({ authorization: "Bearer fixture" })),
+  store: UploadClientStore.memory(),
+});
+const clientProgram: Effect.Effect<UploadStatus, UploadError, UploadClient> = Effect.flatMap(
+  UploadClient,
+  (client) => client.upload({ file, purpose: "attachment", context: {} }),
+);
+const authenticatedClient: Effect.Effect<UploadStatus, UploadError, Source> = clientProgram.pipe(
+  Effect.provide(browserLayer),
+);
+const streamContent: Effect.Effect<
+  UploadStatus,
+  UploadError | StorageError | SourceError,
+  Uploads | Source
+> = Effect.flatMap(Uploads, (uploads) =>
+  uploads.content({ actor: { subject: "user" }, uploadId: "id", body }),
+);
+void [authenticatedClient, streamContent, makeStorageUploadApi(), StorageHttp.routes];

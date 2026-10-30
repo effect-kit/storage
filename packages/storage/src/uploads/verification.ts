@@ -75,8 +75,12 @@ export const snapshot = Effect.fnUntraced(function* (
       });
     }),
   );
-  yield* verify(storage, object, record);
-  return object;
+  // Some native upload acknowledgements lack a validator. This key is reserved for this
+  // intent and never granted to the browser; pinned full-hash readback proves its bytes.
+  const observed =
+    object.ref.version || object.etag ? object : yield* storage.head({ key: record.publishedKey });
+  yield* verify(storage, observed, record);
+  return observed;
 });
 const removeOwned = Effect.fnUntraced(function* (storage: StorageService, object: ObjectMetadata) {
   if (object.ref.version) {

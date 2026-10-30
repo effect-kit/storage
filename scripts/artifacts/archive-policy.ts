@@ -1,6 +1,16 @@
 import { Schema } from "effect";
 
 export const advancedSubpaths = [
+  "uploads",
+  "http",
+  "http/schema",
+  "client",
+  "s3/uploads",
+  "gcs/uploads",
+  "azure/uploads",
+  "supabase/uploads",
+  "supabase/tus-uploads",
+  "vercel/authorized-uploads",
   "lifecycle",
   "events",
   "s3/lifecycle",

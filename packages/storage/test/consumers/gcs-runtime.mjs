@@ -34,3 +34,5 @@ assert(GcsAdministration.make);
 
 import { GcsEvents } from "@effect-kit/storage/gcs/events";
 assert(GcsEvents.decode);
+
+assert(Object.keys(await import("@effect-kit/storage/gcs/uploads")).length > 0);

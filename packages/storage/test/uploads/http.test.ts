@@ -1,14 +1,15 @@
 import { assert, it } from "@effect/vitest";
 import { Effect, Layer } from "effect";
-import { HttpRouter, HttpServer } from "effect/http";
+import { HttpClient, HttpClientResponse, HttpRouter, HttpServer } from "effect/http";
+import { HttpApiClient } from "effect/http-api";
 import { KeyValueStore } from "effect/persistence";
 
-import { StorageHttp } from "../../src/http.js";
+import { StorageHttp, makeStorageUploadApi } from "../../src/http.js";
 import { Storage } from "../../src/storage.js";
-import { Uploads, failUpload } from "../../src/uploads.js";
+import { Uploads, failUpload, type UploadError } from "../../src/uploads.js";
 import { actor, input, setup } from "./fixture.js";
 
-const fixture = Effect.fnUntraced(function* (cookie = false) {
+const fixture = Effect.fnUntraced(function* (cookie = false, filename = "report café.txt") {
   const test = yield* setup();
   const created = yield* test.uploads.create({ actor, input, idempotencyKey: "http" });
   yield* test.uploads.content({
@@ -30,7 +31,7 @@ const fixture = Effect.fnUntraced(function* (cookie = false) {
           : Effect.fail(failUpload("Unauthorized")),
       resolveDownload: ({ fileId }) =>
         fileId === "owned-file"
-          ? Effect.succeed({ ref: object.ref, filename: "report café.txt" })
+          ? Effect.succeed({ ref: object.ref, filename })
           : Effect.fail(failUpload("NotFound")),
     }).pipe(
       Layer.provide(
@@ -52,7 +53,7 @@ const fixture = Effect.fnUntraced(function* (cookie = false) {
         }),
       ),
     );
-  return { ...test, created, request, object };
+  return { ...test, created, request, object, handler: app.handler };
 });
 
 it.effect("HTTP upload routes reject forged identity and cross-origin cookie mutations", () =>
@@ -147,4 +148,90 @@ it.effect(
         });
       }),
     ).pipe(Effect.provide(KeyValueStore.layerMemory)),
+);
+
+it.effect("generated HttpApi clients decode actual route statuses and safe errors", () =>
+  Effect.scoped(
+    Effect.gen(function* () {
+      const test = yield* fixture();
+      const wire = HttpClient.make((request, url) =>
+        Effect.promise(() =>
+          test.handler(
+            new Request(url, {
+              headers: { ...request.headers, authorization: "Bearer fixture-user" },
+            }),
+          ),
+        ).pipe(Effect.map((response) => HttpClientResponse.fromWeb(request, response))),
+      );
+      const client = yield* HttpApiClient.makeWith(makeStorageUploadApi(), {
+        httpClient: wire,
+        baseUrl: "https://app.example",
+      });
+      const status = yield* client.uploads.status({ params: { id: test.created.id } });
+      assert.strictEqual(status.state, "published");
+      const missing = yield* Effect.result(
+        client.uploads.status({ params: { id: "f".repeat(64) } }),
+      );
+      assert.strictEqual(missing._tag, "Failure");
+      if (missing._tag === "Failure" && missing.failure._tag === "UploadError") {
+        const typedCode: UploadError["code"] = missing.failure.code;
+        assert.strictEqual(typedCode, "NotFound");
+      }
+      if (missing._tag === "Failure")
+        assert.deepStrictEqual(missing.failure, { _tag: "UploadError", code: "NotFound" });
+    }),
+  ).pipe(Effect.provide(KeyValueStore.layerMemory)),
+);
+
+it.live("form uploads enforce one bounded file and reject filename header injection", () =>
+  Effect.scoped(
+    Effect.gen(function* () {
+      const test = yield* fixture();
+      const created = yield* test.uploads.create({ actor, input, idempotencyKey: "form" });
+      const form = new FormData();
+      form.append("file", new Blob(["hello"], { type: "text/plain" }), "file.txt");
+      const encoded = new Request("https://app.example", { method: "POST", body: form });
+      const formBytes = yield* Effect.promise(() => encoded.arrayBuffer());
+      assert.strictEqual(
+        (yield* test.request(`/uploads/${created.id}/content`, {
+          method: "POST",
+          body: formBytes,
+          headers: { "content-type": encoded.headers.get("content-type") ?? "" },
+        })).status,
+        200,
+      );
+      const bad = new FormData();
+      bad.append("field", "x".repeat(2048));
+      const badEncoded = new Request("https://app.example", { method: "POST", body: bad });
+      const badBytes = yield* Effect.promise(() => badEncoded.arrayBuffer());
+      const pending = yield* test.uploads.create({ actor, input, idempotencyKey: "bad-form" });
+      assert.strictEqual(
+        (yield* test.request(`/uploads/${pending.id}/content`, {
+          method: "POST",
+          body: badBytes,
+          headers: { "content-type": badEncoded.headers.get("content-type") ?? "" },
+        })).status,
+        400,
+      );
+      const forged = yield* test.uploads
+        .create({
+          actor,
+          input: { ...input, file: { ...input.file, name: "x\r\nSet-Cookie: forged" } },
+          idempotencyKey: "filename",
+        })
+        .pipe(Effect.result);
+      assert.strictEqual(forged._tag, "Failure");
+    }),
+  ).pipe(Effect.provide(KeyValueStore.layerMemory)),
+);
+
+it.effect("download filenames cannot inject response headers", () =>
+  Effect.scoped(
+    Effect.gen(function* () {
+      const test = yield* fixture(false, "report\r\nSet-Cookie: injected");
+      const response = yield* test.request("/files/owned-file");
+      assert.strictEqual(response.status, 400);
+      assert.isNull(response.headers.get("set-cookie"));
+    }),
+  ).pipe(Effect.provide(KeyValueStore.layerMemory)),
 );

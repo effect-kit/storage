@@ -32,8 +32,18 @@ export const fetchTransfer = (
   body: Blob | FormData,
 ) =>
   Effect.tryPromise({
-    try: (signal) =>
-      fetch(url, { method, headers, body, credentials: "omit", redirect: "error", signal }),
+    try: async (signal) => {
+      const response = await fetch(url, {
+        method,
+        headers,
+        body,
+        credentials: "omit",
+        redirect: "error",
+        signal,
+      });
+      await response.body?.cancel();
+      return { status: response.status, headers: response.headers };
+    },
     catch: () => failUpload("Unavailable"),
   });
 export const xhrTransfer = (
