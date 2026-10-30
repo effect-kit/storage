@@ -12,13 +12,13 @@ import {
 import type { MultipartHandle, MultipartUploads, UploadedPart } from "../contracts/multipart.js";
 import type { StorageError } from "../errors.js";
 import { storageError } from "../errors.js";
+import { decodeCursor, encodeCursor } from "../internal/listing-cursor.js";
 import { decodeRequest } from "../internal/request-validation.js";
 import { ObjectHeaders } from "../object.js";
 import type { UploadBody } from "../requests.js";
 import { ListRequest, PutRequest, WriteCondition } from "../requests.js";
 import { authority, encryptionHeaders } from "./config.js";
 import type { S3Connection } from "./config.js";
-import { decodeCursor, encodeCursor } from "./listing.js";
 import {
   ChecksumOptions,
   CompletePart,
@@ -249,7 +249,7 @@ export function multipart(connection: S3Connection): S3MultipartUploads {
         value.upload.ref.key,
         Redacted.value(value.upload.uploadId),
       ]);
-      const marker = yield* decodeCursor(value.cursor, config.storeId, query, "listParts");
+      const marker = yield* decodeCursor("s3", value.cursor, config.storeId, query, "listParts");
       const output = yield* request(connection, "listParts", false, (signal) =>
         client.send(
           new ListPartsCommand({
@@ -374,7 +374,7 @@ export function multipart(connection: S3Connection): S3MultipartUploads {
       if ((value.limit ?? 1000) > nativeLimits.maximumPageSize)
         return yield* storageError("listUploads", "s3", { _tag: "InvalidInput", field: "limit" });
       const query = JSON.stringify(["uploads", value.prefix ?? "", value.limit ?? 1000]);
-      const token = yield* decodeCursor(value.cursor, config.storeId, query, "listUploads");
+      const token = yield* decodeCursor("s3", value.cursor, config.storeId, query, "listUploads");
       const marker =
         token === undefined
           ? undefined

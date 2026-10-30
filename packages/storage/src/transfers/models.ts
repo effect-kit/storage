@@ -6,6 +6,7 @@ import type {
   MultipartUploads,
   UploadedPart,
 } from "../contracts/multipart.js";
+import type { BlockUploads, OffsetUploads } from "../contracts/resumable.js";
 import type { StorageError } from "../errors.js";
 import type { Checksum, ObjectHeaders, ObjectMetadata, ObjectRef } from "../object.js";
 import type { WriteCondition } from "../requests.js";
@@ -29,6 +30,15 @@ export interface TransferEndpoint {
   readonly maximumObjectBytes: number;
   readonly maximumSingleUploadBytes: number;
   readonly transportOverheadBytes: number;
+  readonly validateUpload?:
+    | ((request: {
+        readonly key: string;
+        readonly headers: ObjectHeaders;
+        readonly condition?: WriteCondition | undefined;
+      }) => Effect.Effect<void, StorageError>)
+    | undefined;
+  readonly offsets?: OffsetUploads | undefined;
+  readonly blocks?: BlockUploads | undefined;
   readonly multipart?: MultipartUploads | undefined;
   readonly handles?: MultipartHandleCodec | undefined;
   readonly nativeCopy?:
@@ -100,7 +110,7 @@ export interface UploadRequest<E = never, R = never> {
   readonly headers?: ObjectHeaders;
   readonly condition?: WriteCondition;
   readonly expectedChecksum?: Checksum;
-  readonly strategy?: "auto" | "single" | "multipart";
+  readonly strategy?: "auto" | "single" | "multipart" | "offset" | "blocks";
 }
 
 export interface DownloadTarget<E = never, R = never> {
@@ -127,6 +137,8 @@ export interface TransferReceipt {
   readonly strategy:
     | "single"
     | "multipart"
+    | "offset"
+    | "blocks"
     | "download"
     | "native-copy"
     | "multipart-copy"

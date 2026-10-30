@@ -170,7 +170,7 @@ export class UploadSessions extends Context.Service<UploadSessions, SessionsServ
               yield* Schema.decodeUnknownEffect(SessionId)(request.id).pipe(
                 Effect.mapError(() => sessionError("InvalidSessionId")),
               );
-            if (!endpoint.multipart || !endpoint.handles)
+            if ((!endpoint.multipart || !endpoint.handles) && !endpoint.offsets && !endpoint.blocks)
               return yield* sessionError("DurableUploadUnsupported");
             const headers = yield* validateUpload(runtime, request);
             const { key, source, id: suppliedId } = request;
@@ -180,7 +180,7 @@ export class UploadSessions extends Context.Service<UploadSessions, SessionsServ
               resolved,
               source.length,
               policy.digest.workspaceBytes * 2 + (source.workspaceBytes ?? 0),
-              "multipart",
+              endpoint.offsets ? "offset" : endpoint.blocks ? "blocks" : "multipart",
               false,
               condition,
             );
@@ -206,6 +206,9 @@ export class UploadSessions extends Context.Service<UploadSessions, SessionsServ
               length: source.length ?? 0,
               checksum,
               partBytes: plan.partBytes,
+              ...(plan.strategy === "offset" || plan.strategy === "blocks"
+                ? { protocol: plan.strategy, offset: 0, blocks: [] }
+                : {}),
               parts: [],
               attempts: 0,
               events: [],

@@ -1,58 +1,14 @@
-import { createHash } from "node:crypto";
-
-import { Effect, Schema } from "effect";
-import { Base64Url } from "effect/encoding";
+import { Effect } from "effect";
 
 import { ListObjectsV2Command } from "@aws-sdk/client-s3";
 
 import { storageError } from "../errors.js";
+import { decodeCursor, encodeCursor } from "../internal/listing-cursor.js";
 import type { ListEntry, ListRequest } from "../requests.js";
 import { authority } from "./config.js";
 import type { S3Connection } from "./config.js";
 import { metadata } from "./object-mapping.js";
 import { request } from "./transport.js";
-
-const Cursor = Schema.fromJsonString(
-  Schema.Struct({
-    version: Schema.Literal(1),
-    storeId: Schema.String,
-    query: Schema.String,
-    token: Schema.String,
-  }),
-);
-
-export const decodeCursor = Effect.fnUntraced(function* (
-  cursor: string | undefined,
-  storeId: string,
-  query: string,
-  operation: string,
-) {
-  if (cursor === undefined) return undefined;
-  if (cursor.length > 65536)
-    return yield* storageError(operation, "s3", { _tag: "InvalidInput", field: "cursor" });
-  const decoded = yield* Effect.fromResult(Base64Url.decodeString(cursor)).pipe(
-    Effect.mapError(() => storageError(operation, "s3", { _tag: "InvalidInput", field: "cursor" })),
-  );
-  const value = yield* Schema.decodeUnknownEffect(Cursor, { onExcessProperty: "error" })(
-    decoded,
-  ).pipe(
-    Effect.mapError(() => storageError(operation, "s3", { _tag: "InvalidInput", field: "cursor" })),
-  );
-  if (value.storeId !== storeId || value.query !== createHash("sha256").update(query).digest("hex"))
-    return yield* storageError(operation, "s3", { _tag: "InvalidInput", field: "cursor" });
-  return value.token;
-});
-
-export function encodeCursor(storeId: string, query: string, token: string) {
-  return Base64Url.encode(
-    Schema.encodeSync(Cursor)({
-      version: 1,
-      storeId,
-      query: createHash("sha256").update(query).digest("hex"),
-      token,
-    }),
-  );
-}
 
 export const listPage = Effect.fnUntraced(function* (
   connection: S3Connection,
@@ -65,7 +21,7 @@ export const listPage = Effect.fnUntraced(function* (
     input.delimiter ?? null,
     input.limit ?? 1000,
   ]);
-  const token = yield* decodeCursor(input.cursor, config.storeId, query, "listPage");
+  const token = yield* decodeCursor("s3", input.cursor, config.storeId, query, "listPage");
   const output = yield* request(connection, "listPage", false, (signal) =>
     client.send(
       new ListObjectsV2Command({

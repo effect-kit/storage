@@ -80,7 +80,7 @@ export function resolvePolicy(input: TransferConfiguration, endpoint: TransferEn
 }
 
 export interface UploadPlan {
-  readonly strategy: "single" | "multipart";
+  readonly strategy: "single" | "multipart" | "offset" | "blocks";
   readonly partBytes: number;
   readonly concurrency: number;
   readonly maximumBytes: number;
@@ -92,7 +92,7 @@ export function planUpload(
   policy: ResolvedPolicy,
   length: number | undefined,
   inputDigestWorkspace: number,
-  strategy: "auto" | "single" | "multipart" = "auto",
+  strategy: "auto" | "single" | "multipart" | "offset" | "blocks" = "auto",
   serverCopy = false,
   condition?: WriteCondition,
 ) {
@@ -113,7 +113,7 @@ export function planUpload(
         { _tag: "LimitExceeded", limit: maximumBytes },
         "not-started",
       );
-    if (!["auto", "single", "multipart"].includes(strategy))
+    if (!["auto", "single", "multipart", "offset", "blocks"].includes(strategy))
       return yield* storageError(
         "upload.plan",
         provider,
@@ -121,12 +121,32 @@ export function planUpload(
         "not-started",
       );
 
+    const native =
+      strategy === "offset" || strategy === "blocks"
+        ? strategy
+        : strategy === "auto" && !endpoint.multipart
+          ? endpoint.offsets
+            ? "offset"
+            : endpoint.blocks
+              ? "blocks"
+              : undefined
+          : undefined;
+    if (
+      native &&
+      (native === "offset" ? !endpoint.offsets || length === undefined : !endpoint.blocks)
+    )
+      return yield* storageError(
+        "upload.plan",
+        provider,
+        { _tag: "Unsupported", capability: `${native}-known-source` },
+        "not-started",
+      );
     const single =
       strategy === "single" ||
       (strategy === "auto" &&
         length !== undefined &&
         length <= Math.min(policy.partBytes, endpoint.maximumSingleUploadBytes)) ||
-      !endpoint.multipart;
+      (!endpoint.multipart && !native);
     let partBytes: number;
     let concurrency: number;
     if (single) {
@@ -137,6 +157,45 @@ export function planUpload(
           "upload.plan",
           provider,
           { _tag: "Unsupported", capability: "bounded-single-upload" },
+          "not-started",
+        );
+    } else if (native) {
+      const alignment = native === "offset" ? (endpoint.offsets?.limits.alignmentBytes ?? 0) : 1;
+      const maxPart =
+        native === "offset"
+          ? (endpoint.offsets?.limits.maximumChunkBytes ?? 0)
+          : (endpoint.blocks?.limits.maximumBlockBytes ?? 0);
+      const count =
+        native === "blocks"
+          ? (endpoint.blocks?.limits.maximumBlocks ?? 0)
+          : Number.MAX_SAFE_INTEGER;
+      if (![alignment, maxPart, count].every((value) => Number.isSafeInteger(value) && value > 0))
+        return yield* storageError(
+          "upload.plan",
+          provider,
+          { _tag: "InvalidConfiguration", field: "native.limits" },
+          "not-started",
+        );
+      partBytes =
+        Math.ceil(
+          Math.max(policy.partBytes, Math.ceil((length ?? maximumBytes) / count)) / alignment,
+        ) * alignment;
+      concurrency = 1;
+      if (partBytes > maxPart)
+        return yield* storageError(
+          "upload.plan",
+          provider,
+          { _tag: "LimitExceeded", limit: maxPart },
+          "not-started",
+        );
+      if (
+        length !== undefined &&
+        Math.max(1, Math.ceil(length / partBytes)) + 3 > policy.maxAttempts
+      )
+        return yield* storageError(
+          "upload.plan",
+          provider,
+          { _tag: "LimitExceeded", limit: policy.maxAttempts },
           "not-started",
         );
     } else {
@@ -191,11 +250,17 @@ export function planUpload(
     const receiptBytes = single
       ? 0
       : Math.max(1, Math.ceil((length ?? maximumBytes) / partBytes)) * 8192;
-    const workspaceBytes =
+    const uploadWorkspaceBytes =
       (serverCopy ? 0 : (concurrency + 1) * Math.max(1, partBytes) + policy.maxSourceChunkBytes) +
       concurrency * endpoint.transportOverheadBytes +
       inputDigestWorkspace +
       receiptBytes;
+    const workspaceBytes = Math.max(
+      uploadWorkspaceBytes,
+      native
+        ? policy.maxSourceChunkBytes * 2 + endpoint.transportOverheadBytes + inputDigestWorkspace
+        : 0,
+    );
     if (!Number.isSafeInteger(workspaceBytes) || workspaceBytes > policy.memoryBudgetBytes)
       return yield* storageError(
         "upload.plan",
@@ -204,7 +269,7 @@ export function planUpload(
         "not-started",
       );
     return {
-      strategy: single ? ("single" as const) : ("multipart" as const),
+      strategy: single ? ("single" as const) : (native ?? ("multipart" as const)),
       partBytes,
       concurrency,
       maximumBytes,

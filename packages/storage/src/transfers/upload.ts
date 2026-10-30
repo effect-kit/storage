@@ -6,7 +6,9 @@ import { decodeRequest } from "../internal/request-validation.js";
 import { Checksum, ObjectHeaders, ObjectKey } from "../object.js";
 import type { ObjectMetadata } from "../object.js";
 import { WriteCondition } from "../requests.js";
+import { download } from "./download.js";
 import type { TransferReceipt, UploadRequest } from "./models.js";
+import { nativeUpload } from "./native-upload.js";
 import { partReceipt } from "./part-receipts.js";
 import { planUpload } from "./planner.js";
 import { makeReader, sameChecksum } from "./reader.js";
@@ -69,6 +71,12 @@ export const validateUpload = Effect.fnUntraced(function* <E, R>(
       { _tag: "Unsupported", capability: condition },
       "not-started",
     );
+  if (runtime.endpoint.validateUpload)
+    yield* runtime.endpoint.validateUpload({
+      key: request.key,
+      headers,
+      condition: request.condition,
+    });
   return headers;
 });
 
@@ -167,6 +175,8 @@ export const upload = Effect.fn("Transfers.upload")(function* <E, R>(
 
   const work = Effect.scoped(
     Effect.gen(function* () {
+      if (plan.strategy === "offset" || plan.strategy === "blocks")
+        return yield* nativeUpload(runtime, request, intentHeaders, operation, plan);
       const reader = yield* makeReader(request.source, {
         maximumBytes: plan.maximumBytes,
         maximumChunkBytes: policy.maxSourceChunkBytes,
@@ -329,8 +339,27 @@ export const upload = Effect.fn("Transfers.upload")(function* <E, R>(
     }),
   );
   const transfer = reserved ? work : runtime.lease(plan.workspaceBytes, work);
-  const bounded = existing ? transfer : runtime.deadline(operation, transfer);
+  const verified = Effect.gen(function* () {
+    const receipt = yield* transfer;
+    if (existing || (plan.strategy !== "offset" && plan.strategy !== "blocks")) return receipt;
+    const checked = yield* download(
+      runtime,
+      {
+        ref: receipt.metadata.ref,
+        expectedChecksum: receipt.checksum,
+        target: { write: () => Effect.void },
+      },
+      operation,
+      receipt.metadata,
+    ).pipe(
+      Effect.mapError((error) =>
+        storageError("upload.verify", endpoint.storage.provider, error.reason, "succeeded"),
+      ),
+    );
+    return { ...receipt, metadata: checked.metadata, progress: { ...operation.progress } };
+  });
+  const bounded = existing ? verified : runtime.deadline(operation, verified);
   const receipt = yield* bounded;
-  if (!existing) yield* operation.observe("committed");
+  if (!existing) yield* operation.observe(operation.progress.phase);
   return receipt;
 });

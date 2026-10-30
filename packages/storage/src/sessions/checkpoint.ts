@@ -2,6 +2,7 @@ import { Schema } from "effect";
 
 import { Checksum, ObjectHeaders, ObjectKey, ObjectMetadata, ObjectSize } from "../object.js";
 import { WriteCondition } from "../requests.js";
+import { SavedBlock } from "../transfers/native-upload.js";
 
 export const SessionId = Schema.String.check(Schema.isPattern(/^[A-Za-z0-9_-]{1,100}$/u));
 const Event = Schema.Struct({
@@ -50,6 +51,9 @@ export const UploadCheckpoint = Schema.Struct({
   length: ObjectSize,
   checksum: Checksum,
   partBytes: ObjectSize,
+  protocol: Schema.optional(Schema.Literals(["offset", "blocks"])),
+  offset: Schema.optional(ObjectSize),
+  blocks: Schema.optional(Schema.Array(SavedBlock)),
   handle: Schema.optional(Schema.Redacted(Schema.String)),
   parts: Schema.Array(SavedPart),
   metadata: Schema.optional(ObjectMetadata),

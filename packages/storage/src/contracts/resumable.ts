@@ -1,8 +1,8 @@
 import type { Effect, Redacted } from "effect";
 
 import type { StorageError } from "../errors.js";
-import type { ObjectMetadata, ObjectRef } from "../object.js";
-import type { PutRequest, UploadBody } from "../requests.js";
+import type { ObjectHeaders, ObjectMetadata, ObjectRef } from "../object.js";
+import type { PutRequest, UploadBody, WriteCondition } from "../requests.js";
 
 export interface ResumableHandle {
   readonly protocol: string;
@@ -18,6 +18,7 @@ export type ResumableState =
 
 /** Offset protocols such as GCS/tus, with provider-specific constraints. */
 export interface OffsetUploads {
+  readonly limits: { readonly alignmentBytes: number; readonly maximumChunkBytes: number };
   readonly create: (
     request: Omit<PutRequest, "body">,
   ) => Effect.Effect<ResumableHandle, StorageError>;
@@ -34,6 +35,7 @@ export interface OffsetUploads {
 
 /** Azure-style named blocks are not reported as byte offsets or S3 parts. */
 export interface BlockUploads {
+  readonly limits: { readonly maximumBlockBytes: number; readonly maximumBlocks: number };
   readonly stage: <E = never, R = never>(request: {
     readonly ref: ObjectRef;
     readonly blockId: string;
@@ -50,5 +52,7 @@ export interface BlockUploads {
   readonly commit: (request: {
     readonly ref: ObjectRef;
     readonly blockIds: ReadonlyArray<string>;
+    readonly headers?: ObjectHeaders;
+    readonly condition?: WriteCondition;
   }) => Effect.Effect<ObjectMetadata, StorageError>;
 }

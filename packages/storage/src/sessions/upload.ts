@@ -9,6 +9,7 @@ import type { TransferRuntime } from "../transfers/runtime.js";
 import type { UploadSource } from "../transfers/sources.js";
 import { operationMetadataKey } from "../transfers/upload.js";
 import type { UploadCheckpoint } from "./checkpoint.js";
+import { abortNativeUpload, runNativeUpload, decodeNativeHandle } from "./native-upload.js";
 import type { UploadSessionStore } from "./store.js";
 import { sessionError } from "./store.js";
 
@@ -53,6 +54,7 @@ export const runUpload = Effect.fnUntraced(function* <E, R>(
   original: UploadCheckpoint,
   source: UploadSource<E, R>,
 ) {
+  if (original.protocol) return yield* runNativeUpload(environment, original, source);
   const { runtime, store } = environment;
   if (original.state === "completed") {
     if (!original.metadata) return yield* sessionError("MissingCompletionReceipt");
@@ -289,6 +291,31 @@ export const reconcileUpload = Effect.fnUntraced(function* (
 ) {
   const { runtime, store } = environment;
   if (!["initiating", "completing", "completion-unknown"].includes(original.state)) return original;
+  if (original.protocol === "offset" && original.handle && runtime.endpoint.offsets) {
+    const handle = yield* decodeNativeHandle(original.handle);
+    if (handle.ref.storeId !== runtime.endpoint.storage.storeId || handle.ref.key !== original.key)
+      return yield* sessionError("ForeignHandle");
+    const remote = yield* runtime.cleanupRequest(runtime.endpoint.offsets.query(handle)).pipe(
+      Effect.timeoutOrElse({
+        duration: runtime.policy.cleanupTimeoutMillis,
+        orElse: () => Effect.fail(sessionError("ReconciliationTimeout", true)),
+      }),
+    );
+    if (remote._tag === "Completed")
+      return yield* store.write(
+        { ...original, state: "verifying", metadata: remote.metadata },
+        original.revision,
+      );
+    if (remote._tag === "Uploading")
+      return yield* store.write(
+        { ...original, state: "uploading", offset: remote.committedOffset },
+        original.revision,
+      );
+    return yield* sessionError(
+      remote._tag === "Expired" ? "SessionExpired" : "ReconciliationRequired",
+      true,
+    );
+  }
   // An unknown initiation has no safely observed handle. Never adopt an upload by key alone.
   if (original.state === "initiating" || !runtime.endpoint.reconcile)
     return yield* sessionError("OrphanDiscoveryRequired", true);
@@ -316,6 +343,7 @@ export const abortUpload = Effect.fnUntraced(function* (
   environment: UploadEnvironment,
   original: UploadCheckpoint,
 ) {
+  if (original.protocol) return yield* abortNativeUpload(environment, original);
   const { runtime, store } = environment;
   if (original.state === "aborted") return;
   if (
