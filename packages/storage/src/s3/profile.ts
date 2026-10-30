@@ -9,6 +9,7 @@ import type { nativeLimits } from "./native-models.js";
 
 export interface S3Profile {
   readonly provider: string;
+  readonly bucketTier?: "standard" | "cold";
   readonly configuration: string;
   readonly capabilities: StorageCapabilities;
   readonly limits: Omit<typeof nativeLimits, "maximumParts"> & { readonly maximumParts: number };

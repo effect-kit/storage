@@ -198,6 +198,156 @@
       "workspace-source": "./src/hetzner.ts",
       "types": "./dist/hetzner.d.ts",
       "default": "./dist/hetzner.js"
+    },
+    "./lifecycle": {
+      "workspace-source": "./src/lifecycle.ts",
+      "types": "./dist/lifecycle.d.ts",
+      "default": "./dist/lifecycle.js"
+    },
+    "./events": {
+      "workspace-source": "./src/events.ts",
+      "types": "./dist/events.d.ts",
+      "default": "./dist/events.js"
+    },
+    "./s3/lifecycle": {
+      "workspace-source": "./src/s3/lifecycle.ts",
+      "types": "./dist/s3/lifecycle.d.ts",
+      "default": "./dist/s3/lifecycle.js"
+    },
+    "./s3/governance": {
+      "workspace-source": "./src/s3/governance.ts",
+      "types": "./dist/s3/governance.d.ts",
+      "default": "./dist/s3/governance.js"
+    },
+    "./s3/admin": {
+      "workspace-source": "./src/s3/admin.ts",
+      "types": "./dist/s3/admin.d.ts",
+      "default": "./dist/s3/admin.js"
+    },
+    "./s3/archive": {
+      "workspace-source": "./src/s3/archive.ts",
+      "types": "./dist/s3/archive.d.ts",
+      "default": "./dist/s3/archive.js"
+    },
+    "./s3/events": {
+      "workspace-source": "./src/s3/events.ts",
+      "types": "./dist/s3/events.d.ts",
+      "default": "./dist/s3/events.js"
+    },
+    "./gcs/lifecycle": {
+      "workspace-source": "./src/gcs/lifecycle.ts",
+      "types": "./dist/gcs/lifecycle.d.ts",
+      "default": "./dist/gcs/lifecycle.js"
+    },
+    "./gcs/governance": {
+      "workspace-source": "./src/gcs/governance.ts",
+      "types": "./dist/gcs/governance.d.ts",
+      "default": "./dist/gcs/governance.js"
+    },
+    "./gcs/admin": {
+      "workspace-source": "./src/gcs/admin.ts",
+      "types": "./dist/gcs/admin.d.ts",
+      "default": "./dist/gcs/admin.js"
+    },
+    "./gcs/events": {
+      "workspace-source": "./src/gcs/events.ts",
+      "types": "./dist/gcs/events.d.ts",
+      "default": "./dist/gcs/events.js"
+    },
+    "./azure/lifecycle": {
+      "workspace-source": "./src/azure/lifecycle.ts",
+      "types": "./dist/azure/lifecycle.d.ts",
+      "default": "./dist/azure/lifecycle.js"
+    },
+    "./azure/governance": {
+      "workspace-source": "./src/azure/governance.ts",
+      "types": "./dist/azure/governance.d.ts",
+      "default": "./dist/azure/governance.js"
+    },
+    "./azure/admin": {
+      "workspace-source": "./src/azure/admin.ts",
+      "types": "./dist/azure/admin.d.ts",
+      "default": "./dist/azure/admin.js"
+    },
+    "./azure/archive": {
+      "workspace-source": "./src/azure/archive.ts",
+      "types": "./dist/azure/archive.d.ts",
+      "default": "./dist/azure/archive.js"
+    },
+    "./azure/events": {
+      "workspace-source": "./src/azure/events.ts",
+      "types": "./dist/azure/events.d.ts",
+      "default": "./dist/azure/events.js"
+    },
+    "./azure/account-admin": {
+      "workspace-source": "./src/azure/account-admin.ts",
+      "types": "./dist/azure/account-admin.d.ts",
+      "default": "./dist/azure/account-admin.js"
+    },
+    "./r2/admin": {
+      "workspace-source": "./src/r2/admin.ts",
+      "types": "./dist/r2/admin.d.ts",
+      "default": "./dist/r2/admin.js"
+    },
+    "./r2/events": {
+      "workspace-source": "./src/r2/events.ts",
+      "types": "./dist/r2/events.d.ts",
+      "default": "./dist/r2/events.js"
+    },
+    "./supabase/admin": {
+      "workspace-source": "./src/supabase/admin.ts",
+      "types": "./dist/supabase/admin.d.ts",
+      "default": "./dist/supabase/admin.js"
+    },
+    "./tigris/native": {
+      "workspace-source": "./src/tigris/native.ts",
+      "types": "./dist/tigris/native.d.ts",
+      "default": "./dist/tigris/native.js"
+    },
+    "./wasabi/native": {
+      "workspace-source": "./src/wasabi/native.ts",
+      "types": "./dist/wasabi/native.d.ts",
+      "default": "./dist/wasabi/native.js"
+    },
+    "./b2/admin": {
+      "workspace-source": "./src/b2/admin.ts",
+      "types": "./dist/b2/admin.d.ts",
+      "default": "./dist/b2/admin.js"
+    },
+    "./minio/admin": {
+      "workspace-source": "./src/minio/admin.ts",
+      "types": "./dist/minio/admin.d.ts",
+      "default": "./dist/minio/admin.js"
+    },
+    "./wasabi/admin": {
+      "workspace-source": "./src/wasabi/admin.ts",
+      "types": "./dist/wasabi/admin.d.ts",
+      "default": "./dist/wasabi/admin.js"
+    },
+    "./spaces/admin": {
+      "workspace-source": "./src/spaces/admin.ts",
+      "types": "./dist/spaces/admin.d.ts",
+      "default": "./dist/spaces/admin.js"
+    },
+    "./scaleway/admin": {
+      "workspace-source": "./src/scaleway/admin.ts",
+      "types": "./dist/scaleway/admin.d.ts",
+      "default": "./dist/scaleway/admin.js"
+    },
+    "./hetzner/admin": {
+      "workspace-source": "./src/hetzner/admin.ts",
+      "types": "./dist/hetzner/admin.d.ts",
+      "default": "./dist/hetzner/admin.js"
+    },
+    "./session-events": {
+      "workspace-source": "./src/session-events.ts",
+      "types": "./dist/session-events.d.ts",
+      "import": "./dist/session-events.js"
+    },
+    "./tigris/events": {
+      "workspace-source": "./src/tigris/events.ts",
+      "types": "./dist/tigris/events.d.ts",
+      "import": "./dist/tigris/events.js"
     }
   },
   "publishConfig": {
@@ -338,6 +488,126 @@
       "./hetzner": {
         "types": "./dist/hetzner.d.ts",
         "import": "./dist/hetzner.js"
+      },
+      "./lifecycle": {
+        "types": "./dist/lifecycle.d.ts",
+        "import": "./dist/lifecycle.js"
+      },
+      "./events": {
+        "types": "./dist/events.d.ts",
+        "import": "./dist/events.js"
+      },
+      "./s3/lifecycle": {
+        "types": "./dist/s3/lifecycle.d.ts",
+        "import": "./dist/s3/lifecycle.js"
+      },
+      "./s3/governance": {
+        "types": "./dist/s3/governance.d.ts",
+        "import": "./dist/s3/governance.js"
+      },
+      "./s3/admin": {
+        "types": "./dist/s3/admin.d.ts",
+        "import": "./dist/s3/admin.js"
+      },
+      "./s3/archive": {
+        "types": "./dist/s3/archive.d.ts",
+        "import": "./dist/s3/archive.js"
+      },
+      "./s3/events": {
+        "types": "./dist/s3/events.d.ts",
+        "import": "./dist/s3/events.js"
+      },
+      "./gcs/lifecycle": {
+        "types": "./dist/gcs/lifecycle.d.ts",
+        "import": "./dist/gcs/lifecycle.js"
+      },
+      "./gcs/governance": {
+        "types": "./dist/gcs/governance.d.ts",
+        "import": "./dist/gcs/governance.js"
+      },
+      "./gcs/admin": {
+        "types": "./dist/gcs/admin.d.ts",
+        "import": "./dist/gcs/admin.js"
+      },
+      "./gcs/events": {
+        "types": "./dist/gcs/events.d.ts",
+        "import": "./dist/gcs/events.js"
+      },
+      "./azure/lifecycle": {
+        "types": "./dist/azure/lifecycle.d.ts",
+        "import": "./dist/azure/lifecycle.js"
+      },
+      "./azure/governance": {
+        "types": "./dist/azure/governance.d.ts",
+        "import": "./dist/azure/governance.js"
+      },
+      "./azure/admin": {
+        "types": "./dist/azure/admin.d.ts",
+        "import": "./dist/azure/admin.js"
+      },
+      "./azure/archive": {
+        "types": "./dist/azure/archive.d.ts",
+        "import": "./dist/azure/archive.js"
+      },
+      "./azure/events": {
+        "types": "./dist/azure/events.d.ts",
+        "import": "./dist/azure/events.js"
+      },
+      "./azure/account-admin": {
+        "types": "./dist/azure/account-admin.d.ts",
+        "import": "./dist/azure/account-admin.js"
+      },
+      "./r2/admin": {
+        "types": "./dist/r2/admin.d.ts",
+        "import": "./dist/r2/admin.js"
+      },
+      "./r2/events": {
+        "types": "./dist/r2/events.d.ts",
+        "import": "./dist/r2/events.js"
+      },
+      "./supabase/admin": {
+        "types": "./dist/supabase/admin.d.ts",
+        "import": "./dist/supabase/admin.js"
+      },
+      "./tigris/native": {
+        "types": "./dist/tigris/native.d.ts",
+        "import": "./dist/tigris/native.js"
+      },
+      "./wasabi/native": {
+        "types": "./dist/wasabi/native.d.ts",
+        "import": "./dist/wasabi/native.js"
+      },
+      "./b2/admin": {
+        "types": "./dist/b2/admin.d.ts",
+        "import": "./dist/b2/admin.js"
+      },
+      "./minio/admin": {
+        "types": "./dist/minio/admin.d.ts",
+        "import": "./dist/minio/admin.js"
+      },
+      "./wasabi/admin": {
+        "types": "./dist/wasabi/admin.d.ts",
+        "import": "./dist/wasabi/admin.js"
+      },
+      "./spaces/admin": {
+        "types": "./dist/spaces/admin.d.ts",
+        "import": "./dist/spaces/admin.js"
+      },
+      "./scaleway/admin": {
+        "types": "./dist/scaleway/admin.d.ts",
+        "import": "./dist/scaleway/admin.js"
+      },
+      "./hetzner/admin": {
+        "types": "./dist/hetzner/admin.d.ts",
+        "import": "./dist/hetzner/admin.js"
+      },
+      "./session-events": {
+        "types": "./dist/session-events.d.ts",
+        "import": "./dist/session-events.js"
+      },
+      "./tigris/events": {
+        "types": "./dist/tigris/events.d.ts",
+        "import": "./dist/tigris/events.js"
       }
     },
     "access": "public",
@@ -370,8 +640,10 @@
     "@effect/platform-node": "catalog:",
     "@effect/vitest": "catalog:",
     "@google-cloud/storage": "catalog:",
+    "@tigrisdata/storage": "catalog:",
     "@vercel/blob": "catalog:",
     "effect": "catalog:",
+    "fast-xml-parser": "catalog:",
     "klarity": "catalog:",
     "redis": "catalog:",
     "tsdown": "catalog:",
@@ -389,8 +661,10 @@
     "@effect/platform-deno": "^4.1.0",
     "@effect/platform-node": "^4.1.0",
     "@google-cloud/storage": "^8.4.0",
+    "@tigrisdata/storage": "^3.23.0",
     "@vercel/blob": "^2.8.2",
-    "effect": "^4.1.0"
+    "effect": "^4.1.0",
+    "fast-xml-parser": "^5.11.2"
   },
   "peerDependenciesMeta": {
     "@aws-sdk/client-s3": {
@@ -424,6 +698,12 @@
       "optional": true
     },
     "@vercel/blob": {
+      "optional": true
+    },
+    "@tigrisdata/storage": {
+      "optional": true
+    },
+    "fast-xml-parser": {
       "optional": true
     }
   },

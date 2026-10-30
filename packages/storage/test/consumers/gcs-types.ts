@@ -26,3 +26,15 @@ export const sign = Effect.gen(function* () {
     expiresInSeconds: 60,
   });
 }).pipe(Effect.provide(signing));
+
+import { GcsVersions, GcsMetadata, GcsRecovery } from "@effect-kit/storage/gcs/lifecycle";
+export const lifecycleCapabilities = [GcsVersions, GcsMetadata, GcsRecovery] as const;
+
+import { GcsProtection, GcsStorageTier } from "@effect-kit/storage/gcs/governance";
+export const governanceCapabilities = [GcsProtection, GcsStorageTier] as const;
+
+import { GcsAdministration } from "@effect-kit/storage/gcs/admin";
+export const adminCapabilities = [GcsAdministration] as const;
+
+import { GcsEvents } from "@effect-kit/storage/gcs/events";
+export const eventsCapabilities = [GcsEvents] as const;

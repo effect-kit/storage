@@ -12,6 +12,8 @@ Runtime layers for Node, Bun, Deno and browsers supply hashing and platform serv
 The filesystem provider adds atomic object envelopes on an application-owned directory.
 Native R2 Workers uses caller-owned bindings and has local workerd acceptance.
 Native GCS and Azure adapters add offset/block uploads, signing and protected restartable sessions, with local SDK/protocol evidence.
+Optional lifecycle, governance, archive and administration services preserve native provider semantics.
+Authenticated event integration uses an exclusive-owner Effect KVS inbox and application outbox callbacks; hosted governance qualification remains pending.
 
 ## Package
 

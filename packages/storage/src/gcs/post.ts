@@ -62,7 +62,8 @@ export class GcsPost extends Context.Service<
               value.key.includes(`\${filename}`) ||
               expiry <= now ||
               storage.config.apiEndpoint !== "https://storage.googleapis.com" ||
-              storage.config.kmsKeyName
+              storage.config.kmsKeyName ||
+              storage.config.customerKey
             )
               return yield* storageError(
                 "post",

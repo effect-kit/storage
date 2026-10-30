@@ -166,12 +166,14 @@ export const resolveCompatible = Effect.fnUntraced(function* (
       : [];
   const checksums = provider === "scaleway" || provider === "wasabi";
   const versioned =
+    provider === "tigris" ||
     provider === "b2" ||
     provider === "wasabi" ||
     provider === "scaleway" ||
     ((provider === "minio" || provider === "hetzner") && "versioning" in input && input.versioning);
   const profile: S3Profile = Object.freeze<S3Profile>({
     provider,
+    ...(provider === "spaces" && "tier" in input ? { bucketTier: input.tier } : {}),
     configuration,
     capabilities: {
       putConditions,
@@ -233,7 +235,7 @@ export const resolveCompatible = Effect.fnUntraced(function* (
   if (
     encryption &&
     (["tigris", "spaces"].includes(provider) ||
-      (provider === "r2" && encryption.mode !== "customer") ||
+      (["r2", "wasabi"].includes(provider) && encryption.mode !== "customer") ||
       (provider !== "minio" && provider !== "wasabi" && encryption.mode.startsWith("aws:")))
   )
     return yield* storageError(

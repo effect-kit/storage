@@ -107,3 +107,15 @@ import { R2WorkersStorage } from "@effect-kit/storage/r2-workers";
 import type { R2BucketBinding } from "@effect-kit/storage/r2-workers";
 declare const nativeBinding: R2BucketBinding;
 export const workerProvider = R2WorkersStorage.layer({ bucket: nativeBinding, storeId: "worker" });
+
+import { StorageEventInbox, makeEventProcessor } from "@effect-kit/storage/events";
+import { StorageVersions, StorageMetadata, StorageTags } from "@effect-kit/storage/lifecycle";
+import { sessionEventDelivery } from "@effect-kit/storage/session-events";
+export const advancedCore = [
+  StorageVersions,
+  StorageMetadata,
+  StorageTags,
+  StorageEventInbox,
+  makeEventProcessor,
+  sessionEventDelivery,
+] as const;

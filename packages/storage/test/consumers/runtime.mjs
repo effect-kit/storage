@@ -188,3 +188,19 @@ assert.equal(
   typeof (await import("@effect-kit/storage/r2-workers")).R2WorkersStorage.layer,
   "function",
 );
+
+await Promise.all(
+  [
+    "lifecycle",
+    "events",
+    "session-events",
+    "r2/admin",
+    "r2/events",
+    "supabase/admin",
+    "b2/admin",
+    "s3/events",
+    "gcs/events",
+    "azure/events",
+    "tigris/events",
+  ].map(async (path) => assert(Object.keys(await import(`@effect-kit/storage/${path}`)).length)),
+);

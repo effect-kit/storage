@@ -40,9 +40,21 @@ export type {
   ResumableHandle,
   ResumableState,
 } from "./contracts/resumable.js";
+export {
+  StorageVersions,
+  StorageMetadata,
+  StorageTags,
+  VersionRef,
+  VersionEntry,
+  VersionQuery,
+  MetadataReplace,
+  MetadataMerge,
+  RestoreVersion,
+} from "./lifecycle.js";
 export type {
-  ObjectVersions,
-  ObjectTags,
-  ObjectRetention,
-  StorageAdministration,
-} from "./contracts/lifecycle.js";
+  VersionsService,
+  MetadataService,
+  TagsService,
+  ArchiveService,
+  RestoreStatus,
+} from "./lifecycle.js";

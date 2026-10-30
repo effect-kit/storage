@@ -166,3 +166,102 @@ protection remains enabled for Scaleway/Wasabi; other profiles use required-only
 checksums and currently reject explicit unqualified combinations. Managed verification
 and optional protected sessions remain available. Session handles bind configuration.
 Local RustFS results do not qualify any hosted provider or an actual MinIO edition.
+
+## Lifecycle and administration
+
+`StorageVersions`, `StorageMetadata` and `StorageTags` are optional services from the
+root or `/lifecycle`. Supply only the capabilities the application uses:
+
+```ts
+import { Effect, Layer } from "effect";
+
+import { StorageVersions } from "@effect-kit/storage";
+import { S3Storage } from "@effect-kit/storage/s3";
+import { S3Versions, S3Tags } from "@effect-kit/storage/s3/lifecycle";
+
+const storage = S3Storage.layer({ bucket: "application-uploads", region: "us-east-1" });
+const lifecycle = Layer.merge(S3Versions.layer, S3Tags.layer).pipe(Layer.provide(storage));
+const history = Effect.flatMap(StorageVersions, (versions) =>
+  versions.listPage({ prefix: "uploads/", limit: 100 }),
+).pipe(Effect.provide(lifecycle));
+```
+
+Versions expose lazy `list`, `listPage`, `deleteVersion`, `removeDeleteMarker` and
+`restore`. Deletion requires an exact immutable version; S3 marker removal is a
+separate operation. Restore copies an exact source and requires a destination
+condition. GCS uses generation conditions; its portable restore supports create-only.
+S3 metadata updates copy at most 5 GB and require current destination `IfMatch`.
+They retain reported encryption, retention, tags and storage class. Source and
+destination copy conditions are sent together; compatibility profiles without
+qualified conditional copy reject metadata updates. GCS metadata requires both
+generation and metageneration. Azure custom metadata requires current `IfMatch`;
+`AzureProperties.setHeaders` updates system headers separately with its own CAS.
+`replace` replaces custom metadata while retaining omitted system headers; `merge`
+patches custom metadata, with `null` removing a field.
+
+| Entry point                           | Services and operations                                                                                       |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `/s3/lifecycle`                       | S3Versions, S3Metadata, S3Tags                                                                                |
+| `/s3/governance`                      | S3ObjectLock: retention, legal holds, explicit governance bypass                                              |
+| `/s3/archive`                         | S3Archive: request/status/await readiness; S3StorageTier: encryption observations and conditional tier copies |
+| `/gcs/lifecycle`                      | GcsVersions, GcsMetadata, GcsRecovery: soft-deleted generation restore                                        |
+| `/gcs/governance`                     | GcsProtection: holds/retention/encryption observations; GcsStorageTier: conditional rewrites                  |
+| `/azure/lifecycle`                    | AzureVersions, AzureMetadata, AzureProperties, AzureTags                                                      |
+| `/azure/governance`, `/azure/archive` | AzureProtection; AzureArchive: tier/rehydration status and native undelete                                    |
+| `/tigris/native`                      | TigrisAdministration: configuration/snapshots/forks; TigrisRecovery: soft-delete and archive                  |
+| `/wasabi/native`                      | WasabiNative: exact-key MOVE/compose/append; WasabiCompliance: legacy bucket policy                           |
+
+Every `/provider/admin` module captures separate, explicitly supplied management
+authority. S3/named S3 admin layers own a separate SDK client. GCS admin accepts an
+explicit SDK authentication configuration; Azure container administration and Azure
+ARM `/azure/account-admin` are separate. R2 uses a Cloudflare account token; Supabase
+requires service-role authority; `/b2/admin` uses a native B2 application key.
+Construction does not provision resources or change configuration.
+
+S3 and GCS configuration expose `get`, `plan` and `apply`. Plans are bound to their
+issuing service, checked for mutation, consumed once and checked for stale state.
+S3 requires explicit `allowUnconditional: true`: its preflight is best effort,
+because bucket configuration has no general CAS. It returns per-step outcomes
+after partial changes. GCS applies native metageneration CAS. Other native control
+planes expose explicit replacements and accepted/observed results. No multi-service
+configuration transaction or automatic rollback is implied.
+
+Releasing holds, bypassing governance and changing protection require explicit
+typed intent. Native retention may be irreversible. Archive requests, rehydration,
+rewrites and tier copies can incur storage/retrieval charges; an accepted request
+does not establish readiness. GCS Archive remains online. Azure `deleteEmpty`
+rejects because its container deletion API lacks an atomic nonempty guard.
+
+Install `@tigrisdata/storage` only for `/tigris/native`: the official SDK provides
+native bucket configuration and fork controls; our scoped AWS client handles
+snapshot/bucket mutations without hidden retries. Tigris restore uses Days; AWS-only
+restore tiers are rejected. `TigrisAdministration` takes an
+explicit HTTPS endpoint and refreshable credential function; organization session
+credentials also require `organizationId`. Tigris bucket settings readback is
+Redacted because native migration/notification settings can contain credentials. Install `fast-xml-parser` only for
+`/wasabi/native`: it validates bounded XML receipts and encodes native compose and
+legacy Compliance requests. Core and ordinary S3 imports require neither peer.
+
+## Provider events
+
+`/s3/events`, `/gcs/events`, `/azure/events`, `/r2/events` and `/tigris/events` decode
+native payloads without provider SDKs. They check the selected namespace, preserve
+opaque versions, decode keys according to the native format and retain raw input
+inside `Redacted`. Parsing does not authenticate a webhook or queue message.
+
+`/events` supplies `StorageEventInbox.layer({ namespace, ownership: "exclusive" })`
+over an application-provided Effect KeyValueStore. `makeEventProcessor` requires an
+authentication callback before delivery. Authenticate the transport, bound input
+size and validate its delivery identity in that callback. The inbox serializes
+per-store delivery, rejects duplicates and orders native per-object sequencers.
+Unsequenced event IDs are retained in the application's KVS; choose a namespace and
+backing-store retention horizon appropriate to the transport's replay window.
+Applications must give one process exclusive ownership; independent KVS instances
+or processes do not gain a distributed lock.
+
+Delivery is at least once. Use the supplied idempotency key in an application
+outbox/transaction: a crash between callback completion and inbox acknowledgement
+can redeliver. `/session-events` supplies `sessionEventDelivery({ resolve, outbox })`:
+resolve an event through an application-owned index, bind its object identity, then
+reconcile the existing protected session and deliver its durable events. Provider
+events never directly mark sessions complete or replace a committed object outcome.

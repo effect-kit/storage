@@ -19,3 +19,18 @@ assert.equal(storage.provider, "gcs");
 assert(storage.offsets);
 assert(GcsSigning.layer);
 assert(GcsPost.layer);
+
+import { GcsVersions, GcsMetadata, GcsRecovery } from "@effect-kit/storage/gcs/lifecycle";
+assert(GcsVersions.make);
+assert(GcsMetadata.make);
+assert(GcsRecovery.make);
+
+import { GcsProtection, GcsStorageTier } from "@effect-kit/storage/gcs/governance";
+assert(GcsProtection.make);
+assert(GcsStorageTier.make);
+
+import { GcsAdministration } from "@effect-kit/storage/gcs/admin";
+assert(GcsAdministration.make);
+
+import { GcsEvents } from "@effect-kit/storage/gcs/events";
+assert(GcsEvents.decode);

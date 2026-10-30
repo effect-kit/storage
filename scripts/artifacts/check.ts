@@ -135,7 +135,7 @@ try {
         checks: [
           "packed file policy",
           "production exports",
-          "SDK-free isolated runtime",
+          "SDK-free isolated runtime and lifecycle/event/session-event/native-HTTP-admin imports",
           "NodeNext declarations",
           "Bundler/browser declarations",
           "memory/fault/conformance imports",
@@ -144,6 +144,8 @@ try {
           "explicit S3/signing/POST peers and packed public contracts",
           "isolated GCS SDK-only runtime and NodeNext/Bundler declarations",
           "isolated Azure SDK-only runtime without identity and NodeNext/Bundler declarations",
+          "isolated Tigris native consumer with only its official SDK and AWS peer",
+          "isolated Wasabi native consumer with only XML and AWS peers",
           "SDK-free Supabase native consumer and explicit Supabase S3 AWS peer",
           "isolated Vercel SDK-only server/client/handler NodeNext and Bundler consumers",
           "SDK-free managed transfer runtime and source/sink E/R declarations",
@@ -156,7 +158,7 @@ try {
     )}\n`,
   );
   console.log(
-    "Packed core/testing/transfers pass without SDK peers; S3, GCS, Azure, Supabase and Vercel consumers pass with their explicit peers.",
+    "Packed core/lifecycle/events/sessions and native HTTP admin pass without SDK peers; S3, GCS, Azure, Supabase, Vercel, Tigris and Wasabi pass with their explicit peers.",
   );
 } catch (error) {
   if (error !== null && typeof error === "object" && "stderr" in error) {

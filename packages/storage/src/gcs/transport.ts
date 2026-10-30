@@ -8,6 +8,7 @@ import type { Scope } from "effect";
 
 import { storageError } from "../errors.js";
 import { providerError } from "../internal/node/provider-errors.js";
+import { customerEncryption } from "./config.js";
 import type { GcsConnection } from "./config.js";
 
 export interface Options {
@@ -60,6 +61,12 @@ const openResponse = (
                   method: options.method ?? "GET",
                   headers: {
                     ...Object.fromEntries(new Headers(authenticated.headers).entries()),
+                    ...(/\/o(?:\/|$)/u.test(url.pathname)
+                      ? customerEncryption(connection.config)
+                      : {}),
+                    ...(url.pathname.includes("/rewriteTo/")
+                      ? customerEncryption(connection.config, true)
+                      : {}),
                     ...options.headers,
                     ...(json
                       ? {
@@ -118,6 +125,17 @@ export const jsonRequest = Effect.fnUntraced(function* (
   options: Options,
   acceptedStatuses: ReadonlyArray<number> = [],
 ) {
+  if (options.json !== undefined && typeof options.json !== "boolean")
+    yield* Effect.try({
+      try: () => JSON.stringify(options.json),
+      catch: () =>
+        storageError(
+          operation,
+          "gcs",
+          { _tag: "InvalidInput", field: "json" },
+          mutation ? "not-started" : "not-applicable",
+        ),
+    });
   return yield* Effect.scoped(
     Effect.gen(function* () {
       const response = yield* openResponse(connection, operation, mutation, options);

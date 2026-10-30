@@ -68,6 +68,7 @@ export function nativeOperations(connection: GcsConnection) {
       readonly headers?: ObjectHeaders;
       readonly preconditions?: GcsPreconditions;
       readonly token?: string;
+      readonly storageClass?: "STANDARD" | "NEARLINE" | "COLDLINE" | "ARCHIVE";
     }) {
       yield* validateKey(request.destinationKey, "rewrite", true);
       const source = yield* target(connection, { ref: request.source }, "rewrite");
@@ -90,7 +91,10 @@ export function nativeOperations(connection: GcsConnection) {
             ? { destinationKmsKeyName: connection.config.kmsKeyName }
             : {}),
         },
-        json: nativeHeaders(request.headers ?? {}),
+        json: {
+          ...nativeHeaders(request.headers ?? {}),
+          ...(request.storageClass ? { storageClass: request.storageClass } : {}),
+        },
       });
       const result = yield* decodeJson(
         Schema.Struct({

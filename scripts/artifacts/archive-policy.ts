@@ -1,5 +1,38 @@
 import { Schema } from "effect";
 
+export const advancedSubpaths = [
+  "lifecycle",
+  "events",
+  "s3/lifecycle",
+  "s3/governance",
+  "s3/admin",
+  "s3/archive",
+  "s3/events",
+  "gcs/lifecycle",
+  "gcs/governance",
+  "gcs/admin",
+  "gcs/events",
+  "azure/lifecycle",
+  "azure/governance",
+  "azure/admin",
+  "azure/archive",
+  "azure/events",
+  "azure/account-admin",
+  "r2/admin",
+  "r2/events",
+  "supabase/admin",
+  "tigris/native",
+  "wasabi/native",
+  "b2/admin",
+  "minio/admin",
+  "wasabi/admin",
+  "spaces/admin",
+  "scaleway/admin",
+  "hetzner/admin",
+  "session-events",
+  "tigris/events",
+] as const;
+
 const Manifest = Schema.Struct({
   name: Schema.Literal("@effect-kit/storage"),
   version: Schema.NonEmptyString,
@@ -8,6 +41,8 @@ const Manifest = Schema.Struct({
   types: Schema.Literal("./dist/index.d.ts"),
   peerDependencies: Schema.Struct({
     "@vercel/blob": Schema.String,
+    "@tigrisdata/storage": Schema.NonEmptyString,
+    "fast-xml-parser": Schema.NonEmptyString,
     "@effect/platform-node": Schema.NonEmptyString,
     "@effect/platform-bun": Schema.NonEmptyString,
     "@effect/platform-deno": Schema.NonEmptyString,
@@ -22,6 +57,8 @@ const Manifest = Schema.Struct({
   }),
   peerDependenciesMeta: Schema.Struct({
     "@vercel/blob": Schema.Struct({ optional: Schema.Literal(true) }),
+    "@tigrisdata/storage": Schema.Struct({ optional: Schema.Literal(true) }),
+    "fast-xml-parser": Schema.Struct({ optional: Schema.Literal(true) }),
     "@effect/platform-browser": Schema.Struct({ optional: Schema.Literal(true) }),
     "@effect/platform-deno": Schema.Struct({ optional: Schema.Literal(true) }),
     "@effect/platform-bun": Schema.Struct({ optional: Schema.Literal(true) }),
@@ -176,6 +213,20 @@ const Manifest = Schema.Struct({
 
 export function checkArchive(manifestInput: unknown, entries: readonly string[]): void {
   Schema.decodeUnknownSync(Manifest)(manifestInput);
+  const advancedManifest = Schema.decodeUnknownSync(
+    Schema.Struct({ exports: Schema.Record(Schema.String, Schema.Unknown) }),
+  )(manifestInput);
+  for (const path of advancedSubpaths) {
+    Schema.decodeUnknownSync(
+      Schema.Struct({
+        types: Schema.Literal(`./dist/${path}.d.ts`),
+        import: Schema.Literal(`./dist/${path}.js`),
+      }),
+    )(advancedManifest.exports[`./${path}`]);
+    for (const extension of ["js", "d.ts"])
+      if (!entries.includes(`package/dist/${path}.${extension}`))
+        throw new Error(`Missing advanced entry: ${path}.${extension}`);
+  }
   for (const old of ["./transfers/node", "./sessions/node", "./s3/transfers"]) {
     if (Object.hasOwn((manifestInput as { exports: object }).exports, old))
       throw new Error(`Removed export remains: ${old}`);

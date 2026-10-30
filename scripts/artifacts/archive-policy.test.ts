@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { checkArchive } from "./archive-policy.ts";
+import { advancedSubpaths, checkArchive } from "./archive-policy.ts";
 
 const manifest = {
   name: "@effect-kit/storage",
@@ -11,6 +11,8 @@ const manifest = {
   types: "./dist/index.d.ts",
   peerDependencies: {
     "@vercel/blob": "^2.8.2",
+    "@tigrisdata/storage": "^3.23.0",
+    "fast-xml-parser": "^5.11.2",
     "@effect/platform-node": "^4.1.0",
     "@effect/platform-bun": "^4.1.0",
     "@effect/platform-deno": "^4.1.0",
@@ -25,6 +27,8 @@ const manifest = {
   },
   peerDependenciesMeta: {
     "@vercel/blob": { optional: true },
+    "@tigrisdata/storage": { optional: true },
+    "fast-xml-parser": { optional: true },
     "@effect/platform-browser": { optional: true },
     "@effect/platform-deno": { optional: true },
     "@effect/platform-bun": { optional: true },
@@ -152,6 +156,19 @@ const entries = [
   "package/dist/transfers.d.ts",
 ];
 
+Object.assign(
+  manifest.exports,
+  Object.fromEntries(
+    advancedSubpaths.map((path) => [
+      `./${path}`,
+      { types: `./dist/${path}.d.ts`, import: `./dist/${path}.js` },
+    ]),
+  ),
+);
+entries.push(
+  ...advancedSubpaths.flatMap((path) => [`package/dist/${path}.js`, `package/dist/${path}.d.ts`]),
+);
+
 test("research, source files, secrets and traversal cannot enter the archive", () => {
   checkArchive(manifest, entries);
   for (const path of [
@@ -167,6 +184,7 @@ test("research, source files, secrets and traversal cannot enter the archive", (
 
 test("missing runtime/declarations/license and development exports fail", () => {
   for (const required of [
+    ...advancedSubpaths.flatMap((path) => [`dist/${path}.js`, `dist/${path}.d.ts`]),
     "LICENSE",
     "dist/index.js",
     "dist/index.d.ts",

@@ -2,6 +2,8 @@ packages:
   - packages/*
 
 catalog:
+  fast-xml-parser: 5.11.2
+  "@tigrisdata/storage": 3.23.0
   "@google-cloud/storage": 8.4.0
   "@azure/storage-blob": 12.34.0
   "@azure/identity": 4.14.0

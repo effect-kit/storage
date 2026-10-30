@@ -17,6 +17,13 @@ export const GcsSigning = {
         return StorageSigning.of({
           sign: Effect.fnUntraced(function* (request) {
             yield* signingRequest(request, "gcs");
+            if (storage.config.customerKey)
+              return yield* storageError(
+                "sign",
+                "gcs",
+                { _tag: "Unsupported", capability: "customer-key-signing" },
+                "not-started",
+              );
             const address = yield* target(storage, { ref: request.ref }, "sign");
             if (request.method === "PUT" && (request.ref.version || storage.config.kmsKeyName))
               return yield* storageError(

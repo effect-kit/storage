@@ -1,17 +1,49 @@
 import { crc32 } from "node:zlib";
 
 import { assert, it } from "@effect/vitest";
-import { Effect, Redacted, Result, Stream } from "effect";
+import { Effect, Redacted, Result, Schema, Stream } from "effect";
 
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 import { Storage } from "../../src/index.js";
+import { VersionRef } from "../../src/lifecycle.js";
 import { S3Storage } from "../../src/s3.js";
+import { S3Versions, S3Tags } from "../../src/s3/lifecycle.js";
 import { S3Post } from "../../src/s3/post.js";
 import { S3Signing } from "../../src/s3/signing.js";
 import { runStorageConformance } from "../../src/testing.js";
 import { conformanceFixture, environment, s3Fixture } from "./s3-fixture.js";
+
+it.live("version and marker deletion preserve history and version-specific object tags", () =>
+  Effect.scoped(
+    Effect.gen(function* () {
+      const { storage, prefix } = yield* s3Fixture();
+      const key = `${prefix}advanced-history`;
+      const initial = yield* storage.put({ key, body: new Uint8Array([1, 2, 3]) });
+      const original = yield* Schema.decodeUnknownEffect(VersionRef)(initial.ref);
+      const versions = S3Versions.make(storage);
+      const tags = S3Tags.make(storage);
+      yield* tags.set({ ref: original, tags: { owner: "acceptance" } });
+      yield* storage.put({ key, body: new Uint8Array([4]) });
+      assert.deepStrictEqual(yield* tags.get({ ref: original }), { owner: "acceptance" });
+      yield* storage.delete({ key });
+      const entries = (yield* versions.listPage({ prefix: key })).entries;
+      const marker = entries.find((entry) => entry._tag === "DeleteMarker");
+      if (!marker || marker._tag !== "DeleteMarker") return assert.fail("Missing delete marker");
+      yield* versions.removeDeleteMarker({ ref: marker.ref });
+      assert.deepStrictEqual(
+        yield* Storage.getBytes({ key, maxBytes: 4 }).pipe(Effect.provideService(Storage, storage)),
+        new Uint8Array([4]),
+      );
+      yield* versions.deleteVersion({ ref: original });
+      assert.deepStrictEqual(
+        yield* Storage.getBytes({ key, maxBytes: 4 }).pipe(Effect.provideService(Storage, storage)),
+        new Uint8Array([4]),
+      );
+    }),
+  ),
+);
 
 it.live("public portable conformance against the selected provider", () =>
   Effect.gen(function* () {

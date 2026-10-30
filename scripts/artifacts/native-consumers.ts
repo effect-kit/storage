@@ -26,6 +26,8 @@ export async function checkNativeConsumers(archive: string): Promise<void> {
     ["azure", "@azure/storage-blob"],
     ["supabase", undefined],
     ["vercel", "@vercel/blob"],
+    ["tigris", "@tigrisdata/storage"],
+    ["wasabi", "fast-xml-parser"],
   ] as const) {
     const temporary = await mkdtemp(join(tmpdir(), `storage-${provider}-consumer-`));
     const run = (command: string, args: string[]) =>
@@ -46,6 +48,14 @@ export async function checkNativeConsumers(archive: string): Promise<void> {
             "@effect-kit/storage": `file:${archive}`,
             effect: effect.version,
             ...(sdk && version ? { [sdk]: version.replace(/^\^/u, "") } : {}),
+            ...(["tigris", "wasabi"].includes(provider)
+              ? {
+                  "@aws-sdk/client-s3": library.peerDependencies["@aws-sdk/client-s3"]?.replace(
+                    /^\^/u,
+                    "",
+                  ),
+                }
+              : {}),
           },
           devDependencies: { typescript: typescript.version, "@types/node": node.version },
         }),

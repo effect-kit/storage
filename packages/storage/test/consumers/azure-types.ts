@@ -18,3 +18,21 @@ export const upload = Effect.gen(function* () {
     strategy: "blocks",
   });
 });
+
+import { AzureVersions, AzureMetadata, AzureTags } from "@effect-kit/storage/azure/lifecycle";
+export const lifecycleCapabilities = [AzureVersions, AzureMetadata, AzureTags] as const;
+
+import { AzureProtection } from "@effect-kit/storage/azure/governance";
+export const governanceCapabilities = [AzureProtection] as const;
+
+import { AzureAdministration } from "@effect-kit/storage/azure/admin";
+export const adminCapabilities = [AzureAdministration] as const;
+
+import { AzureArchive } from "@effect-kit/storage/azure/archive";
+export const archiveCapabilities = [AzureArchive] as const;
+
+import { AzureAccountAdministration } from "@effect-kit/storage/azure/account-admin";
+export const account_adminCapabilities = [AzureAccountAdministration] as const;
+
+import { AzureEvents } from "@effect-kit/storage/azure/events";
+export const eventsCapabilities = [AzureEvents] as const;

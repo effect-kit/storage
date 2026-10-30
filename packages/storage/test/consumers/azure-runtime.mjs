@@ -19,3 +19,23 @@ const storage = await Effect.runPromise(
 assert.equal(storage.provider, "azure");
 assert(storage.blocks);
 assert(AzureSigning.layer);
+
+import { AzureVersions, AzureMetadata, AzureTags } from "@effect-kit/storage/azure/lifecycle";
+assert(AzureVersions.make);
+assert(AzureMetadata.make);
+assert(AzureTags.make);
+
+import { AzureProtection } from "@effect-kit/storage/azure/governance";
+assert(AzureProtection.make);
+
+import { AzureAdministration } from "@effect-kit/storage/azure/admin";
+assert(AzureAdministration.make);
+
+import { AzureArchive } from "@effect-kit/storage/azure/archive";
+assert(AzureArchive.make);
+
+import { AzureAccountAdministration } from "@effect-kit/storage/azure/account-admin";
+assert(AzureAccountAdministration.make);
+
+import { AzureEvents } from "@effect-kit/storage/azure/events";
+assert(AzureEvents.decode);

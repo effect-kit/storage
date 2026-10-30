@@ -42,3 +42,18 @@ await Promise.all(
     assert(Object.values(entry).some((value) => typeof value?.layer === "function"));
   }),
 );
+
+await Promise.all(
+  [
+    "s3/lifecycle",
+    "s3/governance",
+    "s3/admin",
+    "s3/archive",
+    "s3/events",
+    "minio/admin",
+    "wasabi/admin",
+    "spaces/admin",
+    "scaleway/admin",
+    "hetzner/admin",
+  ].map(async (path) => assert(Object.keys(await import(`@effect-kit/storage/${path}`)).length)),
+);
