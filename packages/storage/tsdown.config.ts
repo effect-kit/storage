@@ -2,6 +2,8 @@ import defineConfig from "klarity/tsdown/library";
 
 export default defineConfig({
   entry: [
+    "src/composition.ts",
+    "src/cache.ts",
     "src/uploads.ts",
     "src/http.ts",
     "src/client.ts",

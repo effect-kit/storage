@@ -366,3 +366,25 @@ real deployment. For cross-origin Chromium/native-protocol checks, run
 `pnpm test:uploads:local` with Docker and Playwright Chromium installed. This lane
 qualifies local transport behavior; hosted IAM, RLS, callbacks and CORS still require
 an explicitly authorized provider environment.
+
+## Storage composition and caching
+
+`StoragePrefix.layer({ prefix: "tenants/acme/" })` and `StorageReadOnly.layer` from
+`/composition` wrap the supplied Storage. Prefix views return their own stable
+store identity and bind cursors to the prefix/query. Object keys remain opaque;
+no filesystem normalization is applied. Read-only writes/deletes reject before I/O.
+
+`StorageCache.layer({ capacity, timeToLive, objects?: { capacity, maxObjectBytes } })`
+from `/cache` uses Effect Cache. Cache instances belong to their supplied store and
+credential context; authorize application requests before reading cached metadata.
+Metadata TTL permits stale external observations. Verification and conditional writes
+must use the underlying authoritative service. Object reads check access through a
+fresh HEAD and cache only bounded completed bytes, returning a fresh single-use stream.
+Failed lookups have zero retention. Uncertain writes invalidate caches too. Byte fills
+are serialized, limiting workspace to one object plus retained entry capacity.
+
+Compose these layers with `Layer.provide(provider)`. They expose portable Storage and
+a narrowed primitive TransferDriver, preserving provider size limits. Native signing,
+copy, multipart, lifecycle and administration services are deliberately excluded from
+the facade output because their restrictions have not been qualified through these
+wrappers. Supplying raw provider services separately grants independent authority.

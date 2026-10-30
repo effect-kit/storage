@@ -398,6 +398,16 @@
       "workspace-source": "./src/vercel/authorized-uploads.ts",
       "types": "./dist/vercel/authorized-uploads.d.ts",
       "import": "./dist/vercel/authorized-uploads.js"
+    },
+    "./composition": {
+      "workspace-source": "./src/composition.ts",
+      "types": "./dist/composition.d.ts",
+      "default": "./dist/composition.js"
+    },
+    "./cache": {
+      "workspace-source": "./src/cache.ts",
+      "types": "./dist/cache.d.ts",
+      "default": "./dist/cache.js"
     }
   },
   "publishConfig": {
@@ -698,6 +708,14 @@
       "./vercel/authorized-uploads": {
         "types": "./dist/vercel/authorized-uploads.d.ts",
         "import": "./dist/vercel/authorized-uploads.js"
+      },
+      "./composition": {
+        "types": "./dist/composition.d.ts",
+        "import": "./dist/composition.js"
+      },
+      "./cache": {
+        "types": "./dist/cache.d.ts",
+        "import": "./dist/cache.js"
       }
     },
     "access": "public",

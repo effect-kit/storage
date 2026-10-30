@@ -1,6 +1,8 @@
 import { Schema } from "effect";
 
 export const advancedSubpaths = [
+  "composition",
+  "cache",
   "uploads",
   "http",
   "http/schema",
