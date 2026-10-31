@@ -1,9 +1,9 @@
 import { Layer } from "effect";
 
-import { AzureStorage } from "../dist/azure.js";
-import * as Runtime from "../dist/node.js";
-import { UploadSessions } from "../dist/sessions.js";
-import { Transfers } from "../dist/transfers.js";
+import { AzureStorage } from "../../../dist/azure.js";
+import * as Runtime from "../../../dist/node.js";
+import { UploadSessions } from "../../../dist/sessions.js";
+import { Transfers } from "../../../dist/transfers.js";
 
 /** Pass a TokenCredential, shared-key credential, or a Redacted container SAS URL. */
 export function application(config, persistence, options = {}) {

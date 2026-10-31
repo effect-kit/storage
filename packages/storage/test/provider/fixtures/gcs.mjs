@@ -1,9 +1,9 @@
 import { Layer } from "effect";
 
-import { GcsStorage } from "../dist/gcs.js";
-import * as Runtime from "../dist/node.js";
-import { UploadSessions } from "../dist/sessions.js";
-import { Transfers } from "../dist/transfers.js";
+import { GcsStorage } from "../../../dist/gcs.js";
+import * as Runtime from "../../../dist/node.js";
+import { UploadSessions } from "../../../dist/sessions.js";
+import { Transfers } from "../../../dist/transfers.js";
 
 /** ADC/workload credentials are resolved and refreshed by the Google SDK. */
 export function application(config, persistence, options = {}) {

@@ -156,7 +156,7 @@ for (const provider of selected) {
           if (mode === "local-rustfs") {
             const { credentials: _credentials, ...publicConfig } = configuration(provider);
             const example = yield* Effect.sync(() =>
-              spawnSync(process.execPath, [resolve("examples/compatible.mjs")], {
+              spawnSync(process.execPath, [resolve("test/provider/fixtures/compatible.mjs")], {
                 timeout: 30_000,
                 encoding: "utf8",
                 env: {

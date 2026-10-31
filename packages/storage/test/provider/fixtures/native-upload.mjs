@@ -1,8 +1,8 @@
 import { Effect, Redacted } from "effect";
 
-import { Storage } from "../dist/index.js";
-import { UploadSessions } from "../dist/sessions.js";
-import { UploadSource } from "../dist/transfers.js";
+import { Storage } from "../../../dist/index.js";
+import { UploadSessions } from "../../../dist/sessions.js";
+import { UploadSource } from "../../../dist/transfers.js";
 
 const required = (value, field) => {
   if (!value) throw new Error(`Missing ${field}`);
@@ -51,7 +51,7 @@ if (provider === "gcs") {
       process.env.AZURE_STORAGE_ACCESS_KEY,
     );
   } else if (!parsed.search) {
-    const { defaultCredential } = await import("../dist/azure/identity.js");
+    const { defaultCredential } = await import("../../../dist/azure/identity.js");
     credential = defaultCredential();
   }
   application = example.application(

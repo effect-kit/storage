@@ -1,7 +1,7 @@
 import { Effect, Redacted } from "effect";
 
-import { UploadSessions } from "../dist/sessions.js";
-import { Transfers, UploadSource } from "../dist/transfers.js";
+import { UploadSessions } from "../../../dist/sessions.js";
+import { Transfers, UploadSource } from "../../../dist/transfers.js";
 
 const required = (value, field) => {
   if (!value) throw new Error(`Missing ${field}`);

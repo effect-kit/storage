@@ -15,7 +15,9 @@ Read `.github/README.md` when changing workflows or implementing release checks.
   installed Effect 4 source and documentation to confirm APIs.
 - Keep Effect execution at runtime boundaries. Model expected failures explicitly and
   validate untrusted inputs. Preserve public behavior unless the task changes it.
-- Keep source, tests, package exports, and consumer-facing documentation synchronized.
+- Keep source, tests and package exports synchronized. Product docs and examples live
+  in the separate landing-page repository; do not add docs, examples or architecture
+  folders here. Design notes belong in ignored `/research/`. Keep test fixtures in tests.
 - Keep local investigations in `/research/`. It is ignored; never force-add it.
 
 ## Tooling

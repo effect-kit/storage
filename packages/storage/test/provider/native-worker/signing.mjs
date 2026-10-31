@@ -5,7 +5,7 @@ import { Effect, Redacted } from "effect";
 
 import { StorageSharedKeyCredential } from "@azure/storage-blob";
 
-import { azureRequest, googleRequest } from "../../../examples/native-signing.mjs";
+import { azureRequest, googleRequest } from "../fixtures/native-signing.mjs";
 
 const privateKey = generateKeyPairSync("rsa", { modulusLength: 2048 })
   .privateKey.export({ type: "pkcs8", format: "pem" })

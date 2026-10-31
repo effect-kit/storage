@@ -102,7 +102,10 @@ try {
   const result: unknown = await response.json();
   assert.equal(response.status, 200, JSON.stringify(result));
   assert(result && typeof result === "object" && "status" in result && result.status === "passed");
-  await copyFile("packages/storage/examples/r2-worker.mjs", join(temporary, "example.mjs"));
+  await copyFile(
+    "packages/storage/test/provider/fixtures/r2-worker.mjs",
+    join(temporary, "example.mjs"),
+  );
   const exampleCode = await bundleWorker(temporary, "example.mjs");
   exampleWorker = new Miniflare({
     modules: true,

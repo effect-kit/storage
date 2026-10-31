@@ -1,9 +1,9 @@
 import { Layer } from "effect";
 
-import * as Runtime from "../dist/node.js";
-import { Transfers } from "../dist/transfers.js";
-import { VercelStorage } from "../dist/vercel.js";
-import { VercelSigning } from "../dist/vercel/signing.js";
+import * as Runtime from "../../../dist/node.js";
+import { Transfers } from "../../../dist/transfers.js";
+import { VercelStorage } from "../../../dist/vercel.js";
+import { VercelSigning } from "../../../dist/vercel/signing.js";
 
 export function application(config) {
   const provider = VercelStorage.layer(config);

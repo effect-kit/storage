@@ -1,9 +1,9 @@
 import { Layer } from "effect";
 
-import * as Runtime from "../dist/node.js";
-import { UploadSessions } from "../dist/sessions.js";
-import { SupabaseStorage } from "../dist/supabase.js";
-import { Transfers } from "../dist/transfers.js";
+import * as Runtime from "../../../dist/node.js";
+import { UploadSessions } from "../../../dist/sessions.js";
+import { SupabaseStorage } from "../../../dist/supabase.js";
+import { Transfers } from "../../../dist/transfers.js";
 
 export function application(config, persistence, options = {}) {
   const provider = SupabaseStorage.layer({ ...config, resumable: true });

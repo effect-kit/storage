@@ -288,7 +288,7 @@ setup; no hosted workflow or account provisioning is implicit in this local lane
 
 `app-storage-local.yml` is manually dispatched. It runs package checks, installs
 Chromium, verifies packed Supabase/Vercel browser imports and exercises owned tus
-SIGKILL/restarts and runnable examples. It needs no hosted credentials. Only the
+SIGKILL/restarts and subprocess fixtures. It needs no hosted credentials. Only the
 whitelisted `.artifacts/app-storage-local.json` summary is uploaded; bundles,
 checkpoints, source files and environment values remain local. Hosted tests are a
 separate explicit command: `pnpm test:app:hosted`. Its configuration is checked in

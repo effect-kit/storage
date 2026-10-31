@@ -64,8 +64,6 @@ Local investigations stay in ignored `research/` and are never required by CI.
 
 ## Project metadata
 
-- [Architecture decisions](architecture/README.md)
-
 Feature and provider planning records stay in ignored `research/catalogs/`.
 They are not build or CI inputs.
 
@@ -73,7 +71,8 @@ A documented native capability, local fixture result and real-provider acceptanc
 different evidence. Unknown support is never treated as a pass.
 
 Product documentation will live on the separate landing site after implementation.
-This repository keeps source, runnable examples, internal decisions and CI metadata.
+This repository keeps library source, tests and CI metadata. Architecture/design notes
+stay in ignored research; product docs and examples belong to the landing-page repository.
 
 ## Contributing and releases
 
@@ -92,7 +91,6 @@ by this work.
 
 Apache-2.0. Each published package includes its own LICENSE.
 
-Provider examples live in [packages/storage/examples](packages/storage/examples).
 Use `pnpm test:app:local` for packed browser module probes and tus process restarts;
 `pnpm test:app:hosted` requires explicit existing provider resources and test authority.
 
@@ -115,13 +113,10 @@ It never creates buckets, changes policies or configures retention.
 Authorized HTTP/browser upload acceptance: `pnpm test:uploads:local` uses an owned,
 pinned RustFS container and local GCS/Supabase protocol fixtures with Chromium and
 actual cross-origin requests. Requires Docker and Playwright Chromium; uses no cloud
-account. The runnable proxy example is
-`node packages/storage/examples/authorized-upload.mjs` after `pnpm build`.
+account.
 
 Phase 12 adds optional `/composition`, `/cache`, `/compression`, `/encryption`,
 `/migrations`, `/mirror` and `/content` entry points. Native Effect caching, protected
 KVS manifests, qualified native copy and explicit reference/cleanup state preserve the
 existing Storage/Layer API. Run `pnpm test:composition:local` for owned RustFS/filesystem
-acceptance and seven real SIGKILL/restart cases. After building, run
-`node packages/storage/examples/composition.mjs` or
-`node packages/storage/examples/workflows.mjs` for account-free examples.
+acceptance and seven real SIGKILL/restart cases.

@@ -97,7 +97,7 @@ async function runExample(provider: "supabase" | "vercel", endpoint: string) {
   for (const args of commands) {
     const output = await execute(
       process.execPath,
-      [resolve("packages/storage/examples/app-upload.mjs"), ...args],
+      [resolve("packages/storage/test/provider/fixtures/app-upload.mjs"), ...args],
       { env: exampleEnv, timeout: 30000 },
     );
     const receipt = JSON.parse(output.stdout) as {

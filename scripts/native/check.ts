@@ -64,7 +64,7 @@ async function runExample(provider: string, endpoint: string, directory: string)
   ]) {
     const output = await execute(
       process.execPath,
-      [resolve("packages/storage/examples/native-upload.mjs"), ...args],
+      [resolve("packages/storage/test/provider/fixtures/native-upload.mjs"), ...args],
       { env: exampleEnv, timeout: 30000 },
     );
     const receipt = JSON.parse(output.stdout) as { state?: string; size?: number };
