@@ -85,5 +85,6 @@ export async function providerLayer(
     vercel: "VercelSigning",
     s3: "S3Signing",
   }[signing];
-  return module[tag].layer(signingAuthority).pipe(Layer.provideMerge(layer));
+  const signer = signing === "s3" ? module[tag].layer : module[tag].layer(signingAuthority);
+  return signer.pipe(Layer.provideMerge(layer));
 }
