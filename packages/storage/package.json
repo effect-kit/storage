@@ -443,6 +443,16 @@
       "workspace-source": "./src/content.ts",
       "types": "./dist/content.d.ts",
       "default": "./dist/content.js"
+    },
+    "./client/atoms": {
+      "workspace-source": "./src/client/atoms.ts",
+      "types": "./dist/client/atoms.d.ts",
+      "default": "./dist/client/atoms.js"
+    },
+    "./react": {
+      "workspace-source": "./src/react.ts",
+      "types": "./dist/react.d.ts",
+      "default": "./dist/react.js"
     }
   },
   "publishConfig": {
@@ -779,6 +789,14 @@
       "./content": {
         "types": "./dist/content.d.ts",
         "import": "./dist/content.js"
+      },
+      "./client/atoms": {
+        "types": "./dist/client/atoms.d.ts",
+        "import": "./dist/client/atoms.js"
+      },
+      "./react": {
+        "types": "./dist/react.d.ts",
+        "import": "./dist/react.js"
       }
     },
     "access": "public",
@@ -805,19 +823,27 @@
     "@azure/identity": "catalog:",
     "@azure/storage-blob": "catalog:",
     "@cloudflare/workers-types": "catalog:",
+    "@effect/atom-react": "catalog:",
     "@effect/platform-browser": "catalog:",
     "@effect/platform-bun": "catalog:",
     "@effect/platform-deno": "catalog:",
     "@effect/platform-node": "catalog:",
     "@effect/vitest": "catalog:",
     "@google-cloud/storage": "catalog:",
+    "@tanstack/react-router": "catalog:",
     "@tigrisdata/storage": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "@vercel/blob": "catalog:",
     "age-encryption": "catalog:",
     "effect": "catalog:",
     "fast-xml-parser": "catalog:",
     "klarity": "catalog:",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "redis": "catalog:",
+    "scheduler": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
@@ -828,6 +854,7 @@
     "@aws-sdk/s3-request-presigner": "^3.1159.0",
     "@azure/identity": "^4.14.0",
     "@azure/storage-blob": "^12.34.0",
+    "@effect/atom-react": "^4.1.0",
     "@effect/platform-browser": "^4.1.0",
     "@effect/platform-bun": "^4.1.0",
     "@effect/platform-deno": "^4.1.0",
@@ -837,7 +864,9 @@
     "@vercel/blob": "^2.8.2",
     "age-encryption": "^0.3.1",
     "effect": "^4.1.0",
-    "fast-xml-parser": "^5.11.2"
+    "fast-xml-parser": "^5.11.2",
+    "react": ">=19.0.0 <20.0.0",
+    "scheduler": ">=0.25.0 <0.29.0"
   },
   "peerDependenciesMeta": {
     "@aws-sdk/client-s3": {
@@ -880,6 +909,15 @@
       "optional": true
     },
     "age-encryption": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "@effect/atom-react": {
+      "optional": true
+    },
+    "scheduler": {
       "optional": true
     }
   },

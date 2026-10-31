@@ -2,7 +2,7 @@ import { Effect } from "effect";
 
 import { failUpload } from "../uploads/schema.js";
 export interface UploadProgress {
-  readonly phase: "hashing" | "uploading" | "verifying" | "completed";
+  readonly phase: "hashing" | "authorizing" | "uploading" | "verifying" | "completed";
   readonly bytesSent?: number;
   readonly bytesAccepted: number;
   readonly totalBytes: number;

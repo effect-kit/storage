@@ -1,6 +1,8 @@
 import { Schema } from "effect";
 
 export const advancedSubpaths = [
+  "client/atoms",
+  "react",
   "migrations",
   "mirror",
   "content",
@@ -59,6 +61,9 @@ const Manifest = Schema.Struct({
   main: Schema.Literal("./dist/index.js"),
   types: Schema.Literal("./dist/index.d.ts"),
   peerDependencies: Schema.Struct({
+    react: Schema.NonEmptyString,
+    scheduler: Schema.NonEmptyString,
+    "@effect/atom-react": Schema.NonEmptyString,
     "age-encryption": Schema.NonEmptyString,
     "@vercel/blob": Schema.String,
     "@tigrisdata/storage": Schema.NonEmptyString,
@@ -76,6 +81,9 @@ const Manifest = Schema.Struct({
     "@aws-sdk/s3-presigned-post": Schema.NonEmptyString,
   }),
   peerDependenciesMeta: Schema.Struct({
+    react: Schema.Struct({ optional: Schema.Literal(true) }),
+    scheduler: Schema.Struct({ optional: Schema.Literal(true) }),
+    "@effect/atom-react": Schema.Struct({ optional: Schema.Literal(true) }),
     "age-encryption": Schema.Struct({ optional: Schema.Literal(true) }),
     "@vercel/blob": Schema.Struct({ optional: Schema.Literal(true) }),
     "@tigrisdata/storage": Schema.Struct({ optional: Schema.Literal(true) }),

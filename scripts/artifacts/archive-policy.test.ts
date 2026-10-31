@@ -10,6 +10,9 @@ const manifest = {
   main: "./dist/index.js",
   types: "./dist/index.d.ts",
   peerDependencies: {
+    react: ">=19.0.0 <20.0.0",
+    scheduler: ">=0.25.0 <0.29.0",
+    "@effect/atom-react": "^4.1.0",
     "age-encryption": "^0.3.1",
     "@vercel/blob": "^2.8.2",
     "@tigrisdata/storage": "^3.23.0",
@@ -27,6 +30,9 @@ const manifest = {
     "@aws-sdk/s3-presigned-post": "^3.1159.0",
   },
   peerDependenciesMeta: {
+    react: { optional: true },
+    scheduler: { optional: true },
+    "@effect/atom-react": { optional: true },
     "age-encryption": { optional: true },
     "@vercel/blob": { optional: true },
     "@tigrisdata/storage": { optional: true },

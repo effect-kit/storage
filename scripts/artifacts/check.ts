@@ -6,6 +6,7 @@ import { join, resolve } from "node:path";
 
 import { build } from "vite";
 
+import { checkReactConsumer } from "../react/consumer.ts";
 import { checkArchive } from "./archive-policy.ts";
 import { checkNativeConsumers } from "./native-consumers.ts";
 import { checkS3Consumer } from "./s3-consumer.ts";
@@ -176,6 +177,7 @@ try {
   await writeFile(resolve(".artifacts/app-browser-client.js"), clientBundle);
   await checkS3Consumer(temporary);
   await checkNativeConsumers(archive);
+  await checkReactConsumer(archive);
   await writeFile(
     resolve(".artifacts/artifact-check.json"),
     `${JSON.stringify(
@@ -184,6 +186,8 @@ try {
         archive,
         runtime: process.version,
         checks: [
+          "React optional-peer imports, NodeNext/Bundler declarations and SSR without client layer acquisition",
+          "React browser graph and preserved client directive",
           "packed file policy",
           "production exports",
           "SDK-free isolated runtime and lifecycle/event/session-event/native-HTTP-admin imports",

@@ -24,6 +24,9 @@ assert.throws(() => Schema.decodeUnknownSync(ObjectSize)(Number.MAX_SAFE_INTEGER
 const require = createRequire(import.meta.url);
 for (const peer of [
   "age-encryption",
+  "react",
+  "scheduler",
+  "@effect/atom-react",
   "@aws-sdk/client-s3",
   "@aws-sdk/s3-request-presigner",
   "@aws-sdk/s3-presigned-post",
@@ -262,3 +265,6 @@ await Effect.runPromise(
     }),
   ),
 );
+
+const { UploadAtoms } = await import("@effect-kit/storage/client/atoms");
+assert.equal(typeof UploadAtoms.make, "function");

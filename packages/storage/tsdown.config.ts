@@ -2,6 +2,8 @@ import defineConfig from "klarity/tsdown/library";
 
 export default defineConfig({
   entry: [
+    "src/client/atoms.ts",
+    "src/react.ts",
     "src/migrations.ts",
     "src/mirror.ts",
     "src/content.ts",
@@ -90,6 +92,13 @@ export default defineConfig({
     "src/vercel/client.ts",
   ],
   unbundle: true,
+  // Unbundled output retains this directive; packed and Next.js checks assert the boundary.
+  inputOptions: {
+    onLog(level, log, defaultHandler) {
+      if (log.code === "MODULE_LEVEL_DIRECTIVE" && log.id?.endsWith("/src/react.ts")) return;
+      defaultHandler(level, log);
+    },
+  },
   deps: { neverBundle: [/^node:/u] },
   exports: false,
   dts: { sourcemap: false },

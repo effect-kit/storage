@@ -15,6 +15,7 @@ import {
 export { UploadClientStore };
 export type { ClientUploadStore, UploadTicket } from "./client/store.js";
 export type { UploadProgress } from "./client/transport.js";
+export type UploadProtocol = "single" | "post" | "multipart" | "resumable" | "proxy";
 export interface UploadClientOptions<R = never> {
   readonly baseUrl: string;
   readonly credentials?: RequestCredentials;
@@ -155,11 +156,30 @@ const make = Effect.fnUntraced(function* <R>(options: UploadClientOptions<R>) {
     readonly uploadId: string;
     readonly file: File;
     readonly onProgress?: Progress;
+    readonly onProtocol?: (protocol: UploadProtocol, uploadId: string) => void;
   }) {
     const record = yield* ticket(input.uploadId, input.file, input.onProgress);
     const id = record.id;
     if (!id) return yield* failUpload("NotFound");
     let grant = (yield* api("POST", `${path(id)}/grants`, GrantResponse)).grant;
+    const onProtocol = input.onProtocol;
+    if (onProtocol)
+      yield* Effect.try({
+        try: () =>
+          onProtocol(
+            grant._tag === "Multipart" || grant._tag === "Blocks"
+              ? "multipart"
+              : grant._tag === "Resumable"
+                ? "resumable"
+                : grant._tag === "PostForm"
+                  ? "post"
+                  : grant._tag === "Proxy"
+                    ? "proxy"
+                    : "single",
+            id,
+          ),
+        catch: () => failUpload("Unavailable"),
+      });
     let accepted = 0;
     const send = Effect.fnUntraced(function* (
       url: string,
@@ -350,6 +370,12 @@ const make = Effect.fnUntraced(function* <R>(options: UploadClientOptions<R>) {
     const key = input.idempotencyKey ?? crypto.randomUUID();
     const local: UploadTicket = { version: 1, idempotencyKey: key, input: metadata };
     yield* store.write(key, local);
+    yield* emit(input.onProgress, {
+      phase: "authorizing",
+      bytesAccepted: 0,
+      totalBytes: input.file.size,
+      measurement: "indeterminate",
+    });
     const status = yield* api("POST", "/uploads", UploadStatus, {
       version: 1,
       idempotencyKey: key,
@@ -398,6 +424,7 @@ const make = Effect.fnUntraced(function* <R>(options: UploadClientOptions<R>) {
       readonly uploadId: string;
       readonly file: File;
       readonly onProgress?: Progress;
+      readonly onProtocol?: (protocol: UploadProtocol, uploadId: string) => void;
     }) =>
       Effect.gen(function* () {
         const record = yield* store.read(input.uploadId);
