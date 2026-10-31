@@ -147,6 +147,27 @@ it.live(
           Effect.provideService(Storage, source),
         );
         assert.deepStrictEqual(yield* read(rotatedStorage, "private"), message);
+        yield* source.put({
+          key: "rebound",
+          body: physical,
+          customMetadata: { "effect-storage-representation": codec.format },
+        });
+        const rebound = yield* Effect.result(storage.head({ key: "rebound" }));
+        assert.equal(rebound._tag, "Failure");
+        if (rebound._tag === "Failure")
+          assert.equal(rebound.failure.reason._tag, "IntegrityMismatch");
+
+        for (const length of [0, Math.floor(physical.length / 2), physical.length - 1]) {
+          yield* source.put({
+            key: "private",
+            body: physical.subarray(0, length),
+            customMetadata: { "effect-storage-representation": codec.format },
+          });
+          const truncated = yield* Effect.result(storage.head({ key: "private" }));
+          assert.equal(truncated._tag, "Failure");
+          if (truncated._tag === "Failure")
+            assert.equal(truncated.failure.reason._tag, "IntegrityMismatch");
+        }
         physical[physical.length - 1] = (physical[physical.length - 1] ?? 0) ^ 1;
         yield* source.put({
           key: "private",
