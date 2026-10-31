@@ -1,11 +1,11 @@
 import type { Cause } from "effect";
 import { Clock, Effect, Exit, Queue, Stream } from "effect";
 
-import type { StorageError } from "../errors.js";
-import { storageError } from "../errors.js";
+import type { StorageError } from "../core/errors.js";
+import { storageError } from "../core/errors.js";
+import { ObjectHeaders } from "../core/object.js";
+import type { Checksum, ObjectMetadata } from "../core/object.js";
 import { decodeRequest } from "../internal/request-validation.js";
-import { ObjectHeaders } from "../object.js";
-import type { Checksum, ObjectMetadata } from "../object.js";
 import { download, pinnedRequest } from "./download.js";
 import type { CopyIntent, CopyRequest, MoveReceipt, TransferReceipt } from "./models.js";
 import { partReceipt } from "./part-receipts.js";

@@ -1,7 +1,7 @@
 import { Context, Effect, Layer, Redacted, Schema, Semaphore } from "effect";
 import { KeyValueStore } from "effect/persistence";
 
-import type { StorageError } from "../errors.js";
+import type { StorageError } from "../core/errors.js";
 import type { CheckpointProtection, SessionOwnership } from "../sessions/store.js";
 import { UploadId, UploadRecord, failUpload } from "./schema.js";
 

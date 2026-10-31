@@ -1,8 +1,8 @@
 import { Effect, Schema } from "effect";
 
-import type { StorageCapabilities } from "../capabilities.js";
-import { storageError } from "../errors.js";
-import type { ObjectTarget } from "../requests.js";
+import type { StorageCapabilities } from "../core/capabilities.js";
+import { storageError } from "../core/errors.js";
+import type { ObjectTarget } from "../core/requests.js";
 
 export function decodeRequest<S extends Schema.Constraint>(
   schema: S,

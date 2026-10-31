@@ -19,7 +19,7 @@ const bundled = await build({
     minify: false,
     target: "es2022",
     rollupOptions: {
-      input: resolve("packages/storage/test/provider/live/worker.ts"),
+      input: resolve("packages/storage/test/e2e/live/worker.ts"),
       preserveEntrySignatures: "strict",
       output: { codeSplitting: false },
     },

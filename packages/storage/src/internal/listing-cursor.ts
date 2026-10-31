@@ -4,7 +4,7 @@ import { Base64Url } from "effect/encoding";
 import { sha256 } from "@noble/hashes/sha2.js";
 import { bytesToHex } from "@noble/hashes/utils.js";
 
-import { storageError } from "../errors.js";
+import { storageError } from "../core/errors.js";
 
 const Cursor = Schema.fromJsonString(
   Schema.Struct({

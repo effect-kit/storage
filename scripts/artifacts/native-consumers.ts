@@ -69,11 +69,11 @@ export async function checkNativeConsumers(archive: string): Promise<void> {
         "--config.auto-install-peers=false",
       ]);
       await copyFile(
-        resolve(`packages/storage/test/consumers/${provider}-types.ts`),
+        resolve(`packages/storage/test/fixtures/consumers/${provider}-types.ts`),
         join(temporary, "consumer.ts"),
       );
       await copyFile(
-        resolve(`packages/storage/test/consumers/${provider}-runtime.mjs`),
+        resolve(`packages/storage/test/fixtures/consumers/${provider}-runtime.mjs`),
         join(temporary, "consumer.mjs"),
       );
       for (const resolution of ["NodeNext", "Bundler"] as const) {

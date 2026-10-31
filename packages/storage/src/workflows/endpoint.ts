@@ -1,6 +1,6 @@
 import { Context, Effect, Layer } from "effect";
 
-import { Storage } from "../storage.js";
+import { Storage } from "../core/storage.js";
 import { TransferDriver } from "../transfers/dependencies.js";
 import { workflowError } from "./store.js";
 

@@ -1,10 +1,10 @@
 import { Cause, Effect, Exit, Predicate, Ref, Schema, Stream } from "effect";
 
-import { StorageReason, storageError } from "../errors.js";
-import type { StorageError } from "../errors.js";
-import type { GetRequest, PutRequest } from "../requests.js";
-import { Storage } from "../storage.js";
-import type { StorageService } from "../storage.js";
+import { StorageReason, storageError } from "../core/errors.js";
+import type { StorageError } from "../core/errors.js";
+import type { GetRequest, PutRequest } from "../core/requests.js";
+import { Storage } from "../core/storage.js";
+import type { StorageService } from "../core/storage.js";
 import { failBody } from "./body-failure.js";
 
 const Operation = Schema.Literals(["put", "get", "head", "delete", "listPage"]);

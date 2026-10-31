@@ -1,8 +1,8 @@
 import { Clock, Context, Effect, Layer, Redacted, Schema, Semaphore } from "effect";
 import { KeyValueStore } from "effect/persistence";
 
-import type { StorageError } from "../errors.js";
-import { storageError } from "../errors.js";
+import type { StorageError } from "../core/errors.js";
+import { storageError } from "../core/errors.js";
 import { SessionCheckpoint, SessionId } from "./checkpoint.js";
 
 export const sessionError = (code: string, unknown = false) =>

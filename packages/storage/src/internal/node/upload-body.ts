@@ -2,9 +2,9 @@ import { PassThrough } from "node:stream";
 
 import { Effect, Predicate, Stream } from "effect";
 
-import { storageError } from "../../errors.js";
-import type { StorageError } from "../../errors.js";
-import type { PutRequest } from "../../requests.js";
+import { storageError } from "../../core/errors.js";
+import type { StorageError } from "../../core/errors.js";
+import type { PutRequest } from "../../core/requests.js";
 
 const collectUnknown = Effect.fnUntraced(function* <E, R>(
   source: Stream.Stream<Uint8Array, E, R>,

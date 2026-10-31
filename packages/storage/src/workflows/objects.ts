@@ -1,9 +1,9 @@
 import { Effect, Stream } from "effect";
 
-import { storageError } from "../errors.js";
-import type { ObjectMetadata } from "../object.js";
+import { storageError } from "../core/errors.js";
+import type { ObjectMetadata } from "../core/object.js";
+import type { StorageService } from "../core/storage.js";
 import { sha256 } from "../runtime/portable-hash.js";
-import type { StorageService } from "../storage.js";
 
 export const pin = (metadata: ObjectMetadata) =>
   metadata.ref.version

@@ -1,6 +1,6 @@
 import { Effect, Schema } from "effect";
 
-import { storageError } from "../errors.js";
+import { storageError } from "../core/errors.js";
 
 /** Native protocols may add response fields; application request validation remains strict. */
 export function decodeResponse<S extends Schema.Constraint>(

@@ -1,7 +1,7 @@
 import type { Effect } from "effect";
 
-import type { StorageError } from "../errors.js";
-import type { ObjectMetadata } from "../object.js";
+import type { StorageError } from "../core/errors.js";
+import type { ObjectMetadata } from "../core/object.js";
 import type { UploadActor, UploadInput, UploadRecord } from "./schema.js";
 import type { failUpload } from "./schema.js";
 export type UploadAction =

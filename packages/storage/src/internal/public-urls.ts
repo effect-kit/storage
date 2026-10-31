@@ -1,9 +1,9 @@
 import { Effect } from "effect";
 
-import { StoragePublicUrls } from "../capabilities.js";
-import { storageError } from "../errors.js";
-import { ObjectRef } from "../object.js";
-import type { StorageService } from "../storage.js";
+import { StoragePublicUrls } from "../core/capabilities.js";
+import { storageError } from "../core/errors.js";
+import { ObjectRef } from "../core/object.js";
+import type { StorageService } from "../core/storage.js";
 import { decodeRequest } from "./request-validation.js";
 
 /** Caller explicitly selects public delivery; resolving a URL never changes visibility. */

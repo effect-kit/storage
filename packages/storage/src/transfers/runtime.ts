@@ -1,7 +1,7 @@
 import { Cause, Clock, Effect, Exit, Metric, Random, Semaphore } from "effect";
 import type { SecureRandom } from "effect/crypto";
 
-import { StorageError, storageError } from "../errors.js";
+import { StorageError, storageError } from "../core/errors.js";
 import { makeBudget } from "./budget.js";
 import type {
   TransferDiagnostic,

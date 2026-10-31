@@ -55,11 +55,11 @@ export async function checkReactConsumer(
       "--config.auto-install-peers=false",
     ]);
     await copyFile(
-      resolve("packages/storage/test/consumers/react-types.ts"),
+      resolve("packages/storage/test/fixtures/consumers/react-types.ts"),
       join(directory, "consumer.ts"),
     );
     await copyFile(
-      resolve("packages/storage/test/consumers/react-runtime.mjs"),
+      resolve("packages/storage/test/fixtures/consumers/react-runtime.mjs"),
       join(directory, "consumer.mjs"),
     );
     for (const resolution of ["NodeNext", "Bundler"]) {
@@ -81,7 +81,7 @@ export async function checkReactConsumer(
       run(process.execPath, ["node_modules/typescript/bin/tsc", "-p", "tsconfig.json"]);
     }
     run(process.execPath, ["consumer.mjs"]);
-    const source = resolve("packages/storage/test/react/browser.mjs");
+    const source = resolve("packages/storage/test/fixtures/browser/react.mjs");
     await copyFile(source, join(directory, "browser.mjs"));
     await build({
       root: directory,

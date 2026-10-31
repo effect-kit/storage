@@ -2,7 +2,7 @@ import { Effect, Stream } from "effect";
 import { FetchHttpClient, HttpClientRequest } from "effect/http";
 import type { HttpClient, HttpMethod } from "effect/http";
 
-import { storageError } from "../../errors.js";
+import { storageError } from "../../core/errors.js";
 import { providerError } from "../node/provider-errors.js";
 
 export const controlEndpoint = (value: string, provider: string) =>

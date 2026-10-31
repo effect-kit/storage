@@ -11,10 +11,10 @@ import { Effect } from "effect";
 
 import { chromium } from "playwright";
 
-import { httpFixture } from "../../packages/storage/test/supabase/http-fixture.ts";
-import { httpFixture as vercelFixture } from "../../packages/storage/test/vercel/http-fixture.ts";
+import { httpFixture } from "../../packages/storage/test/fixtures/supabase/http-fixture.ts";
+import { httpFixture as vercelFixture } from "../../packages/storage/test/fixtures/vercel/http-fixture.ts";
 
-const worker = resolve("packages/storage/test/provider/native-worker/run.mjs");
+const worker = resolve("packages/storage/test/fixtures/workers/native-worker/run.mjs");
 const execute = promisify(execFile);
 const env = { ...process.env, STORAGE_NATIVE_TEST_KEY: randomBytes(32).toString("base64") };
 const results: { boundary: string; state: string }[] = [];
@@ -97,7 +97,7 @@ async function runExample(provider: "supabase" | "vercel", endpoint: string) {
   for (const args of commands) {
     const output = await execute(
       process.execPath,
-      [resolve("packages/storage/test/provider/fixtures/app-upload.mjs"), ...args],
+      [resolve("packages/storage/test/fixtures/providers/app-upload.mjs"), ...args],
       { env: exampleEnv, timeout: 30000 },
     );
     const receipt = JSON.parse(output.stdout) as {

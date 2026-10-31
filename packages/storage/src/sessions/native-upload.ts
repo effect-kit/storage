@@ -1,7 +1,7 @@
 import { Effect, Redacted, Schema } from "effect";
 
-import type { ResumableHandle } from "../contracts/resumable.js";
-import { StorageError } from "../errors.js";
+import type { ResumableHandle } from "../core/contracts/resumable.js";
+import { StorageError } from "../core/errors.js";
 import { download } from "../transfers/download.js";
 import { NativeHandle, nativeUpload } from "../transfers/native-upload.js";
 import { planUpload } from "../transfers/planner.js";

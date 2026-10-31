@@ -1,8 +1,8 @@
 import { Effect, Predicate, Stream } from "effect";
 
-import { storageError } from "../errors.js";
-import type { StorageError } from "../errors.js";
-import type { PutRequest } from "../requests.js";
+import { storageError } from "../core/errors.js";
+import type { StorageError } from "../core/errors.js";
+import type { PutRequest } from "../core/requests.js";
 
 /** A bounded Web stream bridge that preserves source errors and waits for source EOF. */
 export const webUploadBody = Effect.fnUntraced(function* <A, E, R>(

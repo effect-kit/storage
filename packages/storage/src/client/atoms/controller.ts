@@ -1,9 +1,9 @@
 import { Cause, Effect, Exit, Fiber, Semaphore } from "effect";
 
-import { UploadClient } from "../../client.js";
-import type { UploadProtocol } from "../../client.js";
 import { failUpload } from "../../uploads/schema.js";
 import type { UploadError, UploadInput, UploadStatus } from "../../uploads/schema.js";
+import { UploadClient } from "../index.js";
+import type { UploadProtocol } from "../index.js";
 import type { UploadTicket } from "../store.js";
 import type { UploadProgress } from "../transport.js";
 import { idleSnapshot } from "./state.js";

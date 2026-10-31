@@ -1,8 +1,8 @@
 import { Effect, Schema } from "effect";
 
-import type { UploadedPart } from "../contracts/multipart.js";
-import { storageError } from "../errors.js";
-import { Checksum, ObjectSize } from "../object.js";
+import type { UploadedPart } from "../core/contracts/multipart.js";
+import { storageError } from "../core/errors.js";
+import { Checksum, ObjectSize } from "../core/object.js";
 
 const Receipt = Schema.Struct({
   partNumber: Schema.Int.check(Schema.isGreaterThan(0)),

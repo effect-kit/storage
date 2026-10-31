@@ -1,7 +1,7 @@
 import { Schema } from "effect";
 
-import { Checksum, ObjectHeaders, ObjectKey, ObjectMetadata, ObjectSize } from "../object.js";
-import { WriteCondition } from "../requests.js";
+import { Checksum, ObjectHeaders, ObjectKey, ObjectMetadata, ObjectSize } from "../core/object.js";
+import { WriteCondition } from "../core/requests.js";
 import { SavedBlock } from "../transfers/native-upload.js";
 
 export const SessionId = Schema.String.check(Schema.isPattern(/^[A-Za-z0-9_-]{1,100}$/u));

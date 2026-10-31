@@ -1,11 +1,11 @@
 import { Context, Effect, Layer, Random, Ref, Result, Schema, Stream } from "effect";
 import type { Scope } from "effect";
 
-import { storageError } from "../errors.js";
-import type { StorageError } from "../errors.js";
-import { resolveRange } from "../ranges.js";
-import type { DeleteRequest, GetRequest, GetResult, HeadRequest } from "../requests.js";
-import { Storage } from "../storage.js";
+import { storageError } from "../core/errors.js";
+import type { StorageError } from "../core/errors.js";
+import { resolveRange } from "../core/ranges.js";
+import type { DeleteRequest, GetRequest, GetResult, HeadRequest } from "../core/requests.js";
+import { Storage } from "../core/storage.js";
 import { TransferDriver } from "../transfers/dependencies.js";
 import { listMemory } from "./memory-list.js";
 import {

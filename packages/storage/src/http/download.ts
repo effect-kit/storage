@@ -2,9 +2,9 @@ import { Effect, Scope, Stream } from "effect";
 import { HttpServerResponse } from "effect/http";
 import type { HttpServerRequest } from "effect/http";
 
-import type { ObjectRef } from "../object.js";
-import type { ByteRange } from "../ranges.js";
-import type { StorageService } from "../storage.js";
+import type { ObjectRef } from "../core/object.js";
+import type { ByteRange } from "../core/ranges.js";
+import type { StorageService } from "../core/storage.js";
 import { failUpload } from "../uploads/schema.js";
 
 export const privateDownload = Effect.fnUntraced(function* (

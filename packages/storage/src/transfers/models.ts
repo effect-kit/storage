@@ -5,12 +5,12 @@ import type {
   MultipartHandleCodec,
   MultipartUploads,
   UploadedPart,
-} from "../contracts/multipart.js";
-import type { BlockUploads, OffsetUploads } from "../contracts/resumable.js";
-import type { StorageError } from "../errors.js";
-import type { Checksum, ObjectHeaders, ObjectMetadata, ObjectRef } from "../object.js";
-import type { WriteCondition } from "../requests.js";
-import type { StorageService } from "../storage.js";
+} from "../core/contracts/multipart.js";
+import type { BlockUploads, OffsetUploads } from "../core/contracts/resumable.js";
+import type { StorageError } from "../core/errors.js";
+import type { Checksum, ObjectHeaders, ObjectMetadata, ObjectRef } from "../core/object.js";
+import type { WriteCondition } from "../core/requests.js";
+import type { StorageService } from "../core/storage.js";
 import type { UploadSource } from "./sources.js";
 
 /** Implementations must hash incrementally, retaining no input buffers. */

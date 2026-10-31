@@ -1,7 +1,7 @@
 import { Effect, Stream } from "effect";
 
-import { StorageError } from "../errors.js";
-import type { Checksum } from "../object.js";
+import { StorageError } from "../core/errors.js";
+import type { Checksum } from "../core/object.js";
 import { pinnedRequest } from "../transfers/download.js";
 import { sameChecksum } from "../transfers/reader.js";
 import type { DownloadCheckpoint } from "./checkpoint.js";

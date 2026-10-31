@@ -1,6 +1,6 @@
 import { Predicate } from "effect";
 
-import { storageError } from "../../errors.js";
+import { storageError } from "../../core/errors.js";
 
 /** SDK errors may contain credentials and bearer URLs; retain only classified status. */
 export function providerError(

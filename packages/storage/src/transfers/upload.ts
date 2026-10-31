@@ -1,11 +1,11 @@
 import { Cause, Effect, Exit, Option, Stream } from "effect";
 
-import type { MultipartHandle, MultipartUploads } from "../contracts/multipart.js";
-import { StorageError, storageError } from "../errors.js";
+import type { MultipartHandle, MultipartUploads } from "../core/contracts/multipart.js";
+import { StorageError, storageError } from "../core/errors.js";
+import { Checksum, ObjectHeaders, ObjectKey } from "../core/object.js";
+import type { ObjectMetadata } from "../core/object.js";
+import { WriteCondition } from "../core/requests.js";
 import { decodeRequest } from "../internal/request-validation.js";
-import { Checksum, ObjectHeaders, ObjectKey } from "../object.js";
-import type { ObjectMetadata } from "../object.js";
-import { WriteCondition } from "../requests.js";
 import { download } from "./download.js";
 import type { TransferReceipt, UploadRequest } from "./models.js";
 import { nativeUpload } from "./native-upload.js";

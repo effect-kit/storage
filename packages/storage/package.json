@@ -35,332 +35,332 @@
     },
     "./package.json": "./package.json",
     "./testing": {
-      "workspace-source": "./src/testing.ts",
+      "workspace-source": "./src/testing/index.ts",
       "types": "./dist/testing.d.ts",
       "default": "./dist/testing.js"
     },
     "./s3": {
-      "workspace-source": "./src/s3.ts",
+      "workspace-source": "./src/providers/s3/index.ts",
       "types": "./dist/s3.d.ts",
       "default": "./dist/s3.js"
     },
     "./s3/signing": {
-      "workspace-source": "./src/s3/signing.ts",
+      "workspace-source": "./src/providers/s3/signing.ts",
       "types": "./dist/s3/signing.d.ts",
       "default": "./dist/s3/signing.js"
     },
     "./s3/post": {
-      "workspace-source": "./src/s3/post.ts",
+      "workspace-source": "./src/providers/s3/post.ts",
       "types": "./dist/s3/post.d.ts",
       "default": "./dist/s3/post.js"
     },
     "./transfers": {
-      "workspace-source": "./src/transfers.ts",
+      "workspace-source": "./src/transfers/index.ts",
       "types": "./dist/transfers.d.ts",
       "default": "./dist/transfers.js"
     },
     "./sessions": {
-      "workspace-source": "./src/sessions.ts",
+      "workspace-source": "./src/sessions/index.ts",
       "types": "./dist/sessions.d.ts",
       "default": "./dist/sessions.js"
     },
     "./node": {
-      "workspace-source": "./src/node.ts",
+      "workspace-source": "./src/runtime/node.ts",
       "types": "./dist/node.d.ts",
       "default": "./dist/node.js"
     },
     "./bun": {
-      "workspace-source": "./src/bun.ts",
+      "workspace-source": "./src/runtime/bun.ts",
       "types": "./dist/bun.d.ts",
       "default": "./dist/bun.js"
     },
     "./deno": {
-      "workspace-source": "./src/deno.ts",
+      "workspace-source": "./src/runtime/deno.ts",
       "types": "./dist/deno.d.ts",
       "default": "./dist/deno.js"
     },
     "./browser": {
-      "workspace-source": "./src/browser.ts",
+      "workspace-source": "./src/runtime/browser.ts",
       "types": "./dist/browser.d.ts",
       "default": "./dist/browser.js"
     },
     "./filesystem": {
-      "workspace-source": "./src/filesystem.ts",
+      "workspace-source": "./src/providers/filesystem/index.ts",
       "types": "./dist/filesystem.d.ts",
       "default": "./dist/filesystem.js"
     },
     "./r2-workers": {
-      "workspace-source": "./src/r2-workers.ts",
+      "workspace-source": "./src/providers/r2-workers/index.ts",
       "types": "./dist/r2-workers.d.ts",
       "default": "./dist/r2-workers.js"
     },
     "./gcs": {
-      "workspace-source": "./src/gcs.ts",
+      "workspace-source": "./src/providers/gcs/index.ts",
       "types": "./dist/gcs.d.ts",
       "default": "./dist/gcs.js"
     },
     "./gcs/signing": {
-      "workspace-source": "./src/gcs/signing.ts",
+      "workspace-source": "./src/providers/gcs/signing.ts",
       "types": "./dist/gcs/signing.d.ts",
       "default": "./dist/gcs/signing.js"
     },
     "./azure": {
-      "workspace-source": "./src/azure.ts",
+      "workspace-source": "./src/providers/azure/index.ts",
       "types": "./dist/azure.d.ts",
       "default": "./dist/azure.js"
     },
     "./azure/signing": {
-      "workspace-source": "./src/azure/signing.ts",
+      "workspace-source": "./src/providers/azure/signing.ts",
       "types": "./dist/azure/signing.d.ts",
       "default": "./dist/azure/signing.js"
     },
     "./azure/identity": {
-      "workspace-source": "./src/azure/identity.ts",
+      "workspace-source": "./src/providers/azure/identity.ts",
       "types": "./dist/azure/identity.d.ts",
       "default": "./dist/azure/identity.js"
     },
     "./gcs/post": {
-      "workspace-source": "./src/gcs/post.ts",
+      "workspace-source": "./src/providers/gcs/post.ts",
       "types": "./dist/gcs/post.d.ts",
       "default": "./dist/gcs/post.js"
     },
     "./supabase": {
-      "workspace-source": "./src/supabase.ts",
+      "workspace-source": "./src/providers/supabase/index.ts",
       "types": "./dist/supabase.d.ts",
       "default": "./dist/supabase.js"
     },
     "./supabase/signing": {
-      "workspace-source": "./src/supabase/signing.ts",
+      "workspace-source": "./src/providers/supabase/signing.ts",
       "types": "./dist/supabase/signing.d.ts",
       "default": "./dist/supabase/signing.js"
     },
     "./vercel": {
-      "workspace-source": "./src/vercel.ts",
+      "workspace-source": "./src/providers/vercel/index.ts",
       "types": "./dist/vercel.d.ts",
       "default": "./dist/vercel.js"
     },
     "./vercel/signing": {
-      "workspace-source": "./src/vercel/signing.ts",
+      "workspace-source": "./src/providers/vercel/signing.ts",
       "types": "./dist/vercel/signing.d.ts",
       "default": "./dist/vercel/signing.js"
     },
     "./supabase/s3": {
-      "workspace-source": "./src/supabase/s3.ts",
+      "workspace-source": "./src/providers/supabase/s3.ts",
       "types": "./dist/supabase/s3.d.ts",
       "default": "./dist/supabase/s3.js"
     },
     "./vercel/uploads": {
-      "workspace-source": "./src/vercel/uploads.ts",
+      "workspace-source": "./src/providers/vercel/uploads.ts",
       "types": "./dist/vercel/uploads.d.ts",
       "default": "./dist/vercel/uploads.js"
     },
     "./vercel/client": {
-      "workspace-source": "./src/vercel/client.ts",
+      "workspace-source": "./src/providers/vercel/client.ts",
       "types": "./dist/vercel/client.d.ts",
       "default": "./dist/vercel/client.js"
     },
     "./r2": {
-      "workspace-source": "./src/r2.ts",
+      "workspace-source": "./src/providers/r2/index.ts",
       "types": "./dist/r2.d.ts",
       "default": "./dist/r2.js"
     },
     "./minio": {
-      "workspace-source": "./src/minio.ts",
+      "workspace-source": "./src/providers/minio/index.ts",
       "types": "./dist/minio.d.ts",
       "default": "./dist/minio.js"
     },
     "./tigris": {
-      "workspace-source": "./src/tigris.ts",
+      "workspace-source": "./src/providers/tigris/index.ts",
       "types": "./dist/tigris.d.ts",
       "default": "./dist/tigris.js"
     },
     "./spaces": {
-      "workspace-source": "./src/spaces.ts",
+      "workspace-source": "./src/providers/spaces/index.ts",
       "types": "./dist/spaces.d.ts",
       "default": "./dist/spaces.js"
     },
     "./b2": {
-      "workspace-source": "./src/b2.ts",
+      "workspace-source": "./src/providers/b2/index.ts",
       "types": "./dist/b2.d.ts",
       "default": "./dist/b2.js"
     },
     "./wasabi": {
-      "workspace-source": "./src/wasabi.ts",
+      "workspace-source": "./src/providers/wasabi/index.ts",
       "types": "./dist/wasabi.d.ts",
       "default": "./dist/wasabi.js"
     },
     "./scaleway": {
-      "workspace-source": "./src/scaleway.ts",
+      "workspace-source": "./src/providers/scaleway/index.ts",
       "types": "./dist/scaleway.d.ts",
       "default": "./dist/scaleway.js"
     },
     "./hetzner": {
-      "workspace-source": "./src/hetzner.ts",
+      "workspace-source": "./src/providers/hetzner/index.ts",
       "types": "./dist/hetzner.d.ts",
       "default": "./dist/hetzner.js"
     },
     "./lifecycle": {
-      "workspace-source": "./src/lifecycle.ts",
+      "workspace-source": "./src/lifecycle/index.ts",
       "types": "./dist/lifecycle.d.ts",
       "default": "./dist/lifecycle.js"
     },
     "./events": {
-      "workspace-source": "./src/events.ts",
+      "workspace-source": "./src/lifecycle/events.ts",
       "types": "./dist/events.d.ts",
       "default": "./dist/events.js"
     },
     "./s3/lifecycle": {
-      "workspace-source": "./src/s3/lifecycle.ts",
+      "workspace-source": "./src/providers/s3/lifecycle.ts",
       "types": "./dist/s3/lifecycle.d.ts",
       "default": "./dist/s3/lifecycle.js"
     },
     "./s3/governance": {
-      "workspace-source": "./src/s3/governance.ts",
+      "workspace-source": "./src/providers/s3/governance.ts",
       "types": "./dist/s3/governance.d.ts",
       "default": "./dist/s3/governance.js"
     },
     "./s3/admin": {
-      "workspace-source": "./src/s3/admin.ts",
+      "workspace-source": "./src/providers/s3/admin.ts",
       "types": "./dist/s3/admin.d.ts",
       "default": "./dist/s3/admin.js"
     },
     "./s3/archive": {
-      "workspace-source": "./src/s3/archive.ts",
+      "workspace-source": "./src/providers/s3/archive.ts",
       "types": "./dist/s3/archive.d.ts",
       "default": "./dist/s3/archive.js"
     },
     "./s3/events": {
-      "workspace-source": "./src/s3/events.ts",
+      "workspace-source": "./src/providers/s3/events.ts",
       "types": "./dist/s3/events.d.ts",
       "default": "./dist/s3/events.js"
     },
     "./gcs/lifecycle": {
-      "workspace-source": "./src/gcs/lifecycle.ts",
+      "workspace-source": "./src/providers/gcs/lifecycle.ts",
       "types": "./dist/gcs/lifecycle.d.ts",
       "default": "./dist/gcs/lifecycle.js"
     },
     "./gcs/governance": {
-      "workspace-source": "./src/gcs/governance.ts",
+      "workspace-source": "./src/providers/gcs/governance.ts",
       "types": "./dist/gcs/governance.d.ts",
       "default": "./dist/gcs/governance.js"
     },
     "./gcs/admin": {
-      "workspace-source": "./src/gcs/admin.ts",
+      "workspace-source": "./src/providers/gcs/admin.ts",
       "types": "./dist/gcs/admin.d.ts",
       "default": "./dist/gcs/admin.js"
     },
     "./gcs/events": {
-      "workspace-source": "./src/gcs/events.ts",
+      "workspace-source": "./src/providers/gcs/events.ts",
       "types": "./dist/gcs/events.d.ts",
       "default": "./dist/gcs/events.js"
     },
     "./azure/lifecycle": {
-      "workspace-source": "./src/azure/lifecycle.ts",
+      "workspace-source": "./src/providers/azure/lifecycle.ts",
       "types": "./dist/azure/lifecycle.d.ts",
       "default": "./dist/azure/lifecycle.js"
     },
     "./azure/governance": {
-      "workspace-source": "./src/azure/governance.ts",
+      "workspace-source": "./src/providers/azure/governance.ts",
       "types": "./dist/azure/governance.d.ts",
       "default": "./dist/azure/governance.js"
     },
     "./azure/admin": {
-      "workspace-source": "./src/azure/admin.ts",
+      "workspace-source": "./src/providers/azure/admin.ts",
       "types": "./dist/azure/admin.d.ts",
       "default": "./dist/azure/admin.js"
     },
     "./azure/archive": {
-      "workspace-source": "./src/azure/archive.ts",
+      "workspace-source": "./src/providers/azure/archive.ts",
       "types": "./dist/azure/archive.d.ts",
       "default": "./dist/azure/archive.js"
     },
     "./azure/events": {
-      "workspace-source": "./src/azure/events.ts",
+      "workspace-source": "./src/providers/azure/events.ts",
       "types": "./dist/azure/events.d.ts",
       "default": "./dist/azure/events.js"
     },
     "./azure/account-admin": {
-      "workspace-source": "./src/azure/account-admin.ts",
+      "workspace-source": "./src/providers/azure/account-admin.ts",
       "types": "./dist/azure/account-admin.d.ts",
       "default": "./dist/azure/account-admin.js"
     },
     "./r2/admin": {
-      "workspace-source": "./src/r2/admin.ts",
+      "workspace-source": "./src/providers/r2/admin.ts",
       "types": "./dist/r2/admin.d.ts",
       "default": "./dist/r2/admin.js"
     },
     "./r2/events": {
-      "workspace-source": "./src/r2/events.ts",
+      "workspace-source": "./src/providers/r2/events.ts",
       "types": "./dist/r2/events.d.ts",
       "default": "./dist/r2/events.js"
     },
     "./supabase/admin": {
-      "workspace-source": "./src/supabase/admin.ts",
+      "workspace-source": "./src/providers/supabase/admin.ts",
       "types": "./dist/supabase/admin.d.ts",
       "default": "./dist/supabase/admin.js"
     },
     "./tigris/native": {
-      "workspace-source": "./src/tigris/native.ts",
+      "workspace-source": "./src/providers/tigris/native.ts",
       "types": "./dist/tigris/native.d.ts",
       "default": "./dist/tigris/native.js"
     },
     "./wasabi/native": {
-      "workspace-source": "./src/wasabi/native.ts",
+      "workspace-source": "./src/providers/wasabi/native.ts",
       "types": "./dist/wasabi/native.d.ts",
       "default": "./dist/wasabi/native.js"
     },
     "./b2/admin": {
-      "workspace-source": "./src/b2/admin.ts",
+      "workspace-source": "./src/providers/b2/admin.ts",
       "types": "./dist/b2/admin.d.ts",
       "default": "./dist/b2/admin.js"
     },
     "./minio/admin": {
-      "workspace-source": "./src/minio/admin.ts",
+      "workspace-source": "./src/providers/minio/admin.ts",
       "types": "./dist/minio/admin.d.ts",
       "default": "./dist/minio/admin.js"
     },
     "./wasabi/admin": {
-      "workspace-source": "./src/wasabi/admin.ts",
+      "workspace-source": "./src/providers/wasabi/admin.ts",
       "types": "./dist/wasabi/admin.d.ts",
       "default": "./dist/wasabi/admin.js"
     },
     "./spaces/admin": {
-      "workspace-source": "./src/spaces/admin.ts",
+      "workspace-source": "./src/providers/spaces/admin.ts",
       "types": "./dist/spaces/admin.d.ts",
       "default": "./dist/spaces/admin.js"
     },
     "./scaleway/admin": {
-      "workspace-source": "./src/scaleway/admin.ts",
+      "workspace-source": "./src/providers/scaleway/admin.ts",
       "types": "./dist/scaleway/admin.d.ts",
       "default": "./dist/scaleway/admin.js"
     },
     "./hetzner/admin": {
-      "workspace-source": "./src/hetzner/admin.ts",
+      "workspace-source": "./src/providers/hetzner/admin.ts",
       "types": "./dist/hetzner/admin.d.ts",
       "default": "./dist/hetzner/admin.js"
     },
     "./session-events": {
-      "workspace-source": "./src/session-events.ts",
+      "workspace-source": "./src/sessions/events.ts",
       "types": "./dist/session-events.d.ts",
       "import": "./dist/session-events.js"
     },
     "./tigris/events": {
-      "workspace-source": "./src/tigris/events.ts",
+      "workspace-source": "./src/providers/tigris/events.ts",
       "types": "./dist/tigris/events.d.ts",
       "import": "./dist/tigris/events.js"
     },
     "./uploads": {
-      "workspace-source": "./src/uploads.ts",
+      "workspace-source": "./src/uploads/index.ts",
       "types": "./dist/uploads.d.ts",
       "import": "./dist/uploads.js"
     },
     "./http": {
-      "workspace-source": "./src/http.ts",
+      "workspace-source": "./src/http/index.ts",
       "types": "./dist/http.d.ts",
       "import": "./dist/http.js"
     },
     "./client": {
-      "workspace-source": "./src/client.ts",
+      "workspace-source": "./src/client/index.ts",
       "types": "./dist/client.d.ts",
       "import": "./dist/client.js"
     },
@@ -370,87 +370,87 @@
       "import": "./dist/http/schema.js"
     },
     "./s3/uploads": {
-      "workspace-source": "./src/s3/uploads.ts",
+      "workspace-source": "./src/providers/s3/uploads.ts",
       "types": "./dist/s3/uploads.d.ts",
       "import": "./dist/s3/uploads.js"
     },
     "./gcs/uploads": {
-      "workspace-source": "./src/gcs/uploads.ts",
+      "workspace-source": "./src/providers/gcs/uploads.ts",
       "types": "./dist/gcs/uploads.d.ts",
       "import": "./dist/gcs/uploads.js"
     },
     "./azure/uploads": {
-      "workspace-source": "./src/azure/uploads.ts",
+      "workspace-source": "./src/providers/azure/uploads.ts",
       "types": "./dist/azure/uploads.d.ts",
       "import": "./dist/azure/uploads.js"
     },
     "./supabase/uploads": {
-      "workspace-source": "./src/supabase/uploads.ts",
+      "workspace-source": "./src/providers/supabase/uploads.ts",
       "types": "./dist/supabase/uploads.d.ts",
       "import": "./dist/supabase/uploads.js"
     },
     "./supabase/tus-uploads": {
-      "workspace-source": "./src/supabase/tus-uploads.ts",
+      "workspace-source": "./src/providers/supabase/tus-uploads.ts",
       "types": "./dist/supabase/tus-uploads.d.ts",
       "import": "./dist/supabase/tus-uploads.js"
     },
     "./vercel/authorized-uploads": {
-      "workspace-source": "./src/vercel/authorized-uploads.ts",
+      "workspace-source": "./src/providers/vercel/authorized-uploads.ts",
       "types": "./dist/vercel/authorized-uploads.d.ts",
       "import": "./dist/vercel/authorized-uploads.js"
     },
     "./composition": {
-      "workspace-source": "./src/composition.ts",
+      "workspace-source": "./src/composition/views.ts",
       "types": "./dist/composition.d.ts",
       "default": "./dist/composition.js"
     },
     "./cache": {
-      "workspace-source": "./src/cache.ts",
+      "workspace-source": "./src/composition/cache.ts",
       "types": "./dist/cache.d.ts",
       "default": "./dist/cache.js"
     },
     "./representation": {
-      "workspace-source": "./src/representation.ts",
+      "workspace-source": "./src/composition/representation/index.ts",
       "types": "./dist/representation.d.ts",
       "default": "./dist/representation.js"
     },
     "./compression": {
-      "workspace-source": "./src/compression.ts",
+      "workspace-source": "./src/composition/compression.ts",
       "types": "./dist/compression.d.ts",
       "default": "./dist/compression.js"
     },
     "./encryption": {
-      "workspace-source": "./src/encryption.ts",
+      "workspace-source": "./src/composition/encryption/index.ts",
       "types": "./dist/encryption.d.ts",
       "default": "./dist/encryption.js"
     },
     "./encryption/age": {
-      "workspace-source": "./src/encryption/age.ts",
+      "workspace-source": "./src/composition/encryption/age.ts",
       "types": "./dist/encryption/age.d.ts",
       "default": "./dist/encryption/age.js"
     },
     "./migrations": {
-      "workspace-source": "./src/migrations.ts",
+      "workspace-source": "./src/workflows/migrations/index.ts",
       "types": "./dist/migrations.d.ts",
       "default": "./dist/migrations.js"
     },
     "./mirror": {
-      "workspace-source": "./src/mirror.ts",
+      "workspace-source": "./src/workflows/mirror/index.ts",
       "types": "./dist/mirror.d.ts",
       "default": "./dist/mirror.js"
     },
     "./content": {
-      "workspace-source": "./src/content.ts",
+      "workspace-source": "./src/workflows/content/index.ts",
       "types": "./dist/content.d.ts",
       "default": "./dist/content.js"
     },
     "./client/atoms": {
-      "workspace-source": "./src/client/atoms.ts",
+      "workspace-source": "./src/client/atoms/index.ts",
       "types": "./dist/client/atoms.d.ts",
       "default": "./dist/client/atoms.js"
     },
     "./react": {
-      "workspace-source": "./src/react.ts",
+      "workspace-source": "./src/client/react.ts",
       "types": "./dist/react.d.ts",
       "default": "./dist/react.js"
     }
@@ -808,8 +808,8 @@
     "clean": "node --input-type=module -e \"import { rmSync } from 'node:fs'; for (const directory of ['dist', 'coverage']) rmSync(directory, { recursive: true, force: true })\"",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "typecheck:test": "tsc --noEmit -p test/tsconfig.json",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test": "vitest run --config test/vitest.config.ts",
+    "test:watch": "vitest --config test/vitest.config.ts",
     "check:package": "publint --strict && attw --pack --profile esm-only",
     "lint": "oxlint --deny-warnings src test *.config.ts"
   },

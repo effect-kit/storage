@@ -1,8 +1,8 @@
 import { Context, Effect } from "effect";
 import { SecureRandom } from "effect/crypto";
 
-import { storageError } from "../errors.js";
-import { Storage } from "../storage.js";
+import { storageError } from "../core/errors.js";
+import { Storage } from "../core/storage.js";
 import { TransferDriver, TransferHash } from "./dependencies.js";
 import type { TransferPolicy } from "./models.js";
 import { resolvePolicy } from "./planner.js";

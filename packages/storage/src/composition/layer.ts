@@ -1,7 +1,7 @@
 import { Context, Effect, Layer } from "effect";
 
-import { Storage } from "../storage.js";
-import type { StorageService } from "../storage.js";
+import { Storage } from "../core/storage.js";
+import type { StorageService } from "../core/storage.js";
 import { TransferDriver } from "../transfers/dependencies.js";
 
 /** Facades expose only the capabilities they enforce. Native protocol/admin services stay private. */

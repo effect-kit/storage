@@ -1,4 +1,4 @@
-import type { ReadCondition } from "../requests.js";
+import type { ReadCondition } from "../core/requests.js";
 
 /** Filter an acquired representation without a second, potentially racing metadata request. */
 export function readCondition(condition: ReadCondition | undefined, etag: string | undefined) {

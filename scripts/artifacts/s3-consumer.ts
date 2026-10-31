@@ -32,7 +32,7 @@ export async function checkS3Consumer(temporary: string): Promise<void> {
   await writeFile(manifestPath, JSON.stringify(manifest));
   install();
   await copyFile(
-    resolve("packages/storage/test/consumers/s3-only.mjs"),
+    resolve("packages/storage/test/fixtures/consumers/s3-only.mjs"),
     join(temporary, "s3-only.mjs"),
   );
   execFileSync(process.execPath, ["s3-only.mjs"], { cwd: temporary, stdio: "pipe" });
@@ -50,7 +50,7 @@ export async function checkS3Consumer(temporary: string): Promise<void> {
   install();
   await Promise.all(
     ["s3-runtime.mjs", "s3-types.ts"].map((name) =>
-      copyFile(resolve("packages/storage/test/consumers", name), join(temporary, name)),
+      copyFile(resolve("packages/storage/test/fixtures/consumers", name), join(temporary, name)),
     ),
   );
   await writeFile(

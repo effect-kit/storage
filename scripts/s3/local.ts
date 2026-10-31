@@ -77,7 +77,15 @@ try {
   );
   const result = spawnSync(
     "pnpm",
-    ["--filter", "@effect-kit/storage", "exec", "vitest", "run", "--config", "vitest.s3.config.ts"],
+    [
+      "--filter",
+      "@effect-kit/storage",
+      "exec",
+      "vitest",
+      "run",
+      "--config",
+      "test/vitest.s3.config.ts",
+    ],
     {
       stdio: "inherit",
       env: {
@@ -106,7 +114,7 @@ try {
         "vitest",
         "run",
         "--config",
-        "vitest.compatible.config.ts",
+        "test/vitest.compatible.config.ts",
       ],
       {
         stdio: "inherit",

@@ -1,9 +1,9 @@
 import { Effect } from "effect";
 import type { Scope } from "effect";
 
-import type { StorageCapabilities } from "../capabilities.js";
-import type { StorageError } from "../errors.js";
-import type { StorageService } from "../storage.js";
+import type { StorageCapabilities } from "../core/capabilities.js";
+import type { StorageError } from "../core/errors.js";
+import type { StorageService } from "../core/storage.js";
 import { ConformanceFailure } from "./conformance/assertions.js";
 import { coreCases } from "./conformance/core-cases.js";
 import { listCases } from "./conformance/list-cases.js";

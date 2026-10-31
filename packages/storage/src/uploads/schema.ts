@@ -1,7 +1,7 @@
 import { Schema } from "effect";
 
-import type { ObjectRef } from "../object.js";
-import { ObjectMetadata, ObjectSize } from "../object.js";
+import type { ObjectRef } from "../core/object.js";
+import { ObjectMetadata, ObjectSize } from "../core/object.js";
 
 export const UploadId = Schema.String.check(Schema.isPattern(/^[a-f0-9]{64}$/u));
 export const UploadActor = Schema.Struct({

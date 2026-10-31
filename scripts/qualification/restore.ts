@@ -7,7 +7,7 @@ const directory = await mkdtemp(join(tmpdir(), "storage-restore-"));
 const invoke = (phase: string) =>
   execFileSync(
     process.execPath,
-    ["packages/storage/test/provider/qualification/restore.ts", phase, directory],
+    ["packages/storage/test/e2e/qualification/restore.ts", phase, directory],
     { stdio: "pipe", timeout: 60000 },
   );
 try {

@@ -1,11 +1,11 @@
 import { Effect, Schema } from "effect";
 import { Base64 } from "effect/encoding";
 
-import type { ResumableHandle } from "../contracts/resumable.js";
-import type { StorageError } from "../errors.js";
-import { storageError } from "../errors.js";
-import { Checksum, ObjectRef } from "../object.js";
-import type { ObjectHeaders, ObjectMetadata } from "../object.js";
+import type { ResumableHandle } from "../core/contracts/resumable.js";
+import type { StorageError } from "../core/errors.js";
+import { storageError } from "../core/errors.js";
+import { Checksum, ObjectRef } from "../core/object.js";
+import type { ObjectHeaders, ObjectMetadata } from "../core/object.js";
 import type { UploadRequest } from "./models.js";
 import type { UploadPlan } from "./planner.js";
 import { makeReader, sameChecksum } from "./reader.js";

@@ -1,5 +1,5 @@
-import type { MetadataMerge } from "../lifecycle.js";
-import type { ObjectHeaders } from "../object.js";
+import type { ObjectHeaders } from "../core/object.js";
+import type { MetadataMerge } from "./index.js";
 
 export function mergeHeaders(
   current: ObjectHeaders,

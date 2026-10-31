@@ -1,6 +1,6 @@
 import { Effect, Stream } from "effect";
 
-import type { StorageError } from "../errors.js";
+import type { StorageError } from "../core/errors.js";
 
 /** Emits at most afterBytes before failing, including when the boundary splits a chunk. */
 export function failBody<E, R>(

@@ -16,7 +16,7 @@ export async function buildDigest() {
   };
   const paths = [
     ...(await visit("packages/storage/dist")),
-    ...(await visit("packages/storage/test/provider/live")),
+    ...(await visit("packages/storage/test/e2e/live")),
     "pnpm-lock.yaml",
     "packages/storage/package.json",
   ].toSorted();

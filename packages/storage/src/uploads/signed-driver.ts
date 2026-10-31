@@ -1,9 +1,9 @@
 import { Clock, DateTime, Effect, Layer, Redacted } from "effect";
 
-import { StorageSigning } from "../capabilities.js";
-import type { SignedRequest } from "../capabilities.js";
-import type { StorageError } from "../errors.js";
-import { Storage, type StorageService } from "../storage.js";
+import { StorageSigning } from "../core/capabilities.js";
+import type { SignedRequest } from "../core/capabilities.js";
+import type { StorageError } from "../core/errors.js";
+import { Storage, type StorageService } from "../core/storage.js";
 import { UploadGrantDriver } from "./driver.js";
 import { failUpload } from "./schema.js";
 import type { UploadRecord } from "./schema.js";

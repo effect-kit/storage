@@ -83,7 +83,10 @@ try {
     ],
     temporary,
   );
-  await copyFile("packages/storage/test/provider/r2-worker/run.mjs", join(temporary, "worker.mjs"));
+  await copyFile(
+    "packages/storage/test/fixtures/workers/r2-worker/run.mjs",
+    join(temporary, "worker.mjs"),
+  );
   const code = await bundleWorker(temporary, "worker.mjs");
   await writeFile(join(output, "worker.mjs"), code);
   worker = new Miniflare({
@@ -103,7 +106,7 @@ try {
   assert.equal(response.status, 200, JSON.stringify(result));
   assert(result && typeof result === "object" && "status" in result && result.status === "passed");
   await copyFile(
-    "packages/storage/test/provider/fixtures/r2-worker.mjs",
+    "packages/storage/test/fixtures/providers/r2-worker.mjs",
     join(temporary, "example.mjs"),
   );
   const exampleCode = await bundleWorker(temporary, "example.mjs");

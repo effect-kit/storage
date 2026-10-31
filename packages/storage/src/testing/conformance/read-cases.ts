@@ -1,6 +1,6 @@
 import { Effect, Stream } from "effect";
 
-import { Storage } from "../../storage.js";
+import { Storage } from "../../core/storage.js";
 import type { StorageConformanceCase } from "../conformance.js";
 import { bytesEqual, check, expectReason } from "./assertions.js";
 

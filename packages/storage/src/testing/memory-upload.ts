@@ -1,9 +1,9 @@
 import { DateTime, Effect, Predicate, Ref, Result, Stream } from "effect";
 
-import { storageError } from "../errors.js";
-import type { StorageError } from "../errors.js";
-import type { ObjectHeaders, ObjectMetadata } from "../object.js";
-import type { PutRequest } from "../requests.js";
+import { storageError } from "../core/errors.js";
+import type { StorageError } from "../core/errors.js";
+import type { ObjectHeaders, ObjectMetadata } from "../core/object.js";
+import type { PutRequest } from "../core/requests.js";
 import { cloneMetadata } from "./memory-state.js";
 import type { MemoryContext, MemoryState, StoredObject } from "./memory-state.js";
 

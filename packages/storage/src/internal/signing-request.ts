@@ -1,6 +1,6 @@
 import { Schema } from "effect";
 
-import { ObjectRef } from "../object.js";
+import { ObjectRef } from "../core/object.js";
 import { decodeRequest } from "./request-validation.js";
 
 const Request = Schema.Struct({

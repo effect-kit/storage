@@ -1,8 +1,8 @@
 import { ByteSize, Cause, Effect, FileSystem, Option, Stream } from "effect";
 import type { PlatformError } from "effect/PlatformError";
 
-import type { StorageError } from "../errors.js";
-import { storageError } from "../errors.js";
+import type { StorageError } from "../core/errors.js";
+import { storageError } from "../core/errors.js";
 import { TransferHash } from "./dependencies.js";
 
 export interface UploadSource<E = never, R = never> {

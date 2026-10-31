@@ -1,6 +1,6 @@
 import { Context, Effect, Layer } from "effect";
 
-import type { StorageError } from "../errors.js";
+import type { StorageError } from "../core/errors.js";
 import { failUpload } from "./schema.js";
 import type { UploadGrant, UploadRecord } from "./schema.js";
 export type UploadFailure = StorageError | ReturnType<typeof failUpload>;

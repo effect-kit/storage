@@ -1,11 +1,11 @@
 import { Result, Schema } from "effect";
 import type { Ref } from "effect";
 
-import type { StorageCapabilities } from "../capabilities.js";
-import { storageError } from "../errors.js";
-import type { StorageError } from "../errors.js";
-import type { ObjectMetadata } from "../object.js";
-import type { ObjectTarget } from "../requests.js";
+import type { StorageCapabilities } from "../core/capabilities.js";
+import { storageError } from "../core/errors.js";
+import type { StorageError } from "../core/errors.js";
+import type { ObjectMetadata } from "../core/object.js";
+import type { ObjectTarget } from "../core/requests.js";
 
 const Positive = Schema.Int.check(Schema.isGreaterThan(0));
 export const MemoryOptions = Schema.Struct({

@@ -55,7 +55,7 @@ try {
         reportPath: childReport,
       };
       const code = await new Promise<number>((accept) => {
-        const child = spawn(process.execPath, ["packages/storage/test/provider/live/run.ts"], {
+        const child = spawn(process.execPath, ["packages/storage/test/e2e/live/run.ts"], {
           stdio: ["pipe", "pipe", "pipe"],
           env: { PATH: process.env.PATH, VERCEL_BLOB_RETRIES: "0", NODE_ENV: "test" },
           timeout: 210000,

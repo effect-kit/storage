@@ -1,12 +1,12 @@
 import { Effect, Stream } from "effect";
 
-import type { StorageError } from "../errors.js";
-import { storageError } from "../errors.js";
+import type { StorageError } from "../core/errors.js";
+import { storageError } from "../core/errors.js";
+import type { ObjectMetadata } from "../core/object.js";
+import { Checksum } from "../core/object.js";
+import type { GetRequest } from "../core/requests.js";
+import { HeadRequest } from "../core/requests.js";
 import { decodeRequest } from "../internal/request-validation.js";
-import type { ObjectMetadata } from "../object.js";
-import { Checksum } from "../object.js";
-import type { GetRequest } from "../requests.js";
-import { HeadRequest } from "../requests.js";
 import type { DownloadRequest, TransferEndpoint, TransferReceipt } from "./models.js";
 import { sameChecksum } from "./reader.js";
 import type { Operation, TransferRuntime } from "./runtime.js";

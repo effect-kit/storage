@@ -95,7 +95,7 @@ try {
     }),
     { mode: 0o600 },
   );
-  const child = resolve("packages/storage/test/provider/composition.acceptance.mjs");
+  const child = resolve("packages/storage/test/e2e/providers/composition.acceptance.mjs");
   const run = (scenario, phase) =>
     spawnSync(process.execPath, [child, config, scenario, phase], {
       encoding: "utf8",

@@ -1,8 +1,8 @@
 import { Effect, Stream } from "effect";
 
-import type { ObjectMetadata } from "../object.js";
+import type { ObjectMetadata } from "../core/object.js";
+import type { StorageService } from "../core/storage.js";
 import { sha256 } from "../runtime/portable-hash.js";
-import type { StorageService } from "../storage.js";
 import { failUpload } from "./schema.js";
 import type { UploadRecord } from "./schema.js";
 

@@ -1,7 +1,7 @@
 import { Effect } from "effect";
 
-import { storageError } from "../errors.js";
-import type { WriteCondition } from "../requests.js";
+import { storageError } from "../core/errors.js";
+import type { WriteCondition } from "../core/requests.js";
 import type { TransferEndpoint, TransferConfiguration } from "./models.js";
 
 const MiB = 1024 * 1024;

@@ -1,8 +1,8 @@
 import { Effect, Result, Schema } from "effect";
 
-import type { StorageError, StorageReason } from "../../errors.js";
-import { Storage } from "../../storage.js";
-import type { StorageService } from "../../storage.js";
+import type { StorageError, StorageReason } from "../../core/errors.js";
+import { Storage } from "../../core/storage.js";
+import type { StorageService } from "../../core/storage.js";
 
 export class ConformanceFailure extends Schema.TaggedError<ConformanceFailure>()(
   "ConformanceFailure",

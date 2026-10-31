@@ -32,6 +32,12 @@ Local suite choices: `all`, `s3`, `native`, `app`, `filesystem`, `runtimes`, `r2
 `composition`, `react`. Runtime choices apply to filesystem/runtime helpers. Fixtures are
 internal test assets, not public example applications.
 
+Source ownership is grouped under `src/core`, `src/providers`, `src/runtime`,
+`src/transfers`, `src/sessions`, `src/uploads`, `src/workflows`, `src/composition`,
+`src/lifecycle`, `src/http`, `src/client` and `src/testing`. Public package paths stay
+independent of those implementation folders. Tests live under `test/unit`,
+`test/integration`, `test/e2e` and `test/fixtures`; Vitest configs live in `test/`.
+
 Repository workflow contracts are in `.github/README.md`. Product docs and examples
 belong to the separate landing-page repository. Design/planning records stay in ignored
 `research/`; they are not required build or CI inputs. No CLI product is planned.

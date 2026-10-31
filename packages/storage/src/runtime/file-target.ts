@@ -1,8 +1,8 @@
 import { ByteSize, Effect, FileSystem, Path, Schema, Stream } from "effect";
 import { Digest } from "effect/crypto";
 
-import type { StorageError } from "../errors.js";
-import type { Checksum } from "../object.js";
+import type { StorageError } from "../core/errors.js";
+import type { Checksum } from "../core/object.js";
 import { SessionId } from "../sessions/checkpoint.js";
 import type { RestartableDownloadTarget } from "../sessions/download.js";
 import { sessionError } from "../sessions/store.js";

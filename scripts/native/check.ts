@@ -9,7 +9,7 @@ import { promisify } from "node:util";
 
 import { Effect } from "effect";
 
-import { httpFixture } from "../../packages/storage/test/gcs/http-fixture.ts";
+import { httpFixture } from "../../packages/storage/test/fixtures/gcs/http-fixture.ts";
 
 const execute = promisify(execFile);
 const image =
@@ -17,7 +17,7 @@ const image =
 const container = `storage-native-${randomUUID()}`;
 const temporary = await mkdtemp(join(tmpdir(), "storage-native-"));
 const report = resolve(".artifacts/native-local.json");
-const worker = resolve("packages/storage/test/provider/native-worker/run.mjs");
+const worker = resolve("packages/storage/test/fixtures/workers/native-worker/run.mjs");
 const env = { ...process.env, STORAGE_NATIVE_TEST_KEY: randomBytes(32).toString("base64") };
 let started = false;
 const results: Array<{ provider: string; boundary: string; state: string }> = [];
@@ -64,7 +64,7 @@ async function runExample(provider: string, endpoint: string, directory: string)
   ]) {
     const output = await execute(
       process.execPath,
-      [resolve("packages/storage/test/provider/fixtures/native-upload.mjs"), ...args],
+      [resolve("packages/storage/test/fixtures/providers/native-upload.mjs"), ...args],
       { env: exampleEnv, timeout: 30000 },
     );
     const receipt = JSON.parse(output.stdout) as { state?: string; size?: number };
@@ -154,7 +154,7 @@ try {
       "vitest",
       "run",
       "--config",
-      "vitest.native.config.ts",
+      "test/vitest.native.config.ts",
     ],
     { env: { ...env, STORAGE_AZURE_LOCAL_URL: azure }, timeout: 90000 },
   );
@@ -197,7 +197,7 @@ try {
           }
           await execute(
             process.execPath,
-            [resolve("packages/storage/test/provider/native-worker/signing.mjs")],
+            [resolve("packages/storage/test/fixtures/workers/native-worker/signing.mjs")],
             { env, timeout: 30000 },
           );
         });

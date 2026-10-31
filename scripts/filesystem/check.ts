@@ -8,7 +8,7 @@ import { promisify } from "node:util";
 const runtime = process.argv[2] ?? "node";
 assert(runtime === "node" || runtime === "bun");
 const binary = runtime === "node" ? process.execPath : "bun";
-const worker = resolve("packages/storage/test/provider/filesystem-worker/run.mjs");
+const worker = resolve("packages/storage/test/fixtures/workers/filesystem-worker/run.mjs");
 const execute = promisify(execFile);
 const temporary = await mkdtemp(join(tmpdir(), "storage-filesystem-acceptance-"));
 const invoke = async (root: string, command: string, boundary = "") => {

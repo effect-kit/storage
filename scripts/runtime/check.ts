@@ -131,10 +131,13 @@ async function checkRuntime(runtime: string) {
     );
     await Promise.all(
       ["program.mjs", "run.mjs", "browser.mjs"].map((name) =>
-        copyFile(resolve("packages/storage/test/runtime", name), join(temporary, name)),
+        copyFile(resolve("packages/storage/test/fixtures/runtime", name), join(temporary, name)),
       ),
     );
-    const declarations = await readFile("packages/storage/test/runtime/types.fixture", "utf8");
+    const declarations = await readFile(
+      "packages/storage/test/fixtures/runtime/types.fixture",
+      "utf8",
+    );
     await writeFile(
       join(temporary, "types.ts"),
       declarations.replace("@effect-kit/storage/RUNTIME", `@effect-kit/storage/${runtime}`),

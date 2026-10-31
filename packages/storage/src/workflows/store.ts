@@ -1,7 +1,7 @@
 import { Effect, Redacted, Schema, Semaphore } from "effect";
 import { KeyValueStore } from "effect/persistence";
 
-import { storageError } from "../errors.js";
+import { storageError } from "../core/errors.js";
 import type { CheckpointProtection, SessionOwnership } from "../sessions/store.js";
 
 export interface WorkflowStoreOptions {

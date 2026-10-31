@@ -7,12 +7,12 @@ export {
   ObjectHeaders,
   NativeVersion,
   Checksum,
-} from "./object.js";
-export { Storage } from "./storage.js";
-export type { StorageService } from "./storage.js";
-export { StorageError, StorageReason, MutationOutcome } from "./errors.js";
-export { ByteRange } from "./ranges.js";
-export type { ResolvedRange } from "./ranges.js";
+} from "./core/object.js";
+export { Storage } from "./core/storage.js";
+export type { StorageService } from "./core/storage.js";
+export { StorageError, StorageReason, MutationOutcome } from "./core/errors.js";
+export { ByteRange } from "./core/ranges.js";
+export type { ResolvedRange } from "./core/ranges.js";
 export {
   GetRequest,
   PutRequest,
@@ -21,7 +21,7 @@ export {
   ListRequest,
   ReadCondition,
   WriteCondition,
-} from "./requests.js";
+} from "./core/requests.js";
 export type {
   UploadBody,
   ObjectTarget,
@@ -30,16 +30,20 @@ export type {
   GetResult,
   ListEntry,
   ListPage,
-} from "./requests.js";
-export { StorageSigning, StoragePublicUrls, StorageCopy } from "./capabilities.js";
-export type { StorageCapabilities, SignedRequest, GrantConstraint } from "./capabilities.js";
-export type { MultipartUploads, MultipartHandle, UploadedPart } from "./contracts/multipart.js";
+} from "./core/requests.js";
+export { StorageSigning, StoragePublicUrls, StorageCopy } from "./core/capabilities.js";
+export type { StorageCapabilities, SignedRequest, GrantConstraint } from "./core/capabilities.js";
+export type {
+  MultipartUploads,
+  MultipartHandle,
+  UploadedPart,
+} from "./core/contracts/multipart.js";
 export type {
   OffsetUploads,
   BlockUploads,
   ResumableHandle,
   ResumableState,
-} from "./contracts/resumable.js";
+} from "./core/contracts/resumable.js";
 export {
   StorageVersions,
   StorageMetadata,
@@ -50,11 +54,11 @@ export {
   MetadataReplace,
   MetadataMerge,
   RestoreVersion,
-} from "./lifecycle.js";
+} from "./lifecycle/index.js";
 export type {
   VersionsService,
   MetadataService,
   TagsService,
   ArchiveService,
   RestoreStatus,
-} from "./lifecycle.js";
+} from "./lifecycle/index.js";

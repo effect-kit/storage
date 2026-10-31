@@ -19,7 +19,7 @@ try {
       [
         "--expose-gc",
         "--max-old-space-size=256",
-        "packages/storage/test/provider/qualification/resources.ts",
+        "packages/storage/test/e2e/qualification/resources.ts",
         mode,
       ],
       { encoding: "utf8", timeout: 180000 },

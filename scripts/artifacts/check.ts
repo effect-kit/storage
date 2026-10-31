@@ -82,7 +82,7 @@ try {
     ],
     temporary,
   );
-  const fixtures = resolve("packages/storage/test/consumers");
+  const fixtures = resolve("packages/storage/test/fixtures/consumers");
   await Promise.all([
     copyFile(join(fixtures, "runtime.mjs"), join(temporary, "consumer.mjs")),
     copyFile(join(fixtures, "types.ts"), join(temporary, "consumer.ts")),

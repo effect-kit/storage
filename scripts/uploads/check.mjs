@@ -17,8 +17,8 @@ import {
 import { chromium } from "playwright";
 import { build } from "vite";
 
-import { httpFixture as gcsFixture } from "../../packages/storage/test/gcs/http-fixture.ts";
-import { httpFixture as supabaseFixture } from "../../packages/storage/test/supabase/http-fixture.ts";
+import { httpFixture as gcsFixture } from "../../packages/storage/test/fixtures/gcs/http-fixture.ts";
+import { httpFixture as supabaseFixture } from "../../packages/storage/test/fixtures/supabase/http-fixture.ts";
 import { application, corsProxy } from "./fixture.mjs";
 
 const image =
@@ -37,7 +37,7 @@ try {
       outDir: resolve(".artifacts/uploads/browser"),
       minify: false,
       lib: {
-        entry: resolve("packages/storage/test/uploads/browser.ts"),
+        entry: resolve("packages/storage/test/fixtures/browser/uploads.ts"),
         name: "StorageUploadAcceptance",
         formats: ["iife"],
         fileName: () => "client.js",

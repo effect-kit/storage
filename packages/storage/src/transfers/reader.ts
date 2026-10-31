@@ -1,9 +1,9 @@
 import { Effect, Pull, Stream } from "effect";
 import { Base64, Hex } from "effect/encoding";
 
-import type { StorageError } from "../errors.js";
-import { storageError } from "../errors.js";
-import type { Checksum } from "../object.js";
+import type { StorageError } from "../core/errors.js";
+import { storageError } from "../core/errors.js";
+import type { Checksum } from "../core/object.js";
 import type { TransferDigest } from "./models.js";
 import type { UploadSource } from "./sources.js";
 

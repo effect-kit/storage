@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 
-import { StorageError } from "../errors.js";
+import { StorageError } from "../core/errors.js";
 import { download } from "../transfers/download.js";
 import { partReceipt } from "../transfers/part-receipts.js";
 import { planUpload } from "../transfers/planner.js";
