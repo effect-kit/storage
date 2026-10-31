@@ -197,8 +197,16 @@ export function multipart(connection: S3Connection): S3MultipartUploads {
       return {
         ref: { storeId: config.storeId, key: value.key },
         uploadId: Redacted.make(output.UploadId),
-        checksumAlgorithm: output.ChecksumAlgorithm ?? checksumAlgorithm,
-        checksumType: output.ChecksumType ?? checksumType,
+        // Some compatible services return checksum defaults even when none were requested.
+        // Keep opaque receipts usable without opting into an unqualified checksum protocol.
+        checksumAlgorithm:
+          connection.multipartChecksums === false
+            ? undefined
+            : (output.ChecksumAlgorithm ?? checksumAlgorithm),
+        checksumType:
+          connection.multipartChecksums === false
+            ? undefined
+            : (output.ChecksumType ?? checksumType),
       };
     }),
     uploadPart: Effect.fnUntraced(function* <E = never, R = never>(input: {
@@ -260,7 +268,7 @@ export function multipart(connection: S3Connection): S3MultipartUploads {
         partNumber: value.partNumber,
         etag: output.result.ETag,
         size: output.length,
-        checksums: checksums(output.result),
+        checksums: connection.multipartChecksums === false ? undefined : checksums(output.result),
       };
     }),
     listParts: Effect.fnUntraced(function* (input) {
@@ -297,7 +305,7 @@ export function multipart(connection: S3Connection): S3MultipartUploads {
           partNumber: part.PartNumber,
           etag: part.ETag,
           size: part.Size,
-          checksums: checksums(part),
+          checksums: connection.multipartChecksums === false ? undefined : checksums(part),
         });
       }
       if (output.IsTruncated && !output.NextPartNumberMarker)
@@ -307,8 +315,9 @@ export function multipart(connection: S3Connection): S3MultipartUploads {
         });
       return {
         parts,
-        checksumAlgorithm: output.ChecksumAlgorithm,
-        checksumType: output.ChecksumType,
+        checksumAlgorithm:
+          connection.multipartChecksums === false ? undefined : output.ChecksumAlgorithm,
+        checksumType: connection.multipartChecksums === false ? undefined : output.ChecksumType,
         ...(output.IsTruncated && output.NextPartNumberMarker
           ? { cursor: encodeCursor(config.storeId, query, output.NextPartNumberMarker) }
           : {}),
@@ -436,8 +445,9 @@ export function multipart(connection: S3Connection): S3MultipartUploads {
         uploads.push({
           ref: { storeId: config.storeId, key: upload.Key },
           uploadId: Redacted.make(upload.UploadId),
-          checksumAlgorithm: upload.ChecksumAlgorithm,
-          checksumType: upload.ChecksumType,
+          checksumAlgorithm:
+            connection.multipartChecksums === false ? undefined : upload.ChecksumAlgorithm,
+          checksumType: connection.multipartChecksums === false ? undefined : upload.ChecksumType,
         });
       }
       if (output.IsTruncated && (!output.NextKeyMarker || !output.NextUploadIdMarker))

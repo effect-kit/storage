@@ -105,17 +105,17 @@ for (const profile of profileFixtures) {
           if (incoming.method === "POST" && url.searchParams.has("uploads"))
             xml(
               response,
-              "<InitiateMultipartUploadResult><UploadId>owned-upload</UploadId></InitiateMultipartUploadResult>",
+              "<InitiateMultipartUploadResult><UploadId>owned-upload</UploadId><ChecksumAlgorithm>CRC32</ChecksumAlgorithm><ChecksumType>COMPOSITE</ChecksumType></InitiateMultipartUploadResult>",
             );
           else if (incoming.method === "PUT")
             void drain(incoming).then(() => {
-              response.writeHead(200, { etag: '"part"' });
+              response.writeHead(200, { etag: '"part"', "x-amz-checksum-crc32": "pQDfGw==" });
               return response.end();
             });
           else if (incoming.method === "GET" && url.searchParams.has("uploadId"))
             xml(
               response,
-              '<ListPartsResult><IsTruncated>false</IsTruncated><Part><PartNumber>1</PartNumber><ETag>"part"</ETag><Size>1</Size></Part></ListPartsResult>',
+              '<ListPartsResult><IsTruncated>false</IsTruncated><ChecksumAlgorithm>CRC32</ChecksumAlgorithm><ChecksumType>COMPOSITE</ChecksumType><Part><PartNumber>1</PartNumber><ETag>"part"</ETag><Size>1</Size><ChecksumCRC32>pQDfGw==</ChecksumCRC32></Part></ListPartsResult>',
             );
           else if (incoming.method === "POST")
             void drain(incoming).then(() => {
@@ -144,6 +144,16 @@ for (const profile of profileFixtures) {
         assert.strictEqual(part.etag, '"part"');
         const inventory = yield* storage.multipart.listParts({ upload });
         assert.strictEqual(inventory.parts.length, 1);
+        if (!storage.profile?.checksums) {
+          assert.isUndefined(upload.checksumAlgorithm);
+          assert.isUndefined(upload.checksumType);
+          assert.isUndefined(part.checksums);
+          assert.isUndefined(inventory.parts[0]?.checksums);
+          assert.isUndefined(inventory.checksumAlgorithm);
+        } else {
+          assert.strictEqual(upload.checksumAlgorithm, "CRC32");
+          assert.strictEqual(part.checksums?.[0]?.algorithm, "crc32");
+        }
         assert.strictEqual((yield* storage.multipart.listUploads({})).uploads.length, 0);
         const completed = yield* storage.multipart.complete({ upload, parts: [part] });
         assert.strictEqual(completed.etag, '"complete"');
