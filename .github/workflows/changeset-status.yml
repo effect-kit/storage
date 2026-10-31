@@ -9,4 +9,9 @@ permissions:
 
 jobs:
   status:
+    # Version PRs consume existing changesets and may be merged/deleted before this job fetches them.
+    if: >-
+      github.event.pull_request.user.login != 'github-actions[bot]' ||
+      github.event.pull_request.head.repo.full_name != github.repository ||
+      github.head_ref != 'changeset-release/main'
     uses: effect-kit/.github/.github/workflows/changeset-status.yml@v1
