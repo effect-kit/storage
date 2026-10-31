@@ -6,6 +6,7 @@ import { resolve } from "node:path";
 
 import { buildDigest } from "./artifact.ts";
 import { loadSettings, options } from "./configuration.ts";
+import { assessReport } from "./report.ts";
 
 const runId = randomUUID();
 const directory = resolve(".artifacts/providers", runId);
@@ -71,11 +72,16 @@ try {
       try {
         result = JSON.parse(await readFile(childReport, "utf8"));
       } catch {
-        result = { provider: profile.provider, status: "failed", reason: "ChildReportUnavailable" };
+        result = undefined;
       }
-      report.cases.push(result);
-      process.stdout.write(`${profile.provider}: ${code === 0 ? "passed" : "failed"}\n`);
-      if (code !== 0) report.reason = "ProviderOrCleanupFailed";
+      const { passed, evidence } = assessReport(result, code, {
+        provider: profile.provider,
+        suite: args.suite ?? "portable",
+        prefix: payload.settings.prefix,
+      });
+      report.cases.push(evidence);
+      process.stdout.write(`${profile.provider}: ${passed ? "passed" : "failed"}\n`);
+      if (!passed) report.reason = "ProviderOrCleanupFailed";
     }
     if ((await buildDigest()) !== artifactDigest) throw new Error("BuildChangedDuringRun");
     if (!report.reason) report.status = "passed";
