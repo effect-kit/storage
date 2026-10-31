@@ -2,13 +2,20 @@
 import { createHash } from "node:crypto";
 import { writeFile } from "node:fs/promises";
 
-import { Effect, Exit, Schema } from "effect";
+import { Cause, Context, Effect, Exit, Layer, Option, Schema } from "effect";
 
+import { Storage, StorageError, StorageSigning } from "@effect-kit/storage";
 import { layer as runtime } from "@effect-kit/storage/node";
+import { TransferDriver } from "@effect-kit/storage/transfers";
 
 import type { ProviderSettings } from "../../../../../scripts/providers/configuration.ts";
 import { providerLayer } from "./adapters.ts";
+import { authoritySuite } from "./authority.ts";
+import { browserSuite } from "./browser.ts";
+import { recoverySuite } from "./recovery.ts";
+import { safetySuite } from "./safety.ts";
 import { portableSuite } from "./suite.ts";
+import { transferSuite } from "./transfers.ts";
 
 let raw = "";
 for await (const chunk of process.stdin) {
@@ -30,6 +37,7 @@ const report: {
   cleanupPending: number;
   reason?: string;
   scopeDigest?: string;
+  failure?: { operation: string; reason: string };
 } = {
   provider: settings.provider,
   status: "failed",
@@ -106,14 +114,49 @@ try {
     report.checks = [...result.checks];
     report.status = "passed";
   } else {
-    const layer = await providerLayer(settings, suite);
-    const program = Effect.scoped(portableSuite(layer, settings.prefix, report, suite)).pipe(
+    const effective =
+      suite === "release" && settings.provider === "supabase"
+        ? { ...settings, config: { ...settings.config, resumable: true } }
+        : settings;
+    const layer = await providerLayer(effective, suite);
+    const program = Effect.scoped(
+      Effect.gen(function* () {
+        yield* portableSuite(
+          layer,
+          settings.prefix,
+          report,
+          suite === "portable" ? "portable" : "signing",
+        );
+        if (suite !== "release" && suite !== "browser") return;
+
+        const context = yield* Layer.build(layer);
+        const storage = Context.get(context, Storage);
+        const signing = Option.getOrThrow(Context.getOption(context, StorageSigning));
+        if (suite === "browser") {
+          yield* browserSuite(storage, signing, settings.prefix, report);
+          return;
+        }
+
+        yield* safetySuite(storage, settings.prefix, report);
+        yield* authoritySuite(effective, storage, signing, report);
+        const endpoint = Context.get(context, TransferDriver);
+        yield* transferSuite(storage, endpoint, settings.prefix, report);
+        yield* recoverySuite(effective, storage, endpoint, settings.prefix, report);
+      }),
+    ).pipe(
       Effect.provide(runtime),
-      Effect.timeout("120 seconds"),
+      Effect.timeout(suite === "release" ? "480 seconds" : "120 seconds"),
     );
     const exit = await Effect.runPromiseExit(program);
     if (Exit.isSuccess(exit) && report.cleanupPending === 0) report.status = "passed";
-    else report.reason = "ProviderCaseOrCleanupFailed";
+    else {
+      report.reason = "ProviderCaseOrCleanupFailed";
+      if (Exit.isFailure(exit)) {
+        const error = Option.getOrUndefined(Cause.findErrorOption(exit.cause));
+        if (error instanceof StorageError)
+          report.failure = { operation: error.operation, reason: error.reason._tag };
+      }
+    }
   }
 } catch {
   report.reason = "ProviderCaseFailed";

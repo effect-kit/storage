@@ -10,7 +10,7 @@ on:
       suite:
         description: Bounded provider suite
         type: choice
-        options: [portable, signing]
+        options: [portable, signing, release, browser]
         default: portable
 
 permissions:
@@ -25,7 +25,7 @@ jobs:
     if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
     runs-on: ubuntu-latest
     # All profiles run sequentially, each with a bounded child timeout.
-    timeout-minutes: 60
+    timeout-minutes: 150
     steps:
       - uses: actions/checkout@v7
         with:

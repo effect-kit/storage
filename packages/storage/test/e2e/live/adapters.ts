@@ -71,7 +71,7 @@ export async function providerLayer(
     requestTimeoutMillis: 15000,
     maxUnknownLengthBytes: 1024 * 1024,
   });
-  if (suite !== "signing") return layer;
+  if (!["signing", "release", "browser"].includes(suite)) return layer;
 
   const signing =
     provider === "gcs" || provider === "azure" || provider === "supabase" || provider === "vercel"

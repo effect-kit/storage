@@ -62,3 +62,46 @@ test("unexpected report fields and diagnostics never reach aggregate evidence", 
   assert.equal(result.passed, false);
   assert(!JSON.stringify(result).includes("secret-canary"));
 });
+
+test("release qualification requires protocol, authority, integrity and recovery evidence", () => {
+  const checks = [
+    ...evidence.checks,
+    "signed-read",
+    "missing-object",
+    "foreign-reference-denied",
+    "concurrent-create-only",
+    "stale-write-rejected",
+    "invalid-credential-denied",
+    "expired-grant-denied",
+    "large-native-transfer",
+    "lost-part-response-retried",
+    "checksum-mismatch-rejected",
+    "cancelled-multipart-cleaned",
+    "transfer-resources-released",
+    "fresh-process-upload-recovery",
+  ];
+  const release = { ...evidence, suite: "release", checks };
+  const identity = { ...expected, suite: "release" };
+  assert.equal(assessReport(release, 0, identity).passed, true);
+  for (const missing of checks)
+    assert.equal(
+      assessReport({ ...release, checks: checks.filter((check) => check !== missing) }, 0, identity)
+        .passed,
+      false,
+      missing,
+    );
+  assert.equal(
+    assessReport({ ...release, checks: [...checks, "durable-upload-unavailable"] }, 0, identity)
+      .passed,
+    false,
+  );
+  const browser = { ...evidence, suite: "browser", checks: [...evidence.checks, "signed-read"] };
+  assert.equal(assessReport(browser, 0, { ...expected, suite: "browser" }).passed, false);
+  assert.equal(
+    assessReport({ ...browser, checks: [...browser.checks, "browser-signed-read"] }, 0, {
+      ...expected,
+      suite: "browser",
+    }).passed,
+    true,
+  );
+});

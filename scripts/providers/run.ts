@@ -30,7 +30,7 @@ const report: {
 try {
   const args = options(process.argv.slice(2));
   const settings = await loadSettings(args);
-  if (args.suite === "signing" && settings.some((profile) => profile.provider === "r2-workers"))
+  if (args.suite !== "portable" && settings.some((profile) => profile.provider === "r2-workers"))
     throw new Error("WorkerSigningUnsupported");
   if (args["validate-only"]) {
     process.stdout.write(
@@ -59,7 +59,7 @@ try {
         const child = spawn(process.execPath, ["packages/storage/test/e2e/live/run.ts"], {
           stdio: ["pipe", "pipe", "pipe"],
           env: { PATH: process.env.PATH, VERCEL_BLOB_RETRIES: "0", NODE_ENV: "test" },
-          timeout: 210000,
+          timeout: args.suite === "release" ? 600000 : 210000,
         });
         child.stdout.resume();
         child.stderr.resume();

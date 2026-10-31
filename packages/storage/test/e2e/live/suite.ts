@@ -6,6 +6,7 @@ import type { ObjectRef, StorageError, PutRequest } from "@effect-kit/storage";
 export interface SuiteReport {
   checks: string[];
   cleanupPending: number;
+  failure?: { operation: string; reason: string };
 }
 export type ProviderLayer = Layer.Layer<Storage | TransferDriver, StorageError>;
 import { Transfers, TransferDriver, UploadSource } from "@effect-kit/storage/transfers";

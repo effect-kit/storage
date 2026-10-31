@@ -48,7 +48,8 @@ export function options(args: ReadonlyArray<string>) {
   });
   if ((values["credentials-file"] === undefined) === (values.env !== true))
     throw new Error("Choose --credentials-file .env.providers.local or --env explicitly");
-  if (!["portable", "signing"].includes(values.suite ?? "")) throw new Error("Unknown suite");
+  if (!["portable", "signing", "release", "browser"].includes(values.suite ?? ""))
+    throw new Error("Unknown suite");
   return values;
 }
 
