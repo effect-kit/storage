@@ -1,6 +1,6 @@
 {
   "name": "@effect-kit/storage",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Typed object storage, streaming transfers and resumable workflows for Effect.",
   "keywords": [
     "azure-blob-storage",
