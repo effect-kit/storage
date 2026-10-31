@@ -36,10 +36,10 @@ Read `.github/README.md` when changing workflows or implementing release checks.
   `pnpm test:extended` when changing packaging, exports, declarations, or release tooling.
 - Keep PR checks fast and deterministic. Long suites, live services, fuzzing, and provider
   matrices belong in manually dispatched workflows. Add those commands only when needed.
-- `test:artifacts`, `release:check`, and `release:smoke` are echo placeholders. Implement
-  package-specific checks before using release workflows. `release:prepare` owns release
-  source checks and builds; `release:check` must verify exact archives and write
-  `verification.json` without changing plans or tarballs.
+- `test:artifacts` checks packed consumers, including actual README snippets.
+  `release:prepare` owns release source checks and builds; `release:check` verifies
+  exact archives and writes `verification.json` without changing plans or tarballs.
+  `release:smoke` checks retained archives against registry bytes and provenance.
 - Release tooling must handle all publishable packages in the plan. Registry smoke checks
   compare downloaded bytes and provenance; they must never publish or rebuild a release.
 - Add changesets for user-visible package changes. Do not add release notes for tooling
