@@ -16,6 +16,8 @@ Shared CI/release callers use `effect-kit/.github@v1`, following the Redis repos
 
 Commands own behavior; workflows only select when/where they run. Root package scripts
 accept suite/provider arguments instead of one command or workflow per provider.
+Turbo's test task depends on its own package build so public entry-point imports resolve
+on fresh checkouts without an existing `dist` directory.
 
 `release:prepare` runs source checks and builds. `release:check --pack-dir DIR` reads
 `publish-plan.json` and the supplied `packages/*.tgz`, checks every planned package,
