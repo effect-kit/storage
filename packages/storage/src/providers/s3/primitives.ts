@@ -127,7 +127,7 @@ export const putObject = Effect.fnUntraced(function* <E = never, R = never>(
 
   // A racing HEAD would identify a different write; PUT only reports fields observed by this request.
   return {
-    ...metadata(connection.config, input.key, {
+    ...metadata(connection, input.key, {
       ...output.result,
       ...headers(input),
       ContentLength: output.length,
@@ -149,7 +149,7 @@ const head = Effect.fnUntraced(function* (connection: S3Connection, input: HeadR
       { abortSignal: signal },
     ),
   );
-  return metadata(connection.config, selected.Key, output);
+  return metadata(connection, selected.Key, output);
 });
 
 const get = Effect.fnUntraced(function* (
@@ -308,7 +308,7 @@ const get = Effect.fnUntraced(function* (
 
   return {
     _tag: "Object",
-    metadata: metadata(connection.config, selected.Key, {
+    metadata: metadata(connection, selected.Key, {
       ...output,
       ContentLength: resolved?.totalSize ?? output.ContentLength,
     }),

@@ -106,7 +106,7 @@ export const copyObject = Effect.fnUntraced(function* (
       { _tag: "ProviderFailure", code: "MissingCopyReceipt" },
       "unknown",
     );
-  return metadata(connection.config, value.destinationKey, {
+  return metadata(connection, value.destinationKey, {
     ...output,
     ...output.CopyObjectResult,
   });

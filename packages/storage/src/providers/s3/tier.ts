@@ -115,7 +115,7 @@ const make = (storage: S3StorageService) => ({
         { _tag: "ProviderFailure", code: "MissingCopyReceipt" },
         "unknown",
       );
-    return metadata(storage.config, value.ref.key, {
+    return metadata(storage, value.ref.key, {
       ...before,
       ...output,
       ...output.CopyObjectResult,

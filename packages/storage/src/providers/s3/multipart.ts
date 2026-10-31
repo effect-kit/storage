@@ -372,7 +372,7 @@ export function multipart(connection: S3Connection): S3MultipartUploads {
           { _tag: "ProviderFailure", code: "MissingCompleteReceipt" },
           "unknown",
         );
-      return metadata(config, value.upload.ref.key, output);
+      return metadata(connection, value.upload.ref.key, output);
     }),
     abort: Effect.fnUntraced(function* (input) {
       const value = yield* decodeRequest(Upload, input, "abort", "s3", true);

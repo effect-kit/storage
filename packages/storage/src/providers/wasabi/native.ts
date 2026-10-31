@@ -168,7 +168,7 @@ const make = (storage: S3StorageService) => {
       const output = yield* request(storage, "nativeCompose", true, (signal) =>
         storage.client.send(command, { abortSignal: signal }),
       );
-      return metadata(storage.config, value.destinationKey, output);
+      return metadata(storage, value.destinationKey, output);
     }),
     append: Effect.fnUntraced(function* (input: {
       readonly key: string;
@@ -205,7 +205,7 @@ const make = (storage: S3StorageService) => {
         storage.client.send(command, { abortSignal: signal }),
       );
       return {
-        ref: metadata(storage.config, value.key, output).ref,
+        ref: metadata(storage, value.key, output).ref,
         etag: output.ETag,
         appendedBytes: value.body.length,
       };

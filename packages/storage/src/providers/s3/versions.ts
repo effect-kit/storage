@@ -147,7 +147,7 @@ export class S3Versions extends Context.Service<S3Versions, VersionsService>()(
             });
           entries.push({
             _tag: "Version",
-            metadata: metadata(storage.config, version.Key, {
+            metadata: metadata(storage, version.Key, {
               ...version,
               ContentLength: version.Size,
             }),

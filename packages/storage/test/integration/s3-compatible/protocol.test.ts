@@ -1,9 +1,10 @@
 import { assert, it } from "@effect/vitest";
 import { Effect, Redacted, Result, Stream } from "effect";
 
+import { R2Storage } from "../../../src/providers/r2/index.js";
 import { S3Post } from "../../../src/providers/s3/post.js";
 import { S3Signing } from "../../../src/providers/s3/signing.js";
-import { profileFixtures } from "../../fixtures/s3-compatible/profiles.js";
+import { profileFixtures, settings } from "../../fixtures/s3-compatible/profiles.js";
 import { drain, httpFixture, xml } from "../../fixtures/s3/http-fixture.js";
 
 for (const profile of profileFixtures) {
@@ -19,7 +20,7 @@ for (const profile of profileFixtures) {
             if (incoming.method === "PUT") {
               void drain(incoming).then((bytes) => {
                 saved = bytes;
-                response.writeHead(200, { etag: '"saved"' });
+                response.writeHead(200, { etag: '"saved"', "x-amz-version-id": "saved-version" });
                 return response.end();
               });
             } else if (incoming.method === "DELETE") {
@@ -36,6 +37,7 @@ for (const profile of profileFixtures) {
                 "content-type": "application/octet-stream",
                 "x-amz-meta-label": "same-response",
                 etag: '"saved"',
+                "x-amz-version-id": "saved-version",
               });
               response.end(incoming.method === "HEAD" ? undefined : saved);
             }
@@ -44,15 +46,24 @@ for (const profile of profileFixtures) {
           assert.strictEqual(storage.provider, profile.name);
           const receipt = yield* storage.put({ key: "object", body: new Uint8Array([1, 2, 3]) });
           assert.strictEqual(receipt.size, 3);
-          const result = yield* storage.get({ key: "object" });
+          const expectedVersion =
+            storage.capabilities.versionedReads === "none"
+              ? undefined
+              : { _tag: "S3Version", id: "saved-version" };
+          assert.deepStrictEqual(receipt.ref.version, expectedVersion);
+
+          const result = yield* storage.get({ ref: receipt.ref });
           assert.strictEqual(result._tag, "Object");
           if (result._tag !== "Object") return;
           assert.strictEqual(result.metadata.customMetadata?.label, "same-response");
+          assert.deepStrictEqual(result.metadata.ref.version, expectedVersion);
           assert.deepStrictEqual(
             Array.from(yield* Stream.runCollect(result.body)).flatMap((b) => Array.from(b)),
             [1, 2, 3],
           );
-          assert.strictEqual((yield* storage.head({ key: "object" })).size, 3);
+          const observed = yield* storage.head({ ref: receipt.ref });
+          assert.strictEqual(observed.size, 3);
+          assert.deepStrictEqual(observed.ref.version, expectedVersion);
           assert.strictEqual((yield* storage.listPage()).entries.length, 1);
           const sign = yield* S3Signing.make(storage).sign({
             ref: receipt.ref,
@@ -81,7 +92,7 @@ for (const profile of profileFixtures) {
             );
             assert.isTrue(Result.isFailure(grant) && grant.failure.reason._tag === "Unsupported");
           }
-          yield* storage.delete({ key: "object" });
+          yield* storage.delete({ ref: receipt.ref });
         }),
       ),
   );
@@ -107,12 +118,13 @@ for (const profile of profileFixtures) {
               '<ListPartsResult><IsTruncated>false</IsTruncated><Part><PartNumber>1</PartNumber><ETag>"part"</ETag><Size>1</Size></Part></ListPartsResult>',
             );
           else if (incoming.method === "POST")
-            void drain(incoming).then(() =>
-              xml(
+            void drain(incoming).then(() => {
+              response.setHeader("x-amz-version-id", "completed-version");
+              return xml(
                 response,
                 '<CompleteMultipartUploadResult><ETag>"complete"</ETag></CompleteMultipartUploadResult>',
-              ),
-            );
+              );
+            });
           else if (incoming.method === "DELETE") {
             response.writeHead(204);
             response.end();
@@ -135,11 +147,42 @@ for (const profile of profileFixtures) {
         assert.strictEqual((yield* storage.multipart.listUploads({})).uploads.length, 0);
         const completed = yield* storage.multipart.complete({ upload, parts: [part] });
         assert.strictEqual(completed.etag, '"complete"');
+        assert.deepStrictEqual(
+          completed.ref.version,
+          storage.capabilities.versionedReads === "none"
+            ? undefined
+            : { _tag: "S3Version", id: "completed-version" },
+        );
         yield* storage.multipart.abort(upload);
       }),
     ),
   );
 }
+
+it.effect("R2 copy receipts remain usable when the service returns an upload version", () =>
+  Effect.scoped(
+    Effect.gen(function* () {
+      const fixture = yield* httpFixture((incoming, response) => {
+        assert.strictEqual(incoming.method, "PUT");
+        response.setHeader("x-amz-version-id", "copy-upload-version");
+        xml(response, '<CopyObjectResult><ETag>"copied"</ETag></CopyObjectResult>');
+      });
+      const storage = yield* R2Storage.make({
+        ...settings(fixture.endpoint),
+        accountId: "a".repeat(32),
+      });
+
+      const copied = yield* storage.copyObject({
+        source: { storeId: storage.storeId, key: "source" },
+        destinationKey: "copy",
+      });
+
+      assert.strictEqual(copied.ref.key, "copy");
+      assert.isUndefined(copied.ref.version);
+      assert.strictEqual(copied.etag, '"copied"');
+    }),
+  ),
+);
 
 it.effect(
   "documented create-only profiles send native competing conditions and preserve rejection identity",

@@ -59,7 +59,7 @@ export class S3Metadata extends Context.Service<S3Metadata, MetadataService>()(
           { _tag: "Unsupported", capability: "multipart-metadata-copy" },
           "not-started",
         );
-      const original = metadata(storage.config, input.ref.key, before);
+      const original = metadata(storage, input.ref.key, before);
       const replacement: ObjectHeaders = patch
         ? mergeHeaders(original, patch)
         : replaceHeaders(original, input.headers);
@@ -102,7 +102,7 @@ export class S3Metadata extends Context.Service<S3Metadata, MetadataService>()(
           { _tag: "ProviderFailure", code: "MissingCopyReceipt" },
           "unknown",
         );
-      return metadata(storage.config, input.ref.key, {
+      return metadata(storage, input.ref.key, {
         ...output,
         ...output.CopyObjectResult,
         ...headers(replacement),

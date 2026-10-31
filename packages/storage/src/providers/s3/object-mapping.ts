@@ -5,7 +5,7 @@ import { ObjectRef } from "../../core/object.js";
 import type { Checksum, ObjectHeaders, ObjectMetadata } from "../../core/object.js";
 import type { ObjectTarget, WriteCondition } from "../../core/requests.js";
 import { decodeRequest } from "../../internal/request-validation.js";
-import type { ResolvedS3Config } from "./config.js";
+import type { ResolvedS3Config, S3Connection } from "./config.js";
 import { S3Key } from "./validation.js";
 
 const checksumFields = {
@@ -59,15 +59,18 @@ export function checksums(output: NativeMetadata): ReadonlyArray<Checksum> | und
 }
 
 export function metadata(
-  config: ResolvedS3Config,
+  connection: Pick<S3Connection, "config" | "profile">,
   key: string,
   output: NativeMetadata,
 ): ObjectMetadata {
+  // Some compatible services return upload identities that cannot be used for versioned reads.
+  const versioned = connection.profile?.capabilities.versionedReads !== "none";
+
   return {
     ref: {
-      storeId: config.storeId,
+      storeId: connection.config.storeId,
       key,
-      ...(output.VersionId === undefined
+      ...(!versioned || output.VersionId === undefined
         ? {}
         : { version: { _tag: "S3Version", id: output.VersionId } }),
     },

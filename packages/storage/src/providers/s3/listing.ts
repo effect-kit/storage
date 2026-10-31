@@ -45,7 +45,7 @@ export const listPage = Effect.fnUntraced(function* (
       });
     entries.push({
       _tag: "Object",
-      metadata: metadata(config, object.Key, { ...object, ContentLength: object.Size }),
+      metadata: metadata(connection, object.Key, { ...object, ContentLength: object.Size }),
     });
   }
   for (const prefix of output.CommonPrefixes ?? []) {
