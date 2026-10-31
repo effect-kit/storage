@@ -19,4 +19,4 @@ its packed artifact ID. Smoke compares exact registry bytes, cryptographic signa
 provenance and installed consumers. It never rebuilds, repacks or publishes.
 
 Provider and independent-review qualification remains separate from archive verification.
-Read the root README and `.github/README.md` for commands and workflow contracts.
+Read the root README and `.github/workflows/` for commands and workflow configuration.

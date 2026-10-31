@@ -2,7 +2,8 @@
 
 This is a pnpm/Turborepo workspace for Effect libraries. Read the root and owning
 package README before changing code. The root is private; libraries live in `packages/*`.
-Read `.github/README.md` when changing workflows or implementing release checks.
+Read the root README and relevant `.github/workflows/` files when changing workflows
+or implementing release checks.
 
 ## Implementation
 

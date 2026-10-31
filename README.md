@@ -119,8 +119,8 @@ Local suite selectors are `all`, `s3`, `native`, `app`, `filesystem`, `runtimes`
 ## CI and releases
 
 PR/main checks are offline and deterministic. Extended and hosted acceptance are manual
-workflows. Shared workflow callers use `effect-kit/.github@v1`; contracts are recorded in
-[.github/README.md](.github/README.md).
+workflows. Shared workflow callers use `effect-kit/.github@v1`; their configuration lives
+in [.github/workflows](.github/workflows).
 
 One initial minor Changeset prepares `@effect-kit/storage` for **0.1.0**. Changesets owns
 versions and changelogs. **Release** defaults to a dry run that verifies temporary versions
