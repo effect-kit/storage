@@ -50,6 +50,7 @@ export async function checkReactConsumer(
     run("pnpm", [
       "--ignore-workspace",
       "install",
+      "--no-frozen-lockfile",
       "--prefer-offline",
       "--ignore-scripts",
       "--config.auto-install-peers=false",

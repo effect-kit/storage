@@ -64,6 +64,7 @@ export async function checkNativeConsumers(archive: string): Promise<void> {
       run("pnpm", [
         "--ignore-workspace",
         "install",
+        "--no-frozen-lockfile",
         "--prefer-offline",
         "--ignore-scripts",
         "--config.auto-install-peers=false",

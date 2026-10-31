@@ -15,12 +15,15 @@ export async function checkS3Consumer(temporary: string): Promise<void> {
     execFileSync("pnpm", args, {
       cwd: temporary,
       stdio: "pipe",
-      env: { ...process.env },
+      // Exercise CI defaults locally as well as on the release runner.
+      env: { ...process.env, CI: "true" },
     });
+  // This disposable consumer adds peers in stages, so its lockfile must change in CI too.
   const install = () =>
     run([
       "--ignore-workspace",
       "install",
+      "--no-frozen-lockfile",
       "--prefer-offline",
       "--ignore-scripts",
       "--config.auto-install-peers=false",

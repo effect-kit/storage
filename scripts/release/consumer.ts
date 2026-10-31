@@ -56,6 +56,7 @@ export async function checkConsumer(entry: Candidate["packages"][number]) {
     run("pnpm", [
       "--ignore-workspace",
       "install",
+      "--no-frozen-lockfile",
       "--prefer-offline",
       "--ignore-scripts",
       "--config.auto-install-peers=false",
