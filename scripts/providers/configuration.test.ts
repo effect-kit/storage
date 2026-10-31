@@ -62,6 +62,48 @@ test("owned prefixes, HTTPS endpoints and separated credentials are enforced", (
     ),
   );
 });
+
+test("only local MinIO endpoints may use HTTP", () => {
+  const minioEnvironment = {
+    STORAGE_TEST_MINIO_PREFIX: env.STORAGE_TEST_S3_PREFIX,
+    STORAGE_TEST_MINIO_ACCESS_KEY_ID: env.STORAGE_TEST_S3_ACCESS_KEY_ID,
+    STORAGE_TEST_MINIO_SECRET_ACCESS_KEY: env.STORAGE_TEST_S3_SECRET_ACCESS_KEY,
+  };
+  const minio = (endpoint: string) =>
+    configure(
+      {
+        ...minioEnvironment,
+        STORAGE_TEST_MINIO_CONFIG: JSON.stringify({
+          bucket: "fixture",
+          region: "us-east-1",
+          endpoint,
+          edition: "aistor",
+          serverVersion: "test-fixture",
+          versioning: false,
+        }),
+      },
+      "minio",
+    );
+
+  for (const endpoint of ["http://127.0.0.1:9000", "http://localhost:9000", "http://[::1]:9000"]) {
+    assert.equal(minio(endpoint)[0]?.config.endpoint, endpoint);
+  }
+
+  for (const endpoint of [
+    "http://minio.example.test",
+    "http://10.0.0.1:9000",
+    "http://localhost.example.test:9000",
+    "http://127.0.0.1.example.test:9000",
+    "http://localhost@minio.example.test",
+    "http://user:secret@localhost:9000",
+    "http://localhost:9000/?token=secret",
+    "http://localhost:9000/#secret",
+    "ftp://localhost:9000",
+  ]) {
+    assert.throws(() => minio(endpoint));
+  }
+});
+
 test("example covers each provider and private dotenv stays out of diagnostics", async () => {
   const example = await readFile(".env.example", "utf8");
   for (const provider of providerIds)

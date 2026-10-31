@@ -120,9 +120,15 @@ export function configure(
     for (const key of ["endpoint", "apiEndpoint", "containerUrl", "url"]) {
       if (config[key] === undefined) continue;
       const url = typeof config[key] === "string" ? URL.parse(config[key]) : null;
+      const localMinio =
+        provider === "minio" &&
+        key === "endpoint" &&
+        url?.protocol === "http:" &&
+        ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname);
+
       if (
         !url ||
-        url.protocol !== "https:" ||
+        (url.protocol !== "https:" && !localMinio) ||
         url.username ||
         url.password ||
         url.search ||

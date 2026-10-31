@@ -28,6 +28,9 @@ Reports live in ignored `.artifacts/`. `--suite signing` additionally checks nat
 and requires its corresponding authority. These bounded suites do not certify every
 native provider feature or authority configuration.
 
+Provider endpoints require HTTPS. Local MinIO also accepts HTTP on `localhost`,
+`127.0.0.1`, or `[::1]`; bind its server ports to loopback for local testing.
+
 Local suite choices: `all`, `s3`, `native`, `app`, `filesystem`, `runtimes`, `r2`, `uploads`,
 `composition`, `react`. Runtime choices apply to filesystem/runtime helpers. Fixtures are
 internal test assets, not public example applications.
