@@ -18,6 +18,53 @@ const policy = {
   maxSourceChunkBytes: 1024 ** 2,
   retryBaseMillis: 0,
 };
+it.effect(
+  "a gateway OPTIONS response allows creation without inventing optional tus extensions",
+  () =>
+    Effect.scoped(
+      Effect.gen(function* () {
+        const fixture = yield* httpFixture;
+        fixture.tusOptions({});
+        const storage = yield* SupabaseStorage.make({
+          url: fixture.url,
+          bucket: "bucket",
+          storeId: "test",
+          auth: { mode: "user", token: Redacted.make("user") },
+          resumable: true,
+        });
+        assert(storage.offsets);
+        const upload = yield* storage.offsets.create({ key: "gateway", contentLength: 1 });
+        const result = yield* storage.offsets.write({
+          upload,
+          offset: 0,
+          body: new Uint8Array([1]),
+          contentLength: 1,
+          final: true,
+        });
+        assert.equal(result._tag, "Completed");
+        const before = fixture.seen.length;
+        const unsupported = yield* Effect.result(storage.offsets.cancel(upload));
+        assert.equal(unsupported._tag, "Failure");
+        if (unsupported._tag === "Failure")
+          assert.equal(unsupported.failure.reason._tag, "Unsupported");
+        assert.equal(fixture.seen.length, before + 1);
+        assert.equal(fixture.seen.at(-1)?.method, "HEAD");
+
+        fixture.tusOptions({ "tus-version": "2.0.0", "tus-extension": "creation" });
+        const incompatible = yield* Effect.result(
+          SupabaseStorage.make({
+            url: fixture.url,
+            bucket: "bucket",
+            storeId: "test",
+            auth: { mode: "user", token: Redacted.make("user") },
+            resumable: true,
+          }),
+        );
+        assert.equal(incompatible._tag, "Failure");
+      }),
+    ).pipe(Effect.provide(FetchHttpClient.layer)),
+);
+
 it.effect("protects tus URLs and resumes a saved offset, including a lost final response", () =>
   Effect.scoped(
     Effect.gen(function* () {

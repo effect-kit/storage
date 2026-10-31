@@ -216,6 +216,14 @@ export const negotiateTus = Effect.fnUntraced(function* (connection: SupabaseCon
   const response = yield* request(connection, "tus.options", "OPTIONS", "/upload/resumable").pipe(
     Effect.scoped,
   );
+  // Hosted gateways can answer OPTIONS themselves and omit the tus headers.
+  // Explicit resumable mode may still use Supabase's documented creation protocol;
+  // optional extensions such as termination must never be inferred from that response.
+  if (
+    response.headers["tus-version"] === undefined &&
+    response.headers["tus-extension"] === undefined
+  )
+    return ["creation"];
   const extensions = (response.headers["tus-extension"] ?? "")
     .split(",")
     .map((value) => value.trim());

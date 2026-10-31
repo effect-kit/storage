@@ -26,6 +26,7 @@ export const httpFixture = Effect.acquireRelease(
     let expire = false;
     let partial = false;
     let allowTermination = true;
+    let tusOptions: Record<string, string> | undefined;
     const server = createServer(async (incoming, outgoing) => {
       const url = new URL(incoming.url ?? "/", `http://${incoming.headers.host}`);
       const chunks: Buffer[] = [];
@@ -47,10 +48,13 @@ export const httpFixture = Effect.acquireRelease(
         return;
       }
       if (url.pathname === "/storage/v1/upload/resumable" && incoming.method === "OPTIONS") {
-        outgoing.writeHead(204, {
-          "tus-version": "1.0.0",
-          "tus-extension": `creation,expiration${allowTermination ? ",termination" : ""}`,
-        });
+        outgoing.writeHead(
+          204,
+          tusOptions ?? {
+            "tus-version": "1.0.0",
+            "tus-extension": `creation,expiration${allowTermination ? ",termination" : ""}`,
+          },
+        );
         outgoing.end();
         return;
       }
@@ -305,6 +309,9 @@ export const httpFixture = Effect.acquireRelease(
       },
       noTermination: () => {
         allowTermination = false;
+      },
+      tusOptions: (headers: Record<string, string>) => {
+        tusOptions = headers;
       },
     };
   }),
