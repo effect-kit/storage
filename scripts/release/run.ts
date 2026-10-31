@@ -1,4 +1,5 @@
 import { releaseOptions, verifyCandidate } from "./check.ts";
+import { releaseFailure } from "./failure.ts";
 import { smoke } from "./smoke.ts";
 
 const [mode, ...args] = process.argv.slice(2);
@@ -12,9 +13,10 @@ try {
         : undefined;
   if (!report) throw new Error("Expected check or smoke");
   process.stdout.write(`${mode}: verified ${report.packages.length} exact packages.\n`);
-} catch {
+} catch (error) {
+  const failure = releaseFailure(error, mode ?? "arguments");
   process.stderr.write(
-    "Release verification failed; no inputs were rebuilt, repacked or published.\n",
+    `Release verification failed (${failure.code}); no inputs were rebuilt, repacked or published.\n`,
   );
   process.exitCode = 1;
 }

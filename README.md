@@ -118,7 +118,8 @@ Local suite selectors are `all`, `s3`, `native`, `app`, `filesystem`, `runtimes`
 
 ## CI and releases
 
-PR/main checks are offline and deterministic. Extended and hosted acceptance are manual
+PR/main checks are offline and deterministic. Isolated package consumers prefer cached
+dependencies and may fetch missing registry metadata; install lifecycle scripts stay disabled. Extended and hosted acceptance are manual
 workflows. Shared workflow callers use `effect-kit/.github@v1`; their configuration lives
 in [.github/workflows](.github/workflows).
 

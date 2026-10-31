@@ -1,4 +1,4 @@
-/* oxlint-disable no-await-in-loop -- Consumer configurations and offline installs are verified sequentially. */
+/* oxlint-disable no-await-in-loop -- Consumer configurations and isolated installs are verified sequentially. */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
@@ -16,7 +16,7 @@ export async function checkReactConsumer(
     execFileSync(command, args, {
       cwd: directory,
       stdio: "pipe",
-      env: { ...process.env, npm_config_offline: "true" },
+      env: { ...process.env },
       timeout: 120000,
     });
   try {
@@ -50,7 +50,7 @@ export async function checkReactConsumer(
     run("pnpm", [
       "--ignore-workspace",
       "install",
-      "--offline",
+      "--prefer-offline",
       "--ignore-scripts",
       "--config.auto-install-peers=false",
     ]);

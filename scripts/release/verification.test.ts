@@ -6,6 +6,7 @@ import { gunzipSync, gzipSync } from "node:zlib";
 
 import { inspectArchive } from "./archive.ts";
 import { verifyCandidate } from "./check.ts";
+import { releaseFailure } from "./failure.ts";
 import { archive, candidateFixture, workflowCertificate, foreignCertificate } from "./fixtures.ts";
 import { integrity, parsePlan, readCandidate, unchanged } from "./plan.ts";
 import { verifyProvenance } from "./provenance.ts";
@@ -13,6 +14,21 @@ import { matchRegistry } from "./registry.ts";
 import { smoke } from "./smoke.ts";
 
 const plan = (entries: unknown[]) => ({ version: 1, plan: [entries] });
+
+test("release failures retain safe command codes without leaking subprocess output", () => {
+  const failure = Object.assign(new Error("secret-canary"), {
+    stdout: "ERR_PNPM_NO_OFFLINE_META secret-canary",
+    stderr: "Bearer secret-canary",
+    code: "UNTRUSTED_SECRET_VALUE_WITH_SPACES invalid",
+  });
+  const report = releaseFailure(failure, "consumer");
+  assert.deepEqual(report, { stage: "consumer", code: "ERR_PNPM_NO_OFFLINE_META" });
+  assert(!JSON.stringify(report).includes("secret-canary"));
+  assert.deepEqual(releaseFailure(null, "candidate-policy"), {
+    stage: "candidate-policy",
+    code: "CHECK_FAILED",
+  });
+});
 
 test("archive inspection rejects traversal, links, duplicate entries and corruption", () => {
   const file = { name: "package/dist/index.js", body: "export {};" };

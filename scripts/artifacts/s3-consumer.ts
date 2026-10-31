@@ -15,13 +15,13 @@ export async function checkS3Consumer(temporary: string): Promise<void> {
     execFileSync("pnpm", args, {
       cwd: temporary,
       stdio: "pipe",
-      env: { ...process.env, npm_config_offline: "true" },
+      env: { ...process.env },
     });
   const install = () =>
     run([
       "--ignore-workspace",
       "install",
-      "--offline",
+      "--prefer-offline",
       "--ignore-scripts",
       "--config.auto-install-peers=false",
     ]);

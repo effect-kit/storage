@@ -62,7 +62,7 @@ export async function checkReadmeConsumer(archive: string) {
       [
         "--ignore-workspace",
         "install",
-        "--offline",
+        "--prefer-offline",
         "--ignore-scripts",
         "--config.auto-install-peers=false",
       ],

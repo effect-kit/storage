@@ -21,7 +21,6 @@ export async function checkConsumer(entry: Candidate["packages"][number]) {
         PATH: process.env.PATH,
         HOME: process.env.HOME,
         PNPM_HOME: process.env.PNPM_HOME,
-        npm_config_offline: "true",
       },
     });
   try {
@@ -57,7 +56,7 @@ export async function checkConsumer(entry: Candidate["packages"][number]) {
     run("pnpm", [
       "--ignore-workspace",
       "install",
-      "--offline",
+      "--prefer-offline",
       "--ignore-scripts",
       "--config.auto-install-peers=false",
     ]);

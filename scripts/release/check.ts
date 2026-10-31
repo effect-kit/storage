@@ -6,6 +6,7 @@ import { join } from "node:path";
 import { parseArgs } from "node:util";
 
 import { checkConsumer } from "./consumer.ts";
+import { releaseFailure } from "./failure.ts";
 import { readCandidate, unchanged } from "./plan.ts";
 
 export async function writeReport(root: string, name: string, report: unknown) {
@@ -20,10 +21,12 @@ export async function verifyCandidate(
 ) {
   const root = await realpath(directory);
   await writeReport(root, "verification.json", { schemaVersion: 1, status: "running" });
+  let stage = "candidate-policy";
   try {
     const candidate = await readCandidate(root, expected);
     const packages = [];
-    for (const entry of candidate.packages)
+    for (const entry of candidate.packages) {
+      stage = `consumer:${entry.name}`;
       packages.push({
         name: entry.name,
         version: entry.version,
@@ -31,6 +34,8 @@ export async function verifyCandidate(
         planIntegrity: entry.tarball.integrity,
         checks: await consumer(entry),
       });
+    }
+    stage = "candidate-unchanged";
     await unchanged(candidate);
     const report = {
       schemaVersion: 1,
@@ -43,7 +48,11 @@ export async function verifyCandidate(
     await writeReport(candidate.root, "verification.json", report);
     return report;
   } catch (error) {
-    await writeReport(root, "verification.json", { schemaVersion: 1, status: "failed" });
+    await writeReport(root, "verification.json", {
+      schemaVersion: 1,
+      status: "failed",
+      failure: releaseFailure(error, stage),
+    });
     throw error;
   }
 }

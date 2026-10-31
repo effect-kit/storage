@@ -20,7 +20,7 @@ const run = (command: string, args: string[], cwd = root) =>
   execFileSync(command, args, {
     cwd,
     stdio: "pipe",
-    env: { ...process.env, npm_config_offline: "true" },
+    env: { ...process.env },
   }).toString();
 
 try {
@@ -77,7 +77,7 @@ try {
     [
       "--ignore-workspace",
       "install",
-      "--offline",
+      "--prefer-offline",
       "--ignore-scripts",
       "--config.auto-install-peers=false",
     ],

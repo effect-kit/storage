@@ -35,7 +35,7 @@ export async function checkNativeConsumers(archive: string): Promise<void> {
       execFileSync(command, args, {
         cwd: temporary,
         stdio: "pipe",
-        env: { ...process.env, npm_config_offline: "true" },
+        env: { ...process.env },
       });
     try {
       const version = sdk ? library.peerDependencies[sdk] : undefined;
@@ -64,7 +64,7 @@ export async function checkNativeConsumers(archive: string): Promise<void> {
       run("pnpm", [
         "--ignore-workspace",
         "install",
-        "--offline",
+        "--prefer-offline",
         "--ignore-scripts",
         "--config.auto-install-peers=false",
       ]);
