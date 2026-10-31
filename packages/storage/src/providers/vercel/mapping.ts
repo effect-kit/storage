@@ -111,6 +111,11 @@ export const metadata = Effect.fnUntraced(function* (
   );
 });
 export function providerError(operation: string, mutation: boolean, error: unknown) {
+  // The SDK exposes create-only collisions as generic bad_request errors, without a typed code.
+  const overwriteRejected =
+    mutation &&
+    error instanceof Blob.BlobError &&
+    error.message.startsWith("Vercel Blob: This blob already exists,");
   const readStatus =
     error instanceof Blob.BlobError
       ? /^Vercel Blob: Failed to fetch blob: (\d{3}) /u.exec(error.message)?.[1]
@@ -118,7 +123,7 @@ export function providerError(operation: string, mutation: boolean, error: unkno
   const reason =
     readStatus === "401" || readStatus === "403"
       ? { _tag: "AccessDenied" as const }
-      : readStatus === "412"
+      : readStatus === "412" || overwriteRejected
         ? { _tag: "PreconditionFailed" as const }
         : readStatus === "416"
           ? { _tag: "RangeNotSatisfiable" as const }

@@ -46,8 +46,8 @@ export const httpFixture = Effect.acquireRelease(
         outgoing.writeHead(status, { "content-type": "application/json" });
         outgoing.end(JSON.stringify(value));
       };
-      const error = (status: number, code: string) =>
-        json(status, { error: { code, message: "sensitive upstream message" } });
+      const error = (status: number, code: string, message = "sensitive upstream message") =>
+        json(status, { error: { code, message } });
 
       if (url.pathname === "/upload" && uploadHandler) {
         const headers = Object.fromEntries(
@@ -145,10 +145,11 @@ export const httpFixture = Effect.acquireRelease(
       if (url.pathname === "/" && incoming.method === "PUT") {
         const key = url.searchParams.get("pathname") ?? "";
         const existing = objects.get(key);
-        if (
-          (incoming.headers["x-allow-overwrite"] === "0" && existing) ||
-          (incoming.headers["x-if-match"] && incoming.headers["x-if-match"] !== existing?.etag)
-        ) {
+        if (incoming.headers["x-allow-overwrite"] === "0" && existing) {
+          error(400, "bad_request", "This blob already exists, use `allowOverwrite: true`.");
+          return;
+        }
+        if (incoming.headers["x-if-match"] && incoming.headers["x-if-match"] !== existing?.etag) {
           error(412, "precondition_failed");
           return;
         }

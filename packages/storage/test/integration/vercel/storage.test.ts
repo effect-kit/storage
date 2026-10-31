@@ -91,6 +91,33 @@ it.effect("reads exact object bytes when the CDN negotiates compression", () =>
   ),
 );
 
+it.effect("reports a create-only collision as rejected without replacing the object", () =>
+  Effect.scoped(
+    Effect.gen(function* () {
+      yield* httpFixture;
+      const storage = yield* VercelStorage.make(config);
+      const first = yield* storage.put({ key: "existing", body: new Uint8Array([1]) });
+
+      const duplicate = yield* storage
+        .put({ key: "existing", body: new Uint8Array([2]), condition: { _tag: "CreateOnly" } })
+        .pipe(Effect.result);
+
+      assert.strictEqual(
+        duplicate._tag === "Failure" && duplicate.failure.reason._tag,
+        "PreconditionFailed",
+      );
+      assert.strictEqual(
+        duplicate._tag === "Failure" && duplicate.failure.mutationOutcome,
+        "rejected",
+      );
+      const received = yield* Storage.getBytes({ ref: first.ref, maxBytes: 1 }).pipe(
+        Effect.provideService(Storage, storage),
+      );
+      assert.deepStrictEqual(received, new Uint8Array([1]));
+    }),
+  ),
+);
+
 it.effect("keeps one SDK attempt, rejects foreign token stores and refreshes credentials", () =>
   Effect.scoped(
     Effect.gen(function* () {
