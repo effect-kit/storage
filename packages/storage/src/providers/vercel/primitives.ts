@@ -34,6 +34,8 @@ export const get = Effect.fnUntraced(function* (
         useCache: false,
         ...(input.condition?._tag === "IfNoneMatch" ? { ifNoneMatch: input.condition.etag } : {}),
         headers: {
+          // CDN compression changes response lengths and range validators for the stored bytes.
+          "accept-encoding": "identity",
           ...(input.condition?._tag === "IfMatch" ? { "if-match": input.condition.etag } : {}),
           ...(range
             ? {

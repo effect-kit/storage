@@ -1,4 +1,5 @@
 import { createServer } from "node:http";
+import { brotliCompressSync } from "node:zlib";
 
 import { Effect } from "effect";
 
@@ -18,6 +19,7 @@ export const httpFixture = Effect.acquireRelease(
     let sequence = 0;
     let fail = false;
     let loseComplete = false;
+    let compressReads = false;
     let oldCache: { body: Buffer; etag: string } | undefined;
     const result = (key: string, object: { body: Buffer; etag: string; contentType: string }) => ({
       pathname: key,
@@ -226,10 +228,14 @@ export const httpFixture = Effect.acquireRelease(
         headers["content-range"] = `bytes ${start}-${end}/${output.length}`;
         output = output.subarray(start, end + 1);
       }
-      outgoing.writeHead(range ? 206 : 200, {
-        ...headers,
-        "content-length": String(output.length),
-      });
+      if (compressReads && incoming.headers["accept-encoding"] !== "identity") {
+        output = brotliCompressSync(output);
+        headers["content-encoding"] = "br";
+      } else {
+        headers["content-length"] = String(output.length);
+      }
+
+      outgoing.writeHead(range ? 206 : 200, headers);
       outgoing.end(output);
     });
     await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
@@ -256,6 +262,9 @@ export const httpFixture = Effect.acquireRelease(
       },
       loseComplete: () => {
         loseComplete = true;
+      },
+      compressReads: () => {
+        compressReads = true;
       },
       cache: (body: Buffer) => {
         oldCache = { body, etag: '"cached-old"' };

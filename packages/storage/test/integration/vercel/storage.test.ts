@@ -72,6 +72,25 @@ it.effect("uses exact paths, same-response metadata, 304, ranges and mutation co
   ),
 );
 
+it.effect("reads exact object bytes when the CDN negotiates compression", () =>
+  Effect.scoped(
+    Effect.gen(function* () {
+      const fixture = yield* httpFixture;
+      fixture.compressReads();
+      const storage = yield* VercelStorage.make(config);
+      const payload = new TextEncoder().encode("compressible object content".repeat(128));
+      const saved = yield* storage.put({ key: "compressed", body: payload });
+
+      const received = yield* Storage.getBytes({ ref: saved.ref, maxBytes: payload.length }).pipe(
+        Effect.provideService(Storage, storage),
+      );
+
+      assert.deepStrictEqual(received, payload);
+      assert.strictEqual(fixture.seen.at(-1)?.headers["accept-encoding"], "identity");
+    }),
+  ),
+);
+
 it.effect("keeps one SDK attempt, rejects foreign token stores and refreshes credentials", () =>
   Effect.scoped(
     Effect.gen(function* () {
