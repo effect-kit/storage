@@ -2,6 +2,23 @@ name: Extended tests
 
 on:
   workflow_dispatch:
+    inputs:
+      suite:
+        description: Additional owned local suite (artifacts always run)
+        type: choice
+        options:
+          [artifacts, all, s3, native, app, filesystem, runtimes, r2, uploads, composition, react]
+        default: artifacts
+      runtime:
+        description: Runtime for filesystem or runtime-helper checks
+        type: choice
+        options: [node, bun, deno, browser, all]
+        default: node
+      os:
+        description: Host OS (Docker suites require Ubuntu)
+        type: choice
+        options: [ubuntu-latest, macos-latest]
+        default: ubuntu-latest
 
 permissions:
   contents: read
@@ -11,27 +28,37 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  check:
-    name: Extended (${{ matrix.node || 'pinned Node' }})
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    strategy:
-      fail-fast: false
-      matrix:
-        # An empty override reads .node-version, so the pinned version has one owner.
-        node: ["", "24.x"]
+  extended:
+    runs-on: ${{ inputs.os }}
+    timeout-minutes: 60
     steps:
-      - name: Check out the selected commit
-        uses: actions/checkout@v7
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
-      - name: Install the workspace
-        uses: effect-kit/.github/actions/setup@v1
+      - uses: effect-kit/.github/actions/setup@v1
         with:
-          node-version: ${{ matrix.node }}
-          cache: pnpm
-      - name: Run fast checks
-        run: pnpm ci:check
-      - name: Run package-specific extended checks
-        run: pnpm test:extended
+          bun: "true"
+      - uses: denoland/setup-deno@v2
+        if: inputs.runtime == 'deno' || inputs.runtime == 'all'
+        with:
+          deno-version: 2.9.6
+      - name: Install Chromium for browser contracts
+        run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm ci:check
+      - run: pnpm test:extended
+        if: inputs.suite == 'artifacts'
+      - name: Run selected local suite
+        if: inputs.suite != 'artifacts'
+        run: pnpm test:local --suite "$LOCAL_SUITE" --runtime "$LOCAL_RUNTIME"
+        env:
+          LOCAL_SUITE: ${{ inputs.suite }}
+          LOCAL_RUNTIME: ${{ inputs.runtime }}
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: extended-evidence-${{ github.run_id }}
+          path: .artifacts/**/*.json
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 14

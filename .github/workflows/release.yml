@@ -20,4 +20,4 @@ jobs:
     uses: effect-kit/.github/.github/workflows/release.yml@v1
     with:
       dry-run: ${{ inputs.dry-run }}
-      timeout-minutes: 15
+      timeout-minutes: 20
