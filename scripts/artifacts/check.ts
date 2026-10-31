@@ -9,6 +9,7 @@ import { build } from "vite";
 import { checkReactConsumer } from "../react/consumer.ts";
 import { checkArchive } from "./archive-policy.ts";
 import { checkNativeConsumers } from "./native-consumers.ts";
+import { checkReadmeConsumer } from "./readme.ts";
 import { checkS3Consumer } from "./s3-consumer.ts";
 
 const root = process.cwd();
@@ -178,6 +179,7 @@ try {
   await checkS3Consumer(temporary);
   await checkNativeConsumers(archive);
   await checkReactConsumer(archive);
+  await checkReadmeConsumer(archive);
   await writeFile(
     resolve(".artifacts/artifact-check.json"),
     `${JSON.stringify(
@@ -186,6 +188,7 @@ try {
         archive,
         runtime: process.version,
         checks: [
+          "actual root and packed README snippets compile in NodeNext/Bundler; memory quick starts execute",
           "React optional-peer imports, NodeNext/Bundler declarations and SSR without client layer acquisition",
           "React browser graph and preserved client directive",
           "packed file policy",

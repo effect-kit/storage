@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 import { checkNativeConsumers } from "../artifacts/native-consumers.ts";
+import { checkReadmeConsumer } from "../artifacts/readme.ts";
 import { checkS3Consumer } from "../artifacts/s3-consumer.ts";
 import { checkReactConsumer } from "../react/consumer.ts";
 import type { Candidate } from "./plan.ts";
@@ -106,9 +107,11 @@ await Effect.runPromise(Effect.gen(function* () {
       await checkS3Consumer(directory);
       await checkNativeConsumers(archive);
       await checkReactConsumer(archive);
+      await checkReadmeConsumer(archive);
       checks.push(
         "isolated-native-provider-peers",
         "optional-React-runtime-declarations-SSR-browser",
+        "actual-README-declarations-and-quick-starts",
       );
     }
     return checks;

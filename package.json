@@ -1,7 +1,24 @@
 {
   "name": "effect-kit-storage-workspace",
   "private": true,
-  "description": "Effect Kit Storage workspace.",
+  "description": "Effect Kit Storage: Effect-native object storage libraries and release tooling.",
+  "keywords": [
+    "azure-blob-storage",
+    "cloudflare-r2",
+    "effect",
+    "effect-kit",
+    "effect-ts",
+    "google-cloud-storage",
+    "multipart-upload",
+    "object-storage",
+    "resumable-upload",
+    "s3",
+    "storage",
+    "streams",
+    "supabase",
+    "typescript",
+    "vercel-blob"
+  ],
   "homepage": "https://github.com/effect-kit/storage#readme",
   "bugs": {
     "url": "https://github.com/effect-kit/storage/issues"

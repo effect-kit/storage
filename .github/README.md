@@ -29,3 +29,9 @@ Automatic CI never discovers `.env` files or runs hosted tests. Provider reports
 case names, runtime/build identity and cleanup status, not credentials or SDK diagnostics.
 Live portable/signing evidence does not qualify retention policies, every native protocol,
 all authority profiles, or independent cryptographic audits. Those gates remain in research.
+
+The hosted runner also accepts `--suite release` for native transfers, injected lost-part
+responses, condition races, denied credentials/expired grants, cancellation where available
+and sequential fresh-process session recovery. `--suite browser` uses Chromium at
+`http://127.0.0.1:43179`; resource owners configure CORS separately. Native R2 Workers
+currently accepts only `portable`. Tests never update hosted policy or deploy fixtures.
